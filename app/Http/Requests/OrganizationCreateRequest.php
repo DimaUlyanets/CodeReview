@@ -13,7 +13,7 @@ class OrganizationCreateRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class OrganizationCreateRequest extends Request
         return [
             'name' => 'required|max:255|alpha_dash',
             'description' => 'required|max:140',
-            'icon ' => 'required',
+            'icon' => 'required',
         ];
     }
 }

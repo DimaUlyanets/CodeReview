@@ -5,7 +5,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 
-class Organisation extends Model
+class Organization extends Model
 {
     use HasApiTokens, Notifiable;
 

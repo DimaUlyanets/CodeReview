@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationCreateRequest;
+use App\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 use App\Http\Requests;
 
@@ -28,7 +30,10 @@ class OrganizationController extends Controller
      */
     public function create(OrganizationCreateRequest $request)
     {
-        die("asd");
+
+        $result = Organization::create($request->all());
+        if($result)return Response::json(["success" => $result->toArray()], 200);
+
     }
 
     /**

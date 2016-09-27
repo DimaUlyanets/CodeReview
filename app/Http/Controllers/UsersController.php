@@ -42,7 +42,7 @@ class UsersController extends ApiController
             'password' => Hash::make($request->password),
         ]);
 
-        if($data)return Response::json([ "success" => $data->toArray()], 200);
+        if($data)return Response::json(["success" => $data->toArray()], 200);
 
     }
 

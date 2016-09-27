@@ -12,7 +12,7 @@ class OrganisationsTableSeeder extends Seeder
     public function run()
     {
         DB::table('organizations')->insert([
-            'name' => 'name',
+            'name' => 'Peacemaker',
             'description' => 'description',
             'icon' => 'icon.png'
         ]);
