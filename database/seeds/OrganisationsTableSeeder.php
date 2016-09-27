@@ -14,7 +14,8 @@ class OrganisationsTableSeeder extends Seeder
         DB::table('organizations')->insert([
             'name' => 'Peacemaker',
             'description' => 'description',
-            'icon' => 'icon.png'
+            'icon' => 'icon.png',
+            'default' => 1
         ]);
     }
 }

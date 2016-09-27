@@ -16,7 +16,7 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'icon'
+        'id', 'name', 'description', 'icon'
     ];
 
     public function users()
