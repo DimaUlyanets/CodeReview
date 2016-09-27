@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Group;
 use App\Http\Requests\GroupCreateRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Response;
 
 class GroupController extends Controller
 {
@@ -27,7 +29,15 @@ class GroupController extends Controller
      */
     public function create(GroupCreateRequest $request)
     {
-        die("asd");
+
+        $group = Group::create($request->all());
+
+        if($group){
+
+            return Response::json(["success" => $group->toArray()], 200);
+
+        }
+
     }
 
     /**
