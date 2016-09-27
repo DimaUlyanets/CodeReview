@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
+use App\Organization;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -34,7 +35,7 @@ class UsersController extends ApiController
     public function create(UserCreateRequest $request)
     {
 
-        $data = User::create([
+        $user = User::create([
             'name' => "{$request->first_name} {$request->last_name}",
             'username' => $request->username,
             'email' => $request->email,
@@ -42,7 +43,15 @@ class UsersController extends ApiController
             'password' => Hash::make($request->password),
         ]);
 
-        if($data)return Response::json([ "success" => $data->toArray()], 200);
+        if($user){
+
+            #Get default organization and attach to created user
+            $default = Organization::whereDefault(1)->first();
+            $user->organizations()->attach($default->id);
+
+            return Response::json(["success" => $user->toArray()], 200);
+
+        }
 
     }
 

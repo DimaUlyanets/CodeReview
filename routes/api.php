@@ -28,3 +28,13 @@ Route::group(['prefix' => 'user' , 'middleware' => 'auth:api'] , function() {
     Route::delete('/{id}', 'UsersController@delete')->where('id', '[0-9]+');
 
 });
+
+Route::group(['prefix' => 'organization' , 'middleware' => 'auth:api'] , function() {
+
+    Route::get('/list', 'OrganizationController@all');
+    Route::post('/create', 'OrganizationController@create');
+    Route::get('/{id}', 'OrganizationController@show')->where('id', '[0-9]+');
+    Route::put('/{id}', 'OrganizationController@update')->where('id', '[0-9]+');
+    Route::delete('/{id}', 'OrganizationController@delete')->where('id', '[0-9]+');
+
+});

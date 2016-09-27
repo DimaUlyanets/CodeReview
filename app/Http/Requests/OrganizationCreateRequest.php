@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
 
-class UserCreateRequest extends Request
+class OrganizationCreateRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +24,9 @@ class UserCreateRequest extends Request
     public function rules()
     {
         return [
-            'first_name' => 'required|max:255|alpha_dash',
-            'last_name' => 'required|max:255|alpha_dash',
-            'username' => 'required|max:255|alpha_dash',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6',
+            'name' => 'required|max:255|alpha_dash',
+            'description' => 'required|max:140',
+            'icon' => 'required',
         ];
     }
-
 }
