@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'guest'] , function() {
     
     Route::post('/auth', 'AuthController@authenticate');
-    Route::post('/create', 'UsersController@create');
+    Route::any('/user/create', 'UsersController@create');
 
 });
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
 class UsersController extends ApiController
@@ -29,9 +31,19 @@ class UsersController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(UserCreateRequest $request)
     {
-        //
+
+        $data = User::create([
+            'name' => "{$request->first_name} {$request->last_name}",
+            'username' => $request->username,
+            'email' => $request->email,
+            'api_token' => str_random(60),
+            'password' => Hash::make($request->password),
+        ]);
+
+        if($data)return Response::json([ "success" => $data->toArray()], 200);
+
     }
 
 
