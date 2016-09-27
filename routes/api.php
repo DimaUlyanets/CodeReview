@@ -13,12 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::group(['middleware' => 'guest'] , function() {
+    
+    Route::post('/auth', 'AuthController@authenticate');
+    Route::post('/create', 'UsersController@create');
 
-Route::post('/create', 'UsersController@create');
-Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
+});
 
 
-Route::group(['prefix' => 'user' /*, 'middleware' => 'auth:api'*/ ] , function() {
+
+Route::group(['prefix' => 'user' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'UsersController@all');
     Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
