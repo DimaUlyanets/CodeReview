@@ -27,4 +27,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    /**
+     * The organizations that belong to the user.
+     */
+    public function organizations()
+    {
+        return $this->belongsToMany('App\Organization')->withTimestamps();;
+    }
 }

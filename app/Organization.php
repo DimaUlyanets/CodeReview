@@ -19,5 +19,10 @@ class Organization extends Model
         'name', 'description', 'icon'
     ];
 
+    public function users()
+    {
+        return $this->belongsToMany('App\User')->withTimestamps();;
+    }
+
 
 }

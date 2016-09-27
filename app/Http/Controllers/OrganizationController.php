@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -18,7 +19,7 @@ class OrganizationController extends Controller
      */
     public function all()
     {
-        //
+
     }
 
 

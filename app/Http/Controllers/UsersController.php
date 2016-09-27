@@ -34,7 +34,7 @@ class UsersController extends ApiController
     public function create(UserCreateRequest $request)
     {
 
-        $data = User::create([
+        $user = User::create([
             'name' => "{$request->first_name} {$request->last_name}",
             'username' => $request->username,
             'email' => $request->email,
@@ -42,7 +42,10 @@ class UsersController extends ApiController
             'password' => Hash::make($request->password),
         ]);
 
-        if($data)return Response::json(["success" => $data->toArray()], 200);
+        if($user){
+            $user->organizations()->attach(1);
+            return Response::json(["success" => $user->toArray()], 200);
+        }
 
     }
 
