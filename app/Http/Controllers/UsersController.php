@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
+use App\Organization;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -43,8 +44,13 @@ class UsersController extends ApiController
         ]);
 
         if($user){
-            $user->organizations()->attach(1);
+
+            #Get default organization and attach to created user
+            $default = Organization::whereDefault(1)->first();
+            $user->organizations()->attach($default->id);
+
             return Response::json(["success" => $user->toArray()], 200);
+
         }
 
     }
