@@ -15,7 +15,7 @@ abstract class Request extends FormRequest {
 
     public function response(array $errors)
     {
-        return new JsonResponse($errors, 422);
+        return new JsonResponse(array("errors" => $errors), 422);
     }
 
 }
