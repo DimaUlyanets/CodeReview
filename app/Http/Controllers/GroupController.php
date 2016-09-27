@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\OrganizationCreateRequest;
-use App\Organization;
-use App\User;
+use App\Http\Requests\GroupCreateRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 use App\Http\Requests;
 
-class OrganizationController extends Controller
+class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +16,8 @@ class OrganizationController extends Controller
      */
     public function all()
     {
-
+        //
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -29,18 +25,9 @@ class OrganizationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(OrganizationCreateRequest $request)
+    public function create(GroupCreateRequest $request)
     {
-
-        $result = Organization::create($request->all());
-
-        if($result){
-
-            Organization::createDefaultGroup($result);
-            return Response::json(["success" => $result->toArray()], 200);
-
-        }
-
+        die("asd");
     }
 
     /**
@@ -53,7 +40,6 @@ class OrganizationController extends Controller
     {
         //
     }
-
 
     /**
      * Update the specified resource in storage.

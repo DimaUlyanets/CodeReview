@@ -16,12 +16,26 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'description', 'icon'
+        'id', 'name', 'description', 'icon', 'default'
     ];
 
     public function users()
     {
         return $this->belongsToMany('App\User')->withTimestamps();;
+    }
+
+    public static function createDefaultGroup($organization){
+
+        Group::create([
+                'name' => 'Base group',
+                'description' => 'Base group',
+                'icon' => 'icon.jpg',
+                'default' => 1,
+                'organization_id' => $organization->id
+            ]
+
+        );
+
     }
 
 
