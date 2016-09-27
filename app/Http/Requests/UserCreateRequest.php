@@ -25,8 +25,12 @@ class UserCreateRequest extends Request
     public function rules()
     {
         return [
-            'first_name' => 'required|max:255|alpha_dash',
-            'last_name' => 'required|max:255|alpha_dash',
+            #'first_name' => 'required|max:255|alpha_dash',
+
+            'first_name' =>'unique:users,level_id,NULL,id,building_id,' . Input::get('last_name'),
+            'last_name' =>'unique:users,level_id,NULL,id,building_id,' . Input::get('first_name'),
+
+            #'last_name' => 'required|max:255|alpha_dash',
             'name' => 'required|max:255|alpha_dash',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6',
