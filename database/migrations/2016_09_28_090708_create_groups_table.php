@@ -14,6 +14,7 @@ class CreateGroupsTable extends Migration
     public function up()
     {
         Schema::create('groups', function (Blueprint $table) {
+
             $table->increments('id');
             $table->string('name');
             $table->string('description');
@@ -24,6 +25,7 @@ class CreateGroupsTable extends Migration
             $table->foreign('privacy_id')->references('id')->on('privacy')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('default')->default(0);
             $table->timestamps();
+
         });
     }
 

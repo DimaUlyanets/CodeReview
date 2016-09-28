@@ -19,5 +19,15 @@ class GroupsTableSeeder extends Seeder
             'organization_id' => '1',
             'privacy_id' => 4
         ]);
+
+        DB::table('groups')->insert([
+            'name' => 'Custom Group',
+            'description' => 'Custom',
+            'icon' => 'icon.png',
+            'default' => 0,
+            'organization_id' => '1',
+            'privacy_id' => 4
+        ]);
+
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableGroupUser extends Migration
+class CreateClassesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateTableGroupUser extends Migration
      */
     public function up()
     {
-        Schema::create('group_user', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');;
+        Schema::create('classes', function (Blueprint $table) {
+
+            $table->increments('id');
+            $table->string('name');
+            $table->string('description');
+            $table->string('thumbnail');
             $table->integer('group_id')->unsigned();
             $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('is_collaborative')->default(0);
             $table->timestamps();
+
         });
     }
 
@@ -29,6 +34,6 @@ class CreateTableGroupUser extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_user');
+        Schema::dropIfExists('classes');
     }
 }
