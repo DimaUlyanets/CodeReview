@@ -19,7 +19,19 @@ class GroupController extends ApiController
      */
     public function all()
     {
-        //
+
+        $response = array();
+
+        foreach(Group::all() as $key => $value){
+
+            $response[$key]["id"] = $value->id;
+            $response[$key]["icon"] = $value->icon;
+            $response[$key]["name"] = $value->name;
+
+        }
+
+        return $this->setStatusCode(200)->respondSuccess($response);
+
     }
 
     /**

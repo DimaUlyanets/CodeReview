@@ -45,7 +45,7 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
 
 Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
 
-    Route::get('/list', 'GroupController@all');
+    Route::get('/', 'GroupController@all');
     Route::post('/', 'GroupController@create');
     Route::post('/join', 'GroupController@join');
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
