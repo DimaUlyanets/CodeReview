@@ -18,6 +18,8 @@ Route::group(['middleware' => 'guest'] , function() {
     Route::post('/auth', 'AuthController@authenticate');
     Route::post('/validate/email', 'AuthController@validateEmail');
     Route::post('/users', 'UsersController@create');
+    Route::any('/test', 'AuthController@test');
+
 
 });
 
