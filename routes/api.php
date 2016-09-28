@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'guest'] , function() {
     
     Route::post('/auth', 'AuthController@authenticate');
+    Route::post('/validate/email', 'AuthController@validateEmail');
     Route::post('/user/create', 'UsersController@create');
 
 });
