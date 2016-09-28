@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Input;
 
-class GroupCreateRequest extends Request
+class ClassCreateRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +23,12 @@ class GroupCreateRequest extends Request
      */
     public function rules()
     {
-
         return [
-            'name' => 'required|max:255|alpha_dash|unique:groups,name,NULL,id,organization_id,' . $this->organization_id,
+            'name' => 'required|max:255|alpha_num|unique:classes,name,NULL,id,group_id,' . $this->group_id,
             'description' => 'required|max:140',
-            'icon' => 'required',
-            'organization_id' => 'numeric|required',
-            'privacy_id' => 'numeric|required|exists:privacy,id',
+            'thumbnail' => 'required',
+            'group_id' => 'exists:groups,id|required|numeric',
+            'is_collaborative' => 'numeric|required|numeric',
         ];
     }
 }

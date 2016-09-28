@@ -49,13 +49,19 @@ class Handler extends ExceptionHandler
 
         if(env("APP_DEBUG") == true){
 
-            return Response::json( [
-                'error' => [
-                    'exception' => class_basename( $exception ) . ' in ' . basename( $exception->getFile() ) . ' line ' . $exception->getLine() . ': ' . $exception->getMessage(),
-                ]
-            ], 500 );
+            $error = $this->convertExceptionToResponse($exception);
+            if($error->getStatusCode() == 404){
 
+                return Response::json( [
+                    'error' => [
+                        'exception' => class_basename( $exception ) . ' in ' . basename( $exception->getFile() ) . ' line ' . $exception->getLine() . ': ' . $exception->getMessage(),
+                    ]
+                ], 404 );
+
+            }
         }
+
+        return parent::render($request, $exception);
 
     }
 
