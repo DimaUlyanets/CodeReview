@@ -16,17 +16,36 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'guest'] , function() {
     
     Route::post('/auth', 'AuthController@authenticate');
-    Route::post('/create', 'UsersController@create');
+    Route::post('/validate/email', 'AuthController@validateEmail');
+    Route::post('/users', 'UsersController@create');
 
 });
 
-
-
-Route::group(['prefix' => 'user' , 'middleware' => 'auth:api'] , function() {
+Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'UsersController@all');
     Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'UsersController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'UsersController@delete')->where('id', '[0-9]+');
+
+});
+
+Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , function() {
+
+    Route::get('/list', 'OrganizationController@all');
+    Route::post('/', 'OrganizationController@create');
+    Route::get('/{id}', 'OrganizationController@show')->where('id', '[0-9]+');
+    Route::put('/{id}', 'OrganizationController@update')->where('id', '[0-9]+');
+    Route::delete('/{id}', 'OrganizationController@delete')->where('id', '[0-9]+');
+
+});
+
+Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
+
+    Route::get('/list', 'GroupController@all');
+    Route::post('/', 'GroupController@create');
+    Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
+    Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+');
+    Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');
 
 });
