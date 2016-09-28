@@ -35,4 +35,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Organization')->withTimestamps();;
     }
+
+    /**
+     * The organizations that belong to the user.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany('App\Group')->withTimestamps();;
+    }
+
 }

@@ -36,7 +36,7 @@ class Organization extends Model
      * The organization has many groups.
      */
 
-    public function groups()
+    public function group()
     {
         return $this->hasMany('App\Group');
     }

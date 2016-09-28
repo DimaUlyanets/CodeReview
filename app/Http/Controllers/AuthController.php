@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Requests\EmailValidateRequest;
 use App\Http\Requests\LoginRequest;
 use App\Organization;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -48,8 +49,6 @@ class AuthController extends Controller
 
     public function test(){
 
-        $data = Organization::find(1);
-        dd();
 
     }
 
