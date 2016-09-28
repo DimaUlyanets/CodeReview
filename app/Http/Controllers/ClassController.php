@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Classes;
 use App\Http\Requests\ClassCreateRequest;
+use App\Http\Requests\JoinClassRequest;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
-class ClassController extends Controller
+class ClassController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -69,5 +71,34 @@ class ClassController extends Controller
     public function delete($id)
     {
         //
+    }
+
+    /**
+     * User join to class
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function join(JoinClassRequest $request)
+    {
+
+        $user = User::find($request->user_id);
+
+        if(!$user->classes()->whereId($request->classes_id)->first()){
+
+            $user->classes()->attach($request->classes_id);
+
+            return $this->setStatusCode(200)->respondSuccess(
+                array(
+                    "user_id" => $request->user_id,
+                    "class_id" => $request->classes_id
+                )
+            );
+
+        }
+
+        return $this->setStatusCode(409)->respondWithError("Already exists conflict");
+
     }
 }

@@ -44,4 +44,12 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Group')->withTimestamps();;
     }
 
+    /**
+     * The user belongs to many Classes
+     */
+    public function classes()
+    {
+        return $this->belongsToMany('App\Classes')->withTimestamps();;
+    }
+
 }

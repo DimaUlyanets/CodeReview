@@ -26,4 +26,13 @@ class Classes extends Model
         return $this->belongsTo('App\Group');
     }
 
+    /**
+     * The class has many users.
+     */
+
+    public function users()
+    {
+        return $this->hasMany('App\User');
+    }
+
 }

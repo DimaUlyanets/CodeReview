@@ -50,7 +50,8 @@ class Handler extends ExceptionHandler
         if(env("APP_DEBUG") == true){
 
             $error = $this->convertExceptionToResponse($exception);
-            if($error->getStatusCode() == 404){
+
+            if($error->getStatusCode() == 404 || !preg_match('#FormRequest#', $error->getContent())){
 
                 return Response::json( [
                     'error' => [
