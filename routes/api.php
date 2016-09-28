@@ -46,6 +46,7 @@ Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'GroupController@all');
     Route::post('/', 'GroupController@create');
+    Route::post('/join', 'GroupController@join');
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');

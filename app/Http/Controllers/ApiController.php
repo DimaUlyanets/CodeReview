@@ -46,4 +46,12 @@ class ApiController extends Controller
 
     }
 
+    public function respondSuccess($message){
+
+        return $this->respond([
+            $message
+        ]);
+
+    }
+
 }

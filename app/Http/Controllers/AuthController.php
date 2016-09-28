@@ -49,6 +49,9 @@ class AuthController extends Controller
 
     public function test(){
 
+        $user = User::find(1);
+
+        dd( $user->groups()->whereId(1)->first());
 
     }
 
