@@ -94,7 +94,14 @@ class GroupController extends ApiController
 
            if(!$user->groups()->whereId($request->group_id)->first()){
 
-               $user->organizations()->attach($group->organization->id);
+               #attach to organization if not attached before
+               if(!$user->organizations()->whereId($group->organization->id)->first()){
+
+                   $user->organizations()->attach($group->organization->id);
+
+               }
+
+
                $user->groups()->attach($group->id);
 
                return $this->setStatusCode(200)->respondSuccess(
