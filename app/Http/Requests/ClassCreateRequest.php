@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ClassCreateRequest extends Request
 {
@@ -23,11 +24,16 @@ class ClassCreateRequest extends Request
      */
     public function rules()
     {
+
+        if(!$this->group_id){
+            $this->group_id = Auth::guard('api')->user()->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+        }
+
         return [
             'name' => 'required|max:255|alpha_num|unique:classes,name,NULL,id,group_id,' . $this->group_id,
             'description' => 'required|max:140',
             'thumbnail' => 'required',
-            'group_id' => 'exists:groups,id|required|numeric',
+            'group_id' => 'exists:groups,id|numeric',
             'is_collaborative' => 'numeric|required|numeric',
         ];
     }

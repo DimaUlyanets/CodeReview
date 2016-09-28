@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes;
 use App\Http\Requests\ClassCreateRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class ClassController extends Controller
 {
@@ -27,6 +30,16 @@ class ClassController extends Controller
      */
     public function create(ClassCreateRequest $request)
     {
+        
+        $request->replace(array('group_id' => $request->group_id));
+        $class = Classes::create($request->all());
+
+        if($class){
+
+            return Response::json([$class->toArray()], 200);
+
+        }
+
 
     }
 
