@@ -46,6 +46,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
 
+        /*
         if ($exception instanceof ModelNotFoundException)
         {
             if ($request->ajax())
@@ -55,6 +56,7 @@ class Handler extends ExceptionHandler
                 ], 404);
             }
         }
+        */
 
         return parent::render($request, $exception);
     }

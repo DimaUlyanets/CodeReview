@@ -16,7 +16,8 @@ class GroupsTableSeeder extends Seeder
             'description' => 'Basic',
             'icon' => 'icon.png',
             'default' => 1,
-            'organization_id' => '1'
+            'organization_id' => '1',
+            'privacy_id' => 4
         ]);
     }
 }
