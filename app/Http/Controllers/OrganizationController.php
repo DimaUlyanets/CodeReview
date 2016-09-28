@@ -37,7 +37,7 @@ class OrganizationController extends Controller
         if($result){
 
             Organization::createDefaultGroup($result);
-            return Response::json(["success" => $result->toArray()], 200);
+            return Response::json($result->toArray(), 200);
 
         }
 

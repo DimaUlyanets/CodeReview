@@ -49,7 +49,7 @@ class UsersController extends ApiController
             $default = Organization::whereDefault(1)->first();
             $user->organizations()->attach($default->id);
 
-            return Response::json(["success" => $user->toArray()], 200);
+            return Response::json($user->toArray(), 200);
 
         }
 

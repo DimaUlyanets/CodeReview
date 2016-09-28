@@ -34,7 +34,7 @@ class GroupController extends Controller
 
         if($group){
 
-            return Response::json(["success" => $group->toArray()], 200);
+            return Response::json([$group->toArray()], 200);
 
         }
 
