@@ -21,7 +21,7 @@ Route::group(['middleware' => 'guest'] , function() {
 
 });
 
-Route::group(['prefix' => 'user' , 'middleware' => 'auth:api'] , function() {
+Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'UsersController@all');
     Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
@@ -30,7 +30,7 @@ Route::group(['prefix' => 'user' , 'middleware' => 'auth:api'] , function() {
 
 });
 
-Route::group(['prefix' => 'organization' , 'middleware' => 'auth:api'] , function() {
+Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'OrganizationController@all');
     Route::post('/create', 'OrganizationController@create');
@@ -40,7 +40,7 @@ Route::group(['prefix' => 'organization' , 'middleware' => 'auth:api'] , functio
 
 });
 
-Route::group(['prefix' => 'group' , 'middleware' => 'auth:api'] , function() {
+Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'GroupController@all');
     Route::post('/create', 'GroupController@create');
