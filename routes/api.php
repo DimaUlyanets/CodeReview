@@ -29,6 +29,7 @@ Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
     Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'UsersController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'UsersController@delete')->where('id', '[0-9]+');
+    Route::get('/{id}/groups', 'UsersController@groups')->where('id', '[0-9]+');
 
 });
 

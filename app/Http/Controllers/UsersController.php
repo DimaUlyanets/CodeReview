@@ -103,4 +103,27 @@ class UsersController extends ApiController
         //
     }
 
+    public function groups($id){
+
+        $user = User::find($id);
+        if($user){
+
+            $response = array();
+
+            foreach($user->groups as $key => $group){
+
+                $response[$key]["name"] = $group->name;
+                $response[$key]["icon"] = $group->icon;
+                $response[$key]["id"] = $group->id;
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User Not Found");
+
+    }
+
 }
