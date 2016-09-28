@@ -48,6 +48,7 @@ class UsersController extends ApiController
             #Get default organization and attach to created user
             $default = Organization::whereDefault(1)->first();
             $user->organizations()->attach($default->id);
+            #Organization::find(1)->groups()->whereDefault(1)->get()
 
             return Response::json($user->toArray(), 200);
 

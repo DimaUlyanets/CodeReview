@@ -2,12 +2,11 @@
 
 namespace App;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 
 class Organization extends Model
 {
-    use HasApiTokens, Notifiable;
+    use Notifiable;
 
 
     /**
@@ -18,11 +17,6 @@ class Organization extends Model
     protected $fillable = [
         'id', 'name', 'description', 'icon', 'default'
     ];
-
-    public function users()
-    {
-        return $this->belongsToMany('App\User')->withTimestamps();;
-    }
 
     public static function createDefaultGroup($organization){
 
@@ -38,5 +32,23 @@ class Organization extends Model
 
     }
 
+    /**
+     * The organization has many groups.
+     */
+
+    public function groups()
+    {
+        return $this->hasMany('App\Group');
+    }
+
+    /**
+     * The organization belongs to users
+     */
+
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User')->withTimestamps();;
+    }
 
 }

@@ -18,6 +18,8 @@ Route::group(['middleware' => 'guest'] , function() {
     Route::post('/auth', 'AuthController@authenticate');
     Route::post('/validate/email', 'AuthController@validateEmail');
     Route::post('/users', 'UsersController@create');
+    Route::any('/test', 'AuthController@test');
+
 
 });
 
@@ -43,7 +45,7 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
 Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
 
     Route::get('/list', 'GroupController@all');
-    Route::post('/asd', 'GroupController@create');
+    Route::post('/', 'GroupController@create');
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');

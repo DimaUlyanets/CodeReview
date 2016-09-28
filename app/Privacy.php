@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Privacy extends Model
 {
+
+    protected $table = 'privacy';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -14,4 +17,12 @@ class Privacy extends Model
     protected $fillable = [
         'type', 'subtype'
     ];
+
+    /**
+     * The privacy that belong to the group.
+     */
+    public function group()
+    {
+        return $this->belongsTo('App\Group');
+    }
 }
