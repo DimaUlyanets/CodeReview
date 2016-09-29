@@ -17,10 +17,10 @@ class CreateProfilesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('avatar');
-            $table->string('cover');
-            $table->text('bio');
-            $table->string('color');
+            $table->string('avatar')->nullable();
+            $table->string('cover')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('color')->nullable();
             $table->timestamps();
         });
     }

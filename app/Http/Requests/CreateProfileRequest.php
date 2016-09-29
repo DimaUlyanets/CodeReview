@@ -28,12 +28,11 @@ class CreateProfileRequest extends Request
     {
 
         return [
-            'name' => 'required|max:255',
-            'avatar' => 'required|max:255',
-            'icon' => 'required|max:255',
-            'cover' => 'required|max:255',
-            'bio' => 'required',
-            'color' => 'required|max:255',
+            'avatar' => 'max:255',
+            'icon' => 'max:255',
+            'cover' => 'max:255',
+            'bio' => 'max:255',
+            'color' => 'max:255',
         ];
     }
 }
