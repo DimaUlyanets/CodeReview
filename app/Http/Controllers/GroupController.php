@@ -45,15 +45,16 @@ class GroupController extends ApiController
     public function create(GroupCreateRequest $request)
     {
 
+        $data = $request->all();
+
         if(!$request->organization_id){
 
             $organization = Organization::whereDefault(1)->first();
-            $data = $request->all();
             $data["organization_id"] = $organization->id;
 
         }
 
-        $group = Group::create();
+        $group = Group::create($data);
 
         if($group){
 
