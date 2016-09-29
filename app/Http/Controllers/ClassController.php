@@ -34,6 +34,7 @@ class ClassController extends ApiController
     {
         
         $request->replace(array('group_id' => $request->group_id));
+
         $class = Classes::create($request->all());
 
         if($class){
