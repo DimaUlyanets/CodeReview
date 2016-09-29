@@ -30,9 +30,9 @@ class ClassCreateRequest extends Request
         }
 
         return [
-            'name' => 'required|max:255|alpha_num|unique:classes,name,NULL,id,group_id,' . $this->group_id,
-            'description' => 'required|max:140',
-            'thumbnail' => 'required',
+            'name' => 'required|max:255|unique:classes,name,NULL,id,group_id,' . $this->group_id,
+            'description' => 'max:140',
+            'thumbnail' => 'max:140',
             'group_id' => 'exists:groups,id|numeric',
             'is_collaborative' => 'numeric|required|boolean',
         ];
