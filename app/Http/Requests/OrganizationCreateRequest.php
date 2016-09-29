@@ -24,9 +24,10 @@ class OrganizationCreateRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|max:255',
-            'description' => 'required|max:140',
+            'name' => 'required|max:255|unique:organizations',
+            'description' => 'max:140',
             'icon' => 'required',
+            'privacy_id' => 'exists:privacy,id|required',
         ];
     }
 }

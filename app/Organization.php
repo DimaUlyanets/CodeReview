@@ -20,11 +20,14 @@ class Organization extends Model
 
     public static function createDefaultGroup($organization){
 
+        $privacy = Privacy::whereType("External")->where("subtype", "=", "Free")->first();
+
         Group::create([
                 'name' => 'Base group',
                 'description' => 'Base group',
                 'icon' => 'icon.jpg',
                 'default' => 1,
+                'privacy_id' => $privacy->id,
                 'organization_id' => $organization->id
             ]
 
