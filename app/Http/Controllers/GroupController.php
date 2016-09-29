@@ -76,43 +76,7 @@ class GroupController extends ApiController
 
         if($group){
 
-            $classes = $group->classes;
-            $lessons = $group->lessons;
-
-            $response = [
-
-                "id" => $group->id,
-                "name" => $group->name,
-                "description" => $group->description,
-                "thumbnail" => $group->icon,
-                "lessons_num" => $classes->count(),
-                "classes_num" => $lessons->count(),
-
-            ];
-
-            $relatedLessons = [];
-            foreach($lessons as $key => $value){
-
-                $relatedLessons[$key]["id"] = $value->id;
-                $relatedLessons[$key]["thumbnail"] = $value->thumbnail;
-                $relatedLessons[$key]["name"] = $value->name;
-                $relatedLessons[$key]["author_id"] = $value->author_id;
-
-            }
-
-            $relatedClasses = [];
-            foreach($classes as $key => $value){
-
-                $relatedClasses[$key]["id"] = $value->id;
-                $relatedClasses[$key]["thumbnail"] = $value->thumbnail;
-                $relatedClasses[$key]["name"] = $value->name;
-                $relatedClasses[$key]["author_id"] = $value->author_id;
-
-            }
-
-            $response["child"]["lessons"] = $relatedLessons;
-            $response["child"]["classes"] = $relatedClasses;
-
+            $response = Group::getGroupInfo($id, $group);
 
             return $this->setStatusCode(202)->respondSuccess($response);
 
