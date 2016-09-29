@@ -85,22 +85,32 @@ class ClassController extends ApiController
     public function join(JoinClassRequest $request)
     {
 
-        $user = User::find($request->user_id);
+        $user = Auth::guard('api')->user();
 
-        if(!$user->classes()->whereId($request->classes_id)->first()){
+        $class = Classes::find($request->classes_id);
+        $groups = Auth::guard('api')->user()->groups()->whereId($class->group_id)->first();
 
-            $user->classes()->attach($request->classes_id);
+        #check is user already in group of this class
+        if($groups){
 
-            return $this->setStatusCode(200)->respondSuccess(
-                array(
-                    "user_id" => $request->user_id,
-                    "class_id" => $request->classes_id
-                )
-            );
+            if(!$user->classes()->whereId($request->classes_id)->first()){
+                
+                $user->classes()->attach($request->classes_id);
+
+                return $this->setStatusCode(200)->respondSuccess(
+                    array(
+                        "user_id" => $user->id,
+                        "class_id" => $request->classes_id
+                    )
+                );
+
+            }
+
+            return $this->setStatusCode(409)->respondWithError("Already exists conflict");
 
         }
 
-        return $this->setStatusCode(409)->respondWithError("Already exists conflict");
+        return $this->setStatusCode(409)->respondWithError("User out of class group");
 
     }
 }

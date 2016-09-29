@@ -24,7 +24,6 @@ class JoinClassRequest extends Request
     public function rules()
     {
         return [
-            'user_id' => 'exists:users,id|required',
             'classes_id' => 'exists:classes,id|required',
         ];
     }
