@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
+use App\Profile;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -129,7 +130,19 @@ class UsersController extends ApiController
 
     public function profile(CreateProfileRequest $request, $id){
 
+        $user = User::find($id);
+        $request->replace(array('user_id' => $id));
+        $data = (array)$request->all();
+        unset($data["api_token"]);
 
+        if($user){
+
+            $resutl = Profile::create($data);
+            return $this->setStatusCode(200)->respondSuccess($resutl);
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User does not exists");
 
     }
 

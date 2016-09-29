@@ -21,8 +21,12 @@ class CreateProfileRequest extends Request
      *
      * @return array
      */
+
+
+
     public function rules()
     {
+
         return [
             'name' => 'required|max:255',
             'avatar' => 'required|max:255',
