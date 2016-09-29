@@ -159,4 +159,28 @@ class UsersController extends ApiController
 
     }
 
+    public function classes($id){
+
+        $user = User::find($id);
+
+        if($user){
+
+            $response = [];
+
+            foreach($user->classes as $key => $value){
+
+                $response[$key]["name"] = $value->name;
+                $response[$key]["description"] = $value->description;
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User does not exists");
+
+    }
+
 }
