@@ -30,6 +30,7 @@ Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
     Route::put('/{id}', 'UsersController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'UsersController@delete')->where('id', '[0-9]+');
     Route::get('/{id}/groups', 'UsersController@groups')->where('id', '[0-9]+');
+    Route::post('/{id}/profile', 'UsersController@profile')->where('id', '[0-9]+');
 
 });
 

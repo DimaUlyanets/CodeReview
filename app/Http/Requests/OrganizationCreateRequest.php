@@ -24,7 +24,7 @@ class OrganizationCreateRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|max:255|alpha_dash',
+            'name' => 'required|max:255',
             'description' => 'required|max:140',
             'icon' => 'required',
         ];

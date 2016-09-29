@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
 use App\User;
@@ -123,6 +124,12 @@ class UsersController extends ApiController
         }
 
         return $this->setStatusCode(404)->respondWithError("User Not Found");
+
+    }
+
+    public function profile(CreateProfileRequest $request, $id){
+
+
 
     }
 

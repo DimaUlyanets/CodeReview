@@ -26,7 +26,7 @@ class GroupCreateRequest extends Request
     {
 
         return [
-            'name' => 'required|max:255|alpha_dash|unique:groups,name,NULL,id,organization_id,' . $this->organization_id,
+            'name' => 'required|max:255|unique:groups,name,NULL,id,organization_id,' . $this->organization_id,
             'description' => 'required|max:140',
             'icon' => 'required',
             'organization_id' => 'numeric|required',
