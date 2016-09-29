@@ -24,4 +24,12 @@ class Lesson extends Model
         return $this->belongsToMany('App\Classes')->withTimestamps();
     }
 
+    /**
+     * The lesson to many classes
+     */
+    public function author()
+    {
+        return $this->belongsTo('App\User', 'author_id');
+    }
+
 }

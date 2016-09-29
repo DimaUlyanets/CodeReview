@@ -56,7 +56,38 @@ class ClassController extends ApiController
      */
     public function show($id)
     {
-        //
+        $class = Classes::find($id);
+
+        if($class){
+
+            $user = User::find($class->author_id);
+
+            $lessons = [];
+            foreach($class->lessons as $key => $value){
+
+                $lessons[$key]["name"] = $value->name;
+                $lessons[$key]["thumbnail"] = $value->thumbnail;
+                $lessons[$key]["author_name"] = $value->author->name;
+
+            }
+
+            $response = [
+
+                "name" => $class->name,
+                "description" => $class->description,
+                "author_name" => $user->name,
+                "author_avatar" => $user->profile->avatar,
+                "members" => $class->users()->count(),
+                "lessons" => $lessons
+
+            ];
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("Class Not Found");
+
     }
 
 
