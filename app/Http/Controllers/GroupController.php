@@ -72,7 +72,18 @@ class GroupController extends ApiController
      */
     public function show($id)
     {
-        //
+        $group = Group::find($id);
+
+        if($group){
+
+            $response = Group::getGroupInfo($id, $group);
+
+            return $this->setStatusCode(202)->respondSuccess($response);
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("Group Not Found");
+
     }
 
     /**
