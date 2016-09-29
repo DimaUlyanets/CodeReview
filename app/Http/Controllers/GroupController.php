@@ -56,7 +56,7 @@ class GroupController extends ApiController
 
         if($group){
 
-            return Response::json([$group->toArray()], 200);
+            return Response::json($group->toArray(), 200);
 
         }
 

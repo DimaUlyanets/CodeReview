@@ -13,7 +13,7 @@ class CreateLessonRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,8 +28,9 @@ class CreateLessonRequest extends Request
             'description' => 'max:255',
             'thumbnail' => 'max:255',
             'lesson_file' => 'required|max:255',
-            'difficulty' => 'required|between:0,100',
-            'group_id' => 'required|max:255',
+            'difficulty' => 'required|max:100|numeric',
+            'group_id' => 'required|numeric|exists:groups,id',
+            'class_id' => 'numeric|exists:classes,id',
         ];
     }
 }

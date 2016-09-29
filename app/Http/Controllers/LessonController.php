@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes;
 use App\Http\Requests\CreateLessonRequest;
+use App\Lesson;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
-class LessonController extends Controller
+class LessonController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -25,9 +28,24 @@ class LessonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateLessonRequest $request)
+    public function create(CreateLessonRequest $request)
     {
-        //
+
+        $data = $request->except(['api_token']);
+        $user = Auth::guard('api')->user();
+
+        $data["user_id"] = $user->id;
+        $lesson = Lesson::create($data);
+
+        if($request->class_id){
+
+            $class = Classes::find($request->class_id);
+            $class->lessons()->attach($lesson->id);
+
+        }
+
+        return $this->setStatusCode(200)->respondSuccess($lesson);
+
     }
 
     /**
