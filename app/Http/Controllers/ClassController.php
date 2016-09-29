@@ -94,11 +94,7 @@ class ClassController extends ApiController
         if($groups){
 
             if(!$user->classes()->whereId($request->classes_id)->first()){
-
-                $groups = Auth::guard('api')->user()->groups;
-
-
-
+                
                 $user->classes()->attach($request->classes_id);
 
                 return $this->setStatusCode(200)->respondSuccess(
