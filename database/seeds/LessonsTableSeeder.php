@@ -18,8 +18,9 @@ class LessonsTableSeeder extends Seeder
             'thumbnail' => 'thumbnail.png',
             'lesson_file' => 'avi.avi',
             'difficulty' => '112',
+            'type' => '0',
             'group_id' => '1',
-            'user_id' => '1',
+            'author_id' => '1',
         ]);
 
         DB::table('lessons')->insert([
@@ -29,7 +30,8 @@ class LessonsTableSeeder extends Seeder
             'lesson_file' => 'avi.avi',
             'difficulty' => '112',
             'group_id' => '1',
-            'user_id' => '2',
+            'type' => '1',
+            'author_id' => '2',
         ]);
 
 
