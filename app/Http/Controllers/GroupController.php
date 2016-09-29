@@ -76,9 +76,8 @@ class GroupController extends ApiController
 
         if($group){
 
-            $response = Group::getGroupInfo($id, $group);
-
-            return $this->setStatusCode(202)->respondSuccess($response);
+            $response = Group::getGroupInfo($group);
+            return $this->setStatusCode(200)->respondSuccess($response);
 
         }
 

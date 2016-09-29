@@ -16,7 +16,7 @@ class Group extends Model
         'id', 'name', 'description', 'icon', 'default', 'organization_id', 'privacy_id'
     ];
 
-    public static function getGroupInfo($id, $group){
+    public static function getGroupInfo($group){
 
         $classes = $group->classes;
         $lessons = $group->lessons;
