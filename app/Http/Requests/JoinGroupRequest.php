@@ -24,7 +24,6 @@ class JoinGroupRequest extends Request
     public function rules()
     {
         return [
-            'user_id' => 'exists:users,id|required',
             'group_id' => 'exists:groups,id|required',
         ];
     }

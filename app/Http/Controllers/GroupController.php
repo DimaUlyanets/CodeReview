@@ -8,6 +8,7 @@ use App\Http\Requests\GroupCreateRequest;
 use App\Http\Requests\JoinGroupRequest;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class GroupController extends ApiController
@@ -102,7 +103,13 @@ class GroupController extends ApiController
 
        if($privacy->type == "External" && $privacy->subtype == "Free"){
 
-           $user = User::find($request->user_id);
+           $user = Auth::guard('api')->user();
+
+           if(!$user){
+
+               return $this->setStatusCode(404)->respondWithError("User Not Found");
+
+           }
 
            if(!$user->groups()->whereId($request->group_id)->first()){
 
@@ -118,7 +125,7 @@ class GroupController extends ApiController
 
                return $this->setStatusCode(200)->respondSuccess(
                    array(
-                       "user_id" => $request->user_id,
+                       "user_id" => $user->id,
                        "group_id" => $request->group_id
                    )
                );
