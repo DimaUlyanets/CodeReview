@@ -137,8 +137,14 @@ class UsersController extends ApiController
 
         if($user){
 
-            $resutl = Profile::create($data);
-            return $this->setStatusCode(200)->respondSuccess($resutl);
+            if(!$user->profile){
+
+                $resutl = Profile::create($data);
+                return $this->setStatusCode(200)->respondSuccess($resutl);
+
+            }
+
+            return $this->setStatusCode(409)->respondWithError("User already created profile");
 
         }
 

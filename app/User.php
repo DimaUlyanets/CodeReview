@@ -52,4 +52,12 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Classes')->withTimestamps();;
     }
 
+    /**
+     * The user has one profile
+     */
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
+
 }

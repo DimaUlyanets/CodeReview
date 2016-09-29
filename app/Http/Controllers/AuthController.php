@@ -51,11 +51,7 @@ class AuthController extends Controller
 
         $user = User::find(1);
 
-        // Detach a single role from the user...
-        $user->classes()->detach(1);
-
-// Detach all roles from the user...
-        #$user->classes()->attach(1);
+        dd($user->profile);
 
 
     }
