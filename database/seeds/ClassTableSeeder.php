@@ -17,7 +17,8 @@ class ClassTableSeeder extends Seeder
             'description' => 'Basic',
             'thumbnail' => 'icon.png',
             'group_id' => 1,
-            'is_collaborative' => 0
+            'is_collaborative' => 0,
+            'author_id' => 1
 
         ]);
 
@@ -26,7 +27,8 @@ class ClassTableSeeder extends Seeder
             'description' => 'Basic',
             'thumbnail' => 'icon.png',
             'group_id' => 2,
-            'is_collaborative' => 1
+            'is_collaborative' => 1,
+            'author_id' => 2
 
         ]);
 

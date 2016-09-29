@@ -35,6 +35,7 @@ class ClassController extends ApiController
 
         $data = (array)$request->all();
         $data["group_id"] = $request->group_id;
+        $data["author_id"] = Auth::guard('api')->user()->id;
 
         $class = Classes::create($data);
 

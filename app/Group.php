@@ -43,4 +43,13 @@ class Group extends Model
         return $this->hasMany('App\Classes');
     }
 
+    /**
+     * The group has many lessons.
+     */
+
+    public function lessons()
+    {
+        return $this->hasMany('App\Lesson');
+    }
+
 }
