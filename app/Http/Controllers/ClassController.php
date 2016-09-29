@@ -32,10 +32,11 @@ class ClassController extends ApiController
      */
     public function create(ClassCreateRequest $request)
     {
-        
-        $request->replace(array('group_id' => $request->group_id));
 
-        $class = Classes::create($request->all());
+        $data = (array)$request->all();
+        $data["group_id"] = $request->group_id;
+
+        $class = Classes::create($data);
 
         if($class){
 
