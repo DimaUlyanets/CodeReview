@@ -6,6 +6,7 @@ use App\Group;
 use App\Http\Requests;
 use App\Http\Requests\GroupCreateRequest;
 use App\Http\Requests\JoinGroupRequest;
+use App\Organization;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,13 @@ class GroupController extends ApiController
      */
     public function create(GroupCreateRequest $request)
     {
+
+        if(!$request->organization_id){
+
+            $organization = Organization::whereDefault(1)->first();
+            $request->replace(array('organization_id' => $organization->id));
+
+        }
 
         $group = Group::create($request->all());
 
