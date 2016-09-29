@@ -6,3 +6,6 @@
 ### Backend requirements ###
 1. PHP 7
 2. MYSQL 5.7
+
+### API Endpoints ###
+http://159.203.46.95:81/#!/milestone_1/
