@@ -35,4 +35,13 @@ class Classes extends Model
         return $this->hasMany('App\User');
     }
 
+    /**
+     * The classes to many lessons
+     */
+
+    public function lessons()
+    {
+        return $this->belongsToMany('App\Lesson')->withTimestamps();
+    }
+
 }

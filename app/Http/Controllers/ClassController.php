@@ -40,7 +40,7 @@ class ClassController extends ApiController
 
         if($class){
 
-            return Response::json([$class->toArray()], 200);
+            return Response::json($class->toArray(), 200);
 
         }
 

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateLessonRequest extends FormRequest
+class CreateLessonRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class CreateLessonRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class CreateLessonRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|max:255',
+            'description' => 'max:255',
+            'thumbnail' => 'max:255',
+            'lesson_file' => 'required|max:255',
+            'difficulty' => 'required|max:100|numeric',
+            'group_id' => 'required|numeric|exists:groups,id',
+            'class_id' => 'numeric|exists:classes,id',
         ];
     }
 }

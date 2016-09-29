@@ -2,28 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes;
+use App\Http\Requests\CreateLessonRequest;
+use App\Lesson;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
-class LessonController extends Controller
+class LessonController extends ApiController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function all()
     {
         //
     }
@@ -34,9 +28,24 @@ class LessonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function create(CreateLessonRequest $request)
     {
-        //
+
+        $data = $request->except(['api_token']);
+        $user = Auth::guard('api')->user();
+
+        $data["user_id"] = $user->id;
+        $lesson = Lesson::create($data);
+
+        if($request->class_id){
+
+            $class = Classes::find($request->class_id);
+            $class->lessons()->attach($lesson->id);
+
+        }
+
+        return $this->setStatusCode(200)->respondSuccess($lesson);
+
     }
 
     /**
@@ -46,17 +55,6 @@ class LessonController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
@@ -79,7 +77,7 @@ class LessonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete($id)
     {
         //
     }
