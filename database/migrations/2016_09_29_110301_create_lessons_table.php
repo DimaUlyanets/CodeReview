@@ -20,11 +20,12 @@ class CreateLessonsTable extends Migration
             $table->string('description')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('lesson_file');
+            $table->integer('type')->unsigned();
             $table->string('difficulty');
             $table->integer('group_id')->unsigned();
             $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('author_id')->unsigned();
+            $table->foreign('author_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
 
         });

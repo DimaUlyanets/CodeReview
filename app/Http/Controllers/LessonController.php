@@ -34,7 +34,14 @@ class LessonController extends ApiController
         $data = $request->except(['api_token']);
         $user = Auth::guard('api')->user();
 
-        $data["user_id"] = $user->id;
+        $data["author_id"] = $user->id;
+
+        if(!$request->group_id){
+
+            $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+
+        }
+
         $lesson = Lesson::create($data);
 
         if($request->class_id){
