@@ -131,11 +131,18 @@ class UsersController extends ApiController
     public function profile(CreateProfileRequest $request, $id){
 
         $user = User::find($id);
-        $request->replace(array('user_id' => $id));
         $data = (array)$request->all();
         unset($data["api_token"]);
 
+        if(empty($data)){
+
+            return $this->setStatusCode(204)->respondSuccess(["No content"]);
+
+        }
+
         if($user){
+
+            $data["user_id"] = $id;
 
             if(!$user->profile){
 
