@@ -48,11 +48,12 @@ class GroupController extends ApiController
         if(!$request->organization_id){
 
             $organization = Organization::whereDefault(1)->first();
-            $request->replace(array('organization_id' => $organization->id));
+            $data = $request->all();
+            $data["organization_id"] = $organization->id;
 
         }
 
-        $group = Group::create($request->all());
+        $group = Group::create();
 
         if($group){
 
