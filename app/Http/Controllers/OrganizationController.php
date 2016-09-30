@@ -41,7 +41,11 @@ class OrganizationController extends Controller
 
                 foreach($request->tags as $value){
 
-                    $tag = Tag::create(["name" => $value]);
+
+                    $tag = Tag::whereName($value)->first();
+                    if(!$tag){
+                        $tag = Tag::create(["name" => $value]);
+                    }
                     $result->tags()->attach($tag->id);
 
                 }
