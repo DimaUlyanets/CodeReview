@@ -27,6 +27,7 @@ class OrganizationCreateRequest extends Request
             'name' => 'required|max:255|unique:organizations',
             'description' => 'max:140',
             'icon' => 'required',
+            'tags' => 'array'
         ];
     }
 }

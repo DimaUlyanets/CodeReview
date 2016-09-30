@@ -35,6 +35,7 @@ class ClassCreateRequest extends Request
             'thumbnail' => 'max:140',
             'group_id' => 'exists:groups,id|numeric',
             'is_collaborative' => 'numeric|required|boolean',
+            'tags' => 'array',
         ];
     }
 }

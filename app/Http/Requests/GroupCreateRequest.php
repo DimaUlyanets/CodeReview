@@ -30,6 +30,7 @@ class GroupCreateRequest extends Request
             'description' => 'required|max:140',
             'organization_id' => 'numeric',
             'privacy_id' => 'numeric|required|exists:privacy,id',
+            'tags' => 'array',
         ];
     }
 }

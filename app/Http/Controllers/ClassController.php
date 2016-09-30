@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
+use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -40,6 +41,20 @@ class ClassController extends ApiController
         $class = Classes::create($data);
 
         if($class){
+
+            if($request->tags){
+
+                foreach($request->tags as $value){
+
+                    $tag = Tag::whereName($value)->first();
+                    if(!$tag){
+                        $tag = Tag::create(["name" => $value]);
+                    }
+                    $class->tags()->attach($tag->id);
+
+                }
+
+            }
 
             return Response::json($class->toArray(), 200);
 

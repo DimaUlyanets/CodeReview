@@ -51,7 +51,16 @@ class Organization extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User')->withTimestamps();;
+        return $this->belongsToMany('App\User')->withTimestamps();
+    }
+
+    /**
+     * The tag belongs to many classes.
+     */
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
     }
 
 }

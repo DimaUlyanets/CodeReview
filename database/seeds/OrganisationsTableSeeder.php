@@ -17,5 +17,13 @@ class OrganisationsTableSeeder extends Seeder
             'icon' => 'icon.png',
             'default' => 1
         ]);
+
+        DB::table('organizations')->insert([
+            'name' => 'Hack tools',
+            'description' => 'description',
+            'icon' => 'icon.png',
+            'default' => 0
+        ]);
+
     }
 }

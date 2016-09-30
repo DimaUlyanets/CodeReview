@@ -95,4 +95,13 @@ class Group extends Model
         return $this->hasMany('App\Lesson');
     }
 
+    /**
+     * The tag belongs to many classes.
+     */
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
+    }
+
 }
