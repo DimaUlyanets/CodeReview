@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
+use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -35,6 +36,17 @@ class OrganizationController extends Controller
         $result = Organization::create($request->all());
 
         if($result){
+
+            if($request->tags){
+
+                foreach($request->tags as $value){
+
+                    $tag = Tag::create(["name" => $value]);
+                    $result->tags()->attach($tag->id);
+
+                }
+
+            }
 
             Organization::createDefaultGroup($result);
             return Response::json($result->toArray(), 200);

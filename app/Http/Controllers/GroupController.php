@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Requests\GroupCreateRequest;
 use App\Http\Requests\JoinGroupRequest;
 use App\Organization;
+use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,17 @@ class GroupController extends ApiController
         $group = Group::create($data);
 
         if($group){
+
+            if($request->tags){
+
+                foreach($request->tags as $value){
+
+                    $tag = Tag::create(["name" => $value]);
+                    $group->tags()->attach($tag->id);
+
+                }
+
+            }
 
             return Response::json($group->toArray(), 200);
 
