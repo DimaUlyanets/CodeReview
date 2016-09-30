@@ -164,7 +164,7 @@ class GroupController extends ApiController
 
         $user = Auth::guard('api')->user();
 
-        if($user->groups()->whereId($id)->first()){
+        if($user->groups()->whereId($id)->whereDefault(0)->first()){
 
             $user->groups()->detach($id);
             exit;
