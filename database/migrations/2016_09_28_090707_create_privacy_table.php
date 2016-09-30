@@ -15,7 +15,7 @@ class CreatePrivacyTable extends Migration
     {
         Schema::create('privacy', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type');
+            $table->string('type', 16);
             $table->string('subtype');
         });
     }

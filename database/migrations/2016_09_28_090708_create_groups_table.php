@@ -23,7 +23,7 @@ class CreateGroupsTable extends Migration
             $table->foreign('organization_id')->references('id')->on('organizations')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('privacy_id')->unsigned();
             $table->foreign('privacy_id')->references('id')->on('privacy')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('default')->default(0);
+            $table->boolean('default')->default(0);
             $table->timestamps();
 
         });

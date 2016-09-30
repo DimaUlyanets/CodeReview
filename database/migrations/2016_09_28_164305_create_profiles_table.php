@@ -20,7 +20,7 @@ class CreateProfilesTable extends Migration
             $table->string('avatar')->nullable();
             $table->string('cover')->nullable();
             $table->text('bio')->nullable();
-            $table->string('color')->nullable();
+            $table->string('color', 7)->nullable();
             $table->timestamps();
         });
     }

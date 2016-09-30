@@ -21,7 +21,7 @@ class CreateLessonsTable extends Migration
             $table->string('thumbnail')->nullable();
             $table->string('lesson_file');
             $table->integer('type')->unsigned();
-            $table->string('difficulty');
+            $table->integer('difficulty', 2);
             $table->integer('views')->nullable();
             $table->integer('group_id')->unsigned();
             $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
