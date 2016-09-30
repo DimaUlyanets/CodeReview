@@ -27,8 +27,8 @@ class Group extends Model
             "name" => $group->name,
             "description" => $group->description,
             "thumbnail" => $group->icon,
-            "lessons_num" => $classes->count(),
-            "classes_num" => $lessons->count(),
+            "lessons_num" => $lessons->count(),
+            "classes_num" => $classes->count(),
 
         ];
 
