@@ -81,3 +81,14 @@ Route::group(['prefix' => 'lessons' , 'middleware' => 'auth:api'] , function() {
     Route::delete('/{id}', 'LessonController@delete')->where('id', '[0-9]+');
 
 });
+
+Route::group(['prefix' => 'tags' , 'middleware' => 'auth:api'] , function() {
+
+    Route::get('/', 'TagController@all');
+    Route::post('/', 'TagController@create');
+    Route::get('/{id}', 'TagController@show')->where('id', '[0-9]+');
+    Route::put('/{id}', 'TagController@update')->where('id', '[0-9]+');
+    Route::delete('/{id}', 'TagController@delete')->where('id', '[0-9]+');
+    Route::get('/suggest/{tag}', 'TagController@suggest')->where('id', '[0-9]+');
+
+});
