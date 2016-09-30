@@ -79,6 +79,7 @@ Route::group(['prefix' => 'lessons' , 'middleware' => 'auth:api'] , function() {
     Route::get('/{id}', 'LessonController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'LessonController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'LessonController@delete')->where('id', '[0-9]+');
+    Route::get('/suggest/{tag}', 'LessonController@suggest')->where('id', '[0-9]+');
 
 });
 
@@ -90,5 +91,16 @@ Route::group(['prefix' => 'tags' , 'middleware' => 'auth:api'] , function() {
     Route::put('/{id}', 'TagController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'TagController@delete')->where('id', '[0-9]+');
     Route::get('/suggest/{tag}', 'TagController@suggest')->where('id', '[0-9]+');
+
+});
+
+Route::group(['prefix' => 'skills' , 'middleware' => 'auth:api'] , function() {
+
+    Route::get('/', 'SkillController@all');
+    Route::post('/', 'SkillController@create');
+    Route::get('/{id}', 'SkillController@show')->where('id', '[0-9]+');
+    Route::put('/{id}', 'SkillController@update')->where('id', '[0-9]+');
+    Route::delete('/{id}', 'SkillController@delete')->where('id', '[0-9]+');
+    Route::get('/suggest/{tag}', 'SkillController@suggest')->where('id', '[0-9]+');
 
 });
