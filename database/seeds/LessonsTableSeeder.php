@@ -21,6 +21,7 @@ class LessonsTableSeeder extends Seeder
             'type' => '0',
             'group_id' => '1',
             'author_id' => '1',
+            'views' => 20
         ]);
 
         DB::table('lessons')->insert([
@@ -32,6 +33,7 @@ class LessonsTableSeeder extends Seeder
             'group_id' => '1',
             'type' => '1',
             'author_id' => '2',
+            'views' => 20
         ]);
 
 

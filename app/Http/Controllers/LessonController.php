@@ -63,7 +63,33 @@ class LessonController extends ApiController
      */
     public function show($id)
     {
-        //
+        $lesson = Lesson::find($id);
+
+        if($lesson){
+
+
+
+            $response = [
+
+                "id" => $lesson->id,
+                "name" => $lesson->name,
+                "description" => $lesson->description,
+                "thumbnail" => $lesson->thumbnail,
+                "lesson_file" => $lesson->lesson_file,
+                "difficulty" => $lesson->difficulty,
+                "views" => ++$lesson->views,
+
+            ];
+
+            $lesson->views = $lesson->views;
+            $lesson->save();
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("Lesson Not Found");
+
     }
 
     /**
