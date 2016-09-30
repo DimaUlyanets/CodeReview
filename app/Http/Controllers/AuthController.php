@@ -41,6 +41,15 @@ class AuthController extends Controller
             ]), 401);
     }
 
+    public function logout(){
+
+        $user = Auth::guard('api')->user();
+        $user->api_token = str_random(60);
+        $user->save();
+        return Response::json(["success"], 200);
+
+    }
+
     public function validateEmail(EmailValidateRequest $request){
 
         return Response::json(["success"], 200);
