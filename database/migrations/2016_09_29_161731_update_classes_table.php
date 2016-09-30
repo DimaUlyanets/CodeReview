@@ -27,6 +27,7 @@ class UpdateClassesTable extends Migration
     public function down()
     {
         Schema::table('classes', function (Blueprint $table) {
+            $table->dropForeign('classes_author_id_foreign');
             $table->dropColumn('author_id');
         });
     }
