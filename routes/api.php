@@ -69,6 +69,7 @@ Route::group(['prefix' => 'classes' , 'middleware' => 'auth:api'] , function() {
     Route::put('/{id}', 'ClassController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'ClassController@delete')->where('id', '[0-9]+');
     Route::post('/join', 'ClassController@join');
+    Route::get('/{id}/leave', 'ClassController@leave');
 
 });
 
