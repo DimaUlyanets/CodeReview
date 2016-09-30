@@ -51,6 +51,10 @@ class Handler extends ExceptionHandler
 
             $error = $this->convertExceptionToResponse($exception);
 
+            if(preg_match('#Unauthenticated#', $error->getContent())){
+                return Response::json( ['error' => "Unauthenticated"], 401 );
+            }
+
             if($error->getStatusCode() == 404 || !preg_match('#FormRequest#', $error->getContent())){
 
                 return Response::json( [
