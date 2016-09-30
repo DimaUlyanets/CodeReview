@@ -24,6 +24,10 @@ class AuthController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
 
+            $user = Auth::user();
+            $user->api_token = str_random(60);
+            $user->save();
+
             return response()->json(
                 array(
                     "api_token" => Auth::user()->api_token,
@@ -44,7 +48,7 @@ class AuthController extends Controller
     public function logout(){
 
         $user = Auth::guard('api')->user();
-        $user->api_token = str_random(60);
+        $user->api_token = NULL;
         $user->save();
         return Response::json(["success"], 200);
 
