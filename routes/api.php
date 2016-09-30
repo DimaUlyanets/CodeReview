@@ -79,6 +79,7 @@ Route::group(['prefix' => 'lessons' , 'middleware' => 'auth:api'] , function() {
     Route::get('/{id}', 'LessonController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'LessonController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'LessonController@delete')->where('id', '[0-9]+');
+    Route::get('/suggest/{tag}', 'LessonController@suggest')->where('id', '[0-9]+');
 
 });
 

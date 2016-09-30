@@ -129,4 +129,25 @@ class LessonController extends ApiController
     {
         //
     }
+
+    public function suggest($tag){
+
+        $data = Lesson::where('name', 'like', "{$tag}%")->get();
+
+        if(isset($data[0])){
+
+            $response = [];
+
+            foreach($data as $key => $value){
+
+                $response[$key]["id"] = $value->id;
+                $response[$key]["name"] = $value->name;
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+        }
+
+    }
 }
