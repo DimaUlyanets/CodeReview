@@ -27,6 +27,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ClassTagSeeder::class);
         $this->call(GroupTagSeeder::class);
         $this->call(OrganizationTagSeeder::class);
+        $this->call(SkillTableSeeder::class);
+        $this->call(LessonSkillTableSeeder::class);
+
+
 
 
     }

@@ -32,4 +32,12 @@ class Lesson extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    /**
+     * The lesson to many skills
+     */
+    public function skills()
+    {
+        return $this->belongsToMany('App\Skill')->withTimestamps();
+    }
+
 }

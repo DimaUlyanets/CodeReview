@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes;
 use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
+use App\Skill;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -48,6 +49,20 @@ class LessonController extends ApiController
 
             $class = Classes::find($request->class_id);
             $class->lessons()->attach($lesson->id);
+
+        }
+
+        if($request->skills){
+
+            foreach($request->skills as $value){
+                
+                $skill = Skill::whereName($value)->first();
+                if(!$skill){
+                    $skill = Skill::create(["name" => $value]);
+                }
+                $lesson->skills()->attach($skill->id);
+
+            }
 
         }
 
