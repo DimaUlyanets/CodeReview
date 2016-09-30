@@ -71,12 +71,14 @@ class ClassController extends ApiController
 
             }
 
+            $avatar = ($user->profile) ? $user->profile->avatar : "";
+
             $response = [
 
                 "name" => $class->name,
                 "description" => $class->description,
                 "author_name" => $user->name,
-                "author_avatar" => $user->profile->avatar,
+                "author_avatar" => $avatar,
                 "members" => $class->users()->count(),
                 "lessons" => $lessons
 
