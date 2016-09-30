@@ -169,6 +169,7 @@ class UsersController extends ApiController
 
             foreach($user->classes as $key => $value){
 
+                $response[$key]["id"] = $value->id;
                 $response[$key]["name"] = $value->name;
                 $response[$key]["description"] = $value->description;
 
