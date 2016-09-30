@@ -76,7 +76,7 @@ class TagController extends ApiController
             foreach($data as $key => $value){
 
                 $response[$key]["id"] = $value->id;
-                $response[$key]["tag"] = $value->name;
+                $response[$key]["name"] = $value->name;
 
             }
 
