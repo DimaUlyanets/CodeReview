@@ -166,6 +166,7 @@ class GroupController extends ApiController
 
         if($user->groups()->whereId($id)->first()){
 
+            $user->groups()->detach($id);
             exit;
 
         }
