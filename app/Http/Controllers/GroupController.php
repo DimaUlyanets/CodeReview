@@ -159,4 +159,19 @@ class GroupController extends ApiController
         return $this->setStatusCode(409)->respondWithError("Privacy conflict");
 
     }
+
+    public function leave($id){
+
+        $user = Auth::guard('api')->user();
+
+        if($user->groups()->whereId($id)->first()){
+
+            $user->groups()->detach($id);
+            exit;
+
+        }
+
+        return $this->setStatusCode(409)->respondWithError("Conflict");
+
+    }
 }

@@ -20,10 +20,14 @@ Route::group(['middleware' => 'guest'] , function() {
     Route::post('/users', 'UsersController@create');
     Route::any('/test', 'AuthController@test');
 
+});
 
+Route::group(['prefix' => 'auth' , 'middleware' => 'auth:api'] , function() {
+    Route::get('/logout', 'AuthController@logout');
 });
 
 Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
+
 
     Route::get('/list', 'UsersController@all');
     Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
@@ -50,6 +54,7 @@ Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
     Route::get('/', 'GroupController@all');
     Route::post('/', 'GroupController@create');
     Route::post('/join', 'GroupController@join');
+    Route::get('/{id}/leave', 'GroupController@leave');
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');
@@ -64,6 +69,7 @@ Route::group(['prefix' => 'classes' , 'middleware' => 'auth:api'] , function() {
     Route::put('/{id}', 'ClassController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'ClassController@delete')->where('id', '[0-9]+');
     Route::post('/join', 'ClassController@join');
+    Route::get('/{id}/leave', 'ClassController@leave');
 
 });
 

@@ -147,4 +147,20 @@ class ClassController extends ApiController
         return $this->setStatusCode(409)->respondWithError("User out of class group");
 
     }
+
+    public function leave($id){
+
+        $user = Auth::guard('api')->user();
+
+        if($user->classes()->whereId($id)->first()){
+
+            $user->classes()->detach($id);
+            exit;
+
+        }
+
+        return $this->setStatusCode(409)->respondWithError("Conflict");
+
+    }
+
 }

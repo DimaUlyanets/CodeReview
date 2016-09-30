@@ -18,7 +18,7 @@ class CreateOrganisationsTable extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('icon');
-            $table->integer('default')->default(0);
+            $table->boolean('default')->default(0);
             $table->timestamps();
         });
     }
