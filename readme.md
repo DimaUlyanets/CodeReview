@@ -9,3 +9,6 @@
 
 ### API Endpoints ###
 http://159.203.46.95:81/#!/milestone_1/
+
+To clear cache:
+composer dump-autoload && php artisan clear-compiled && php artisan optimize
