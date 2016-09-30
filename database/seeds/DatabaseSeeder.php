@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ProfilesTableSeeder::class);
         $this->call(LessonsTableSeeder::class);
         $this->call(ClassesLessonTableSeeder::class);
+        $this->call(TagTableSeeder::class);
+        $this->call(ClassTagSeeder::class);
+        $this->call(GroupTagSeeder::class);
+        $this->call(OrganizationTagSeeder::class);
 
 
     }
