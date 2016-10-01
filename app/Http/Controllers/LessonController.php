@@ -64,6 +64,8 @@ class LessonController extends ApiController
 
             }
 
+            $lesson->skills = $request->skills;
+
         }
 
         return $this->setStatusCode(200)->respondSuccess($lesson);
