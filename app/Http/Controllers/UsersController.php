@@ -216,9 +216,11 @@ class UsersController extends ApiController
 
             }
 
-            dd($suggestion);
+            return $this->setStatusCode(200)->respondSuccess($suggestion);
 
         }
+
+        return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
     }
 
