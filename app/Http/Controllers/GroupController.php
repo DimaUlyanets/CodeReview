@@ -53,7 +53,13 @@ class GroupController extends ApiController
             $organization = Organization::whereDefault(1)->first();
             $data["organization_id"] = $organization->id;
 
+        }else{
+
+            $data["organization_id"] = $request->organization_id;
+
         }
+
+        $data["default"] = 0;
 
         $group = Group::create($data);
 
