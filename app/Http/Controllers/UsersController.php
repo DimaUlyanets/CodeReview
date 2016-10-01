@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
+use App\Organization;
+use App\Profile;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -34,7 +37,7 @@ class UsersController extends ApiController
     public function create(UserCreateRequest $request)
     {
 
-        $data = User::create([
+        $user = User::create([
             'name' => "{$request->first_name} {$request->last_name}",
             'username' => $request->username,
             'email' => $request->email,
@@ -42,7 +45,17 @@ class UsersController extends ApiController
             'password' => Hash::make($request->password),
         ]);
 
-        if($data)return Response::json([ "success" => $data->toArray()], 200);
+        if($user){
+
+            #Get default organization and attach to created user
+            $default = Organization::whereDefault(1)->first();
+
+            $user->organizations()->attach($default->id);
+            $user->groups()->attach($default->group->first()->id);
+
+            return Response::json($user->toArray(), 200);
+
+        }
 
     }
 
@@ -90,6 +103,85 @@ class UsersController extends ApiController
     public function delete($id)
     {
         //
+    }
+
+    public function groups($id){
+
+        $user = User::find($id);
+        if($user){
+
+            $response = array();
+
+            foreach($user->groups as $key => $group){
+
+                $response[$key]["name"] = $group->name;
+                $response[$key]["icon"] = $group->icon;
+                $response[$key]["id"] = $group->id;
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User Not Found");
+
+    }
+
+    public function profile(CreateProfileRequest $request, $id){
+
+        $user = User::find($id);
+        $data = (array)$request->all();
+        unset($data["api_token"]);
+
+        if(empty($data)){
+
+            return $this->setStatusCode(204)->respondSuccess(["No content"]);
+
+        }
+
+        if($user){
+
+            $data["user_id"] = $id;
+
+            if(!$user->profile){
+
+                $resutl = Profile::create($data);
+                return $this->setStatusCode(200)->respondSuccess($resutl);
+
+            }
+
+            return $this->setStatusCode(409)->respondWithError("User already created profile");
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User does not exists");
+
+    }
+
+    public function classes($id){
+
+        $user = User::find($id);
+
+        if($user){
+
+            $response = [];
+
+            foreach($user->classes as $key => $value){
+
+                $response[$key]["id"] = $value->id;
+                $response[$key]["name"] = $value->name;
+                $response[$key]["description"] = $value->description;
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess($response);
+
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User does not exists");
+
     }
 
 }

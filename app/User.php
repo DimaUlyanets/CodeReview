@@ -2,13 +2,12 @@
 
 namespace App;
 
-use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use  Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,4 +26,38 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+
+    /**
+     * The organizations that belong to the user.
+     */
+    public function organizations()
+    {
+        return $this->belongsToMany('App\Organization')->withTimestamps();;
+    }
+
+    /**
+     * The organizations that belong to the user.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany('App\Group')->withTimestamps();;
+    }
+
+    /**
+     * The user belongs to many Classes
+     */
+    public function classes()
+    {
+        return $this->belongsToMany('App\Classes')->withTimestamps();;
+    }
+
+    /**
+     * The user has one profile
+     */
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
+
 }
