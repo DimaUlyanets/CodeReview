@@ -44,15 +44,7 @@ class ClassController extends ApiController
 
             if($request->tags){
 
-                foreach($request->tags as $value){
-
-                    $tag = Tag::whereName($value)->first();
-                    if(!$tag){
-                        $tag = Tag::create(["name" => $value]);
-                    }
-                    $class->tags()->attach($tag->id);
-
-                }
+                Tag::assignTag($class, $request);
 
             }
 

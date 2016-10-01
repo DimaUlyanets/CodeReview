@@ -40,4 +40,13 @@ class Lesson extends Model
         return $this->belongsToMany('App\Skill')->withTimestamps();
     }
 
+    /**
+     * The tag belongs to many lessons.
+     */
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
+    }
+
 }

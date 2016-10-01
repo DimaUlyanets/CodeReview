@@ -16,6 +16,20 @@ class Tag extends Model
         'name'
     ];
 
+    public static function assignTag($entity, $request){
+
+        foreach($request->tags as $value){
+
+            $tag = Tag::whereName($value)->first();
+            if(!$tag){
+                $tag = Tag::create(["name" => $value]);
+            }
+            $entity->tags()->attach($tag->id);
+
+        }
+
+    }
+
     /**
      * The tag belongs to many groups organizations.
      */
@@ -40,6 +54,15 @@ class Tag extends Model
     public function classes()
     {
         return $this->belongsToMany('App\Classes')->withTimestamps();
+    }
+
+    /**
+     * The tag belongs to many classes.
+     */
+
+    public function lessons()
+    {
+        return $this->belongsToMany('App\Lessons')->withTimestamps();
     }
 
 }

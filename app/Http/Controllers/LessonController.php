@@ -6,6 +6,7 @@ use App\Classes;
 use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
 use App\Skill;
+use App\Tag;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -65,6 +66,12 @@ class LessonController extends ApiController
             }
 
             $lesson->skills = $request->skills;
+
+        }
+
+        if($request->tags){
+
+            Tag::assignTag($lesson, $request);
 
         }
 

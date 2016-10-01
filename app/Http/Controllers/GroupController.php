@@ -61,15 +61,7 @@ class GroupController extends ApiController
 
             if($request->tags){
 
-                foreach($request->tags as $value){
-
-                    $tag = Tag::whereName($value)->first();
-                    if(!$tag){
-                        $tag = Tag::create(["name" => $value]);
-                    }
-                    $group->tags()->attach($tag->id);
-
-                }
+                Tag::assignTag($group, $request);
 
             }
 

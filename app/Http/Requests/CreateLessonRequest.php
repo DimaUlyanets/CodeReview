@@ -33,6 +33,7 @@ class CreateLessonRequest extends Request
             'group_id' => 'numeric|exists:groups,id',
             'class_id' => 'numeric|exists:classes,id',
             'skills' => 'array',
+            'tags' => 'array',
         ];
     }
 }
