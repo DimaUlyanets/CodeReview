@@ -67,7 +67,7 @@ class SkillController extends ApiController
 
     public function suggest($tag){
 
-        $data = Skill::where('name', 'like', "{$tag}%")->get();
+        $data = Skill::where('name', 'like', "%{$tag}%")->get();
 
         if(isset($data[0])){
 
@@ -81,6 +81,10 @@ class SkillController extends ApiController
             }
 
             return $this->setStatusCode(200)->respondSuccess($response);
+
+        }else{
+
+            return $this->setStatusCode(404)->respondSuccess("Not Found");
 
         }
 

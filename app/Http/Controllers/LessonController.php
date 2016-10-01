@@ -141,7 +141,7 @@ class LessonController extends ApiController
 
     public function suggest($tag){
 
-        $data = Lesson::where('name', 'like', "{$tag}%")->get();
+        $data = Lesson::where('name', 'like', "%{$tag}%")->get();
 
         if(isset($data[0])){
 
@@ -155,6 +155,10 @@ class LessonController extends ApiController
             }
 
             return $this->setStatusCode(200)->respondSuccess($response);
+
+        }else{
+
+            return $this->setStatusCode(404)->respondSuccess("Not Found");
 
         }
 
