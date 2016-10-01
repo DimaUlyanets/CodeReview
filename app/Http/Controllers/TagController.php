@@ -84,7 +84,7 @@ class TagController extends ApiController
 
         }else{
 
-            return $this->setStatusCode(200)->respondSuccess("Not Found");
+            return $this->setStatusCode(404)->respondSuccess("Not Found");
 
         }
 
