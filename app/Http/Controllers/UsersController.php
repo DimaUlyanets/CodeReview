@@ -184,4 +184,42 @@ class UsersController extends ApiController
 
     }
 
+    public function suggest(Request $request){
+
+        $user = User::whereUsername($request->username)->first();
+
+        if($user){
+
+            $list = User::all();
+            $existing = [];
+
+            foreach($list as $value){
+
+                $existing[] = $value->username;
+
+            }
+
+            $year = date('Y');
+
+            if(!in_array("{$request->last_name}_{$request->first_name}", $existing))$suggestion[] = "{$request->last_name}_{$request->first_name}";
+            if(!in_array("{$request->first_name}_{$request->last_name}", $existing))$suggestion[] = "{$request->first_name}_{$request->last_name}";
+            if(!in_array("{$request->last_name}_{$request->first_name}_{$year}", $existing))$suggestion[] = "{$request->last_name}_{$request->first_name}_{$year}";
+            if(!in_array("{$year}_{$request->last_name}_{$request->first_name}", $existing))$suggestion[] = "{$year}_{$request->last_name}_{$request->first_name}";
+            if(!in_array("{$year}_{$request->username}", $existing))$suggestion[] = "{$year}_{$request->username}";
+            if(!in_array("{$request->username}_{$year}", $existing))$suggestion[] = "{$request->username}_{$year}";
+
+            $listOfWords = ["diamond", "great", "awesome", "1234"];
+
+            foreach($listOfWords as $value){
+
+                if(!in_array("{$value}_{$request->username}", $existing))$suggestion[] = "{$value}_{$request->username}";
+
+            }
+
+            dd($suggestion);
+
+        }
+
+    }
+
 }

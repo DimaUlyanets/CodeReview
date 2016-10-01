@@ -19,6 +19,7 @@ Route::group(['middleware' => 'guest'] , function() {
     Route::post('/validate/email', 'AuthController@validateEmail');
     Route::post('/users', 'UsersController@create');
     Route::any('/test', 'AuthController@test');
+    Route::post('/users/suggest/', 'UsersController@suggest')->where('id', '[0-9]+');
 
 });
 
