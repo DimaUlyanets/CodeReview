@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Files;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
@@ -144,12 +145,17 @@ class UsersController extends ApiController
 
             $data["user_id"] = $id;
 
-            if(!$user->profile){
+            #if(!$user->profile){
+
+                $files = Files::saveUserFiles($user, $request);
+
+                if(isset($files["cover"]))$data["cover"] = $files["cover"];
+                if(isset($files["avatar"]))$data["avatar"] = $files["avatar"];
 
                 $resutl = Profile::create($data);
                 return $this->setStatusCode(200)->respondSuccess($resutl);
 
-            }
+            #}
 
             return $this->setStatusCode(409)->respondWithError("User already created profile");
 

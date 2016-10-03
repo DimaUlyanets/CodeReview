@@ -14,6 +14,10 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => 'guest'] , function() {
+
+    Route::get('/view', function () {
+        return view('test');
+    });
     
     Route::post('/auth', 'AuthController@authenticate');
     Route::post('/validate/email', 'AuthController@validateEmail');

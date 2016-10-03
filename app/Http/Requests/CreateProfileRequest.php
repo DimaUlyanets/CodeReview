@@ -28,9 +28,8 @@ class CreateProfileRequest extends Request
     {
 
         return [
-            'avatar' => 'max:255',
-            'icon' => 'max:255',
-            'cover' => 'max:255',
+            'avatar' => 'image',
+            'cover' => 'image',
             'bio' => 'max:255',
             'color' => 'max:255',
         ];

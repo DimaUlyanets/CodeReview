@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -62,10 +63,13 @@ class AuthController extends Controller
 
     public function test(){
 
-        $user = User::find(1);
 
-        dd($user->profile);
+        #Storage::disk('s3')->exists('file.jpg');
 
+        Storage::disk('s3')->put('testing/trampampam/tsetet/kitty.jpg', file_get_contents("https://yomotherboard.com/wp-content/uploads/2015/02/laravel.png", 'public'));
+        #$contents = Storage::disk('s3')->url('public.jpg');
+        #$contents = Storage::disk('s3')->get('public.jpg');
+        dd(Storage::disk('s3')->url("testing/trampampam/tsetet/kitty.jpg"));
 
     }
 

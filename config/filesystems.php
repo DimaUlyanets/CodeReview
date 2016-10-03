@@ -56,10 +56,11 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'your-key',
-            'secret' => 'your-secret',
-            'region' => 'your-region',
-            'bucket' => 'your-bucket',
+            'key' => 'AKIAI4WNZMXPGZYYRDEQ',
+            'secret' => 'xPgROCZocGztU+cVUipEC/ZsoofZi6sZqPUnbC3G',
+            'region' => 'eu-west-1',
+            'bucket' => 'bck-lessons',
+            'visibility' => 'public',
         ],
 
     ],
