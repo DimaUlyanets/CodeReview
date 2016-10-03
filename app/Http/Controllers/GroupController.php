@@ -63,6 +63,12 @@ class GroupController extends ApiController
 
         $group = Group::create($data);
 
+        if(!empty($request->icon)){
+            $path = env("APP_S3") . $request->icon->store("organizations/{$data["organization_id"]}/groups/{$group->id}/icon", 's3');
+            $group->icon = $path;
+            $group->save();
+        }
+
         if($group){
 
             if($request->tags){
