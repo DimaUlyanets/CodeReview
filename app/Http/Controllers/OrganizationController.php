@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Files;
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
 use App\Tag;
@@ -32,6 +33,9 @@ class OrganizationController extends Controller
      */
     public function create(OrganizationCreateRequest $request)
     {
+
+
+        Files::saveEntityIcon();
 
         $result = Organization::create($request->all());
 

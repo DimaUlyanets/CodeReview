@@ -12,7 +12,7 @@ class Files extends Model
         $result = [];
 
         if(!empty($request->cover)){
-            #$result["cover"] = env("APP_S3") . $request->cover->store("users/{$user->id}/cover_photo", 's3');
+            $result["cover"] = env("APP_S3") . $request->cover->store("users/{$user->id}/cover_photo", 's3');
         }
         if(!empty($request->avatar)){
             $result["avatar"] = env("APP_S3") . $request->avatar->store("users/{$user->id}/profile_avatar", 's3');
