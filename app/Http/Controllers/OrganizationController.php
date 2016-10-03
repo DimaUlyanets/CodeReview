@@ -35,9 +35,12 @@ class OrganizationController extends Controller
     {
 
 
-        Files::saveEntityIcon();
+        $data = $request->all();
 
-        $result = Organization::create($request->all());
+        $result = Organization::create($data);
+        $path = env("APP_S3") . $request->icon->store("organizations/{$result->id}/icon", 's3');
+        $result->icon = $path;
+        $result->save();
 
         if($result){
 

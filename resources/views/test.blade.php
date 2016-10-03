@@ -17,7 +17,7 @@
 
         var url = 'http://mitka.local/api/organizations?api_token=jWFlb99NQgwBGgm7vIfB1SzGEeYJJI92Xl1Yw9Q0XNh3Jonb63JCbAgPhuUI&cover=123';
         var data = {
-            "name": "yoyko",
+            "name": "yoddddyko",
             "description": "stupido"
         }
         var formData  = new FormData();
