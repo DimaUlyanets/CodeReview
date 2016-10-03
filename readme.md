@@ -4,7 +4,7 @@
 3. php artisan serve
 
 ### Backend requirements ###
-1. PHP 5.6.4
+1. PHP >= 5.6.4
 2. MYSQL 5.7
 
 ### API Endpoints ###
