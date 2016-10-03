@@ -145,7 +145,7 @@ class UsersController extends ApiController
 
             $data["user_id"] = $id;
 
-            #if(!$user->profile){
+            if(!$user->profile){
 
                 $files = Files::saveUserFiles($user, $request);
 
@@ -155,7 +155,7 @@ class UsersController extends ApiController
                 $resutl = Profile::create($data);
                 return $this->setStatusCode(200)->respondSuccess($resutl);
 
-            #}
+            }
 
             return $this->setStatusCode(409)->respondWithError("User already created profile");
 
