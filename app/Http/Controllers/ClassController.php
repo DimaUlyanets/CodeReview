@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
+use App\Group;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
 use App\Tag;
@@ -41,6 +42,15 @@ class ClassController extends ApiController
         $class = Classes::create($data);
 
         if($class){
+
+            if(!empty($request->thumbnail)){
+
+                $organization = Group::find($data["group_id"])->organization;
+                $path = env("APP_S3") . $request->thumbnail->store("organizations/{$organization->id}/groups/{$data["group_id"]}/classes/icon", 's3');
+                $class->thumbnail = $path;
+                $class->save();
+
+            }
 
             if($request->tags){
 

@@ -15,18 +15,19 @@
 
     function sendData() {
 
-        var url = 'http://mitka.local/api/groups?api_token=jWFlb99NQgwBGgm7vIfB1SzGEeYJJI92Xl1Yw9Q0XNh3Jonb63JCbAgPhuUI&cover=123';
+        var url = 'http://mitka.local/api/classes?api_token=jWFlb99NQgwBGgm7vIfB1SzGEeYJJI92Xl1Yw9Q0XNh3Jonb63JCbAgPhuUI&cover=123';
         var data = {
             "name": "yoddddydfdfko",
             "description": "stupido",
-            "privacy_id" : 1
+            "privacy_id" : 1,
+            "is_collaborative": 1
         }
         var formData  = new FormData();
 
         for(name in data) {
             formData.append(name, data[name]);
         }
-        formData.append('icon', document.getElementById("file").files[0]);
+        formData.append('thumbnail', document.getElementById("file").files[0]);
 
         fetch(url, {
             method: 'POST',
