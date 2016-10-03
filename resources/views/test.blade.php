@@ -15,12 +15,16 @@
 
     function sendData() {
 
-        var url = 'http://mitka.local/api/classes?api_token=jWFlb99NQgwBGgm7vIfB1SzGEeYJJI92Xl1Yw9Q0XNh3Jonb63JCbAgPhuUI&cover=123';
+        var url = 'http://mitka.local/api/lessons?api_token=jWFlb99NQgwBGgm7vIfB1SzGEeYJJI92Xl1Yw9Q0XNh3Jonb63JCbAgPhuUI&cover=123';
         var data = {
             "name": "yoddddydfdfko",
             "description": "stupido",
             "privacy_id" : 1,
-            "is_collaborative": 1
+            "is_collaborative": 1,
+            "lesson_file" : "22",
+            "difficulty" : 11,
+            "type" : 1
+
         }
         var formData  = new FormData();
 

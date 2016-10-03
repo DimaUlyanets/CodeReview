@@ -26,7 +26,7 @@ class CreateLessonRequest extends Request
         return [
             'name' => 'required|max:255',
             'description' => 'max:255',
-            'thumbnail' => 'max:255',
+            'thumbnail' => 'image',
             'lesson_file' => 'required|max:255',
             'difficulty' => 'required|between:0,100|numeric',
             'type' => 'numeric|required',
