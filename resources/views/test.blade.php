@@ -21,7 +21,6 @@
             "description": "stupido",
             "privacy_id" : 1,
             "is_collaborative": 1,
-            "lesson_file" : "22",
             "difficulty" : 11,
             "type" : 1
 
@@ -31,7 +30,7 @@
         for(name in data) {
             formData.append(name, data[name]);
         }
-        formData.append('thumbnail', document.getElementById("file").files[0]);
+        formData.append('lesson_file', document.getElementById("file").files[0]);
 
         fetch(url, {
             method: 'POST',
