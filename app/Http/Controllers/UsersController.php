@@ -190,6 +190,8 @@ class UsersController extends ApiController
 
         if($user){
 
+            $suggestion = [];
+
             $list = User::all();
             $existing = [];
 
@@ -208,7 +210,8 @@ class UsersController extends ApiController
             if(!in_array("{$year}_{$request->username}", $existing))$suggestion[] = "{$year}_{$request->username}";
             if(!in_array("{$request->username}_{$year}", $existing))$suggestion[] = "{$request->username}_{$year}";
 
-            $listOfWords = ["diamond", "great", "awesome", "1234"];
+            #put any words to this array to combine with username
+            $listOfWords = [""];
 
             foreach($listOfWords as $value){
 
@@ -216,7 +219,7 @@ class UsersController extends ApiController
 
             }
 
-            return $this->setStatusCode(200)->respondSuccess($suggestion);
+            return $this->setStatusCode(409)->respondSuccess($suggestion);
 
         }
 
