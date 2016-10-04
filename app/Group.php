@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Group extends Model
 {
@@ -56,6 +57,22 @@ class Group extends Model
         $response["child"]["classes"] = $relatedClasses;
 
         return $response;
+
+    }
+
+    public static function userHasAccess($group){
+
+        $user =  Auth::guard('api')->user();
+        $member = $user->groups()->whereId($group->id)->first();
+        $privacy = $group->privacy;
+
+        if($member || "{$privacy->type} {$privacy->subtype}" == "External Free"){
+
+            return true;
+
+        }
+
+        return false;
 
     }
 
