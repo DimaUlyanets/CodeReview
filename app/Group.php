@@ -63,6 +63,9 @@ class Group extends Model
     public static function userHasAccess($group){
 
         $user =  Auth::guard('api')->user();
+
+        if(!$group) return false;
+
         $member = $user->groups()->whereId($group->id)->first();
         $privacy = $group->privacy;
 
