@@ -17,7 +17,7 @@ class CreateProfileRequest extends Request
 
         if($this->id == Auth::guard('api')->user()->id)return true;
         return false;
-        
+
     }
 
     /**

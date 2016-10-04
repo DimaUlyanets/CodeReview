@@ -15,7 +15,11 @@ class GroupCreateRequest extends Request
      */
     public function authorize()
     {
-        return true;
+
+        #check is current user exist in organization where he try to create group
+        if(Auth::guard('api')->user()->organizations()->whereId($this->organization_id)->first())return true;
+        return false;
+
     }
 
     /**
