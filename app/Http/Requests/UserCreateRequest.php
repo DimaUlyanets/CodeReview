@@ -27,7 +27,7 @@ class UserCreateRequest extends Request
         return [
             'first_name' => 'required|max:255|alpha_dash',
             'last_name' => 'required|max:255|alpha_dash',
-            'username' => 'required|max:255|alpha_dash',
+            'username' => 'required|max:255|alpha_dash|unique:users',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6',
         ];
