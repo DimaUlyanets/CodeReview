@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Files;
+use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
@@ -10,6 +11,7 @@ use App\Profile;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
@@ -109,7 +111,14 @@ class UsersController extends ApiController
     public function groups($id){
 
         $user = User::find($id);
+
         if($user){
+
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
 
             $response = array();
 
