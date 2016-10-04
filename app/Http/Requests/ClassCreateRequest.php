@@ -14,7 +14,11 @@ class ClassCreateRequest extends Request
      */
     public function authorize()
     {
-        return true;
+
+        #check is user in group where he want to create class
+        if(Auth::guard('api')->user()->groups()->whereId($this->group_id)->first())return true;
+        return false;
+
     }
 
     /**

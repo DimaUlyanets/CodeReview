@@ -180,6 +180,12 @@ class UsersController extends ApiController
 
         if($user){
 
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
+
             $response = [];
 
             foreach($user->classes as $key => $value){
