@@ -19,9 +19,6 @@
         var data = {
 
             "description": "stupido",
-            "privacy_id" : 1,
-            "is_collaborative": 1,
-            "difficulty" : 11,
             "type" : 1,
             'tags[0]' : 1,
             'tags[1]' : 2,

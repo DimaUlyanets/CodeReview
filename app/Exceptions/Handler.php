@@ -47,7 +47,8 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
 
-        #return parent::render($request, $exception);
+        $error = $this->convertExceptionToResponse($exception);
+        if(preg_match("#failed to pass validation#", $error))return parent::render($request, $exception);
 
         if(env("APP_DEBUG") == true){
 

@@ -56,10 +56,10 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'AKIAI4WNZMXPGZYYRDEQ',
-            'secret' => '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',
-            'region' => 'eu-west-1',
-            'bucket' => 'bck-lessons',
+            'key' => env("APP_S3_KEY"),
+            'secret' => env("APP_S3_SECRET"),
+            'region' => env("APP_S3_REGION"),
+            'bucket' => env("APP_S3_BUCKET"),
             'visibility' => 'public',
         ],
 
