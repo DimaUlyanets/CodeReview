@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Classes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CreateLessonRequest extends Request
 {
@@ -13,6 +15,39 @@ class CreateLessonRequest extends Request
      */
     public function authorize()
     {
+
+
+        $user = Auth::guard('api')->user();
+
+        if($this->class_id){
+
+            $class = Classes::find($this->class_id);
+
+            if(!$class)return false;
+
+            if(!$user->groups()->whereId($class->group->id)->first()){
+
+                return false;
+
+            }
+
+
+        }
+
+        $group_id = $this->group_id;
+
+        if(!$this->group_id){
+
+            $group_id = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+
+        }
+
+        if(!$user->groups()->whereId($group_id)->first()){
+
+            return false;
+
+        }
+
         return true;
     }
 
