@@ -17,12 +17,15 @@
 
         var url = 'http://mitka.local/api/lessons?api_token=jWFlb99NQgwBGgm7vIfB1SzGEeYJJI92Xl1Yw9Q0XNh3Jonb63JCbAgPhuUI&cover=123';
         var data = {
-            "name": "yoddddydfdfko",
+
             "description": "stupido",
             "privacy_id" : 1,
             "is_collaborative": 1,
             "difficulty" : 11,
-            "type" : 1
+            "type" : 1,
+            'tags[0]' : 1,
+            'tags[1]' : 2,
+            'name' : '123'
 
         }
         var formData  = new FormData();

@@ -58,7 +58,7 @@ class ClassController extends ApiController
             if(!empty($request->thumbnail)){
 
                 $organization = Group::find($data["group_id"])->organization;
-                $path = env("APP_S3") . $request->thumbnail->store("organizations/{$organization->id}/groups/{$data["group_id"]}/classes/icon", 's3');
+                $path = env("APP_S3") . $request->thumbnail->store("organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon", 's3');
                 $class->thumbnail = $path;
                 $class->save();
 
