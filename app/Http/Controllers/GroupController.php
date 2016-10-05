@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Requests\GroupCreateRequest;
 use App\Http\Requests\JoinGroupRequest;
 use App\Organization;
+use App\Privacy;
 use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
