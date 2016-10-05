@@ -8,6 +8,7 @@ use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
 use App\Skill;
 use App\Tag;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -111,7 +112,7 @@ class LessonController extends ApiController
 
         if($lesson){
 
-
+            if(!User::LessonAndClassAccess($lesson))return $this->setStatusCode(403)->respondSuccess("Forbidden");
 
             $response = [
 

@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Files;
+use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
+use App\Privacy;
 use App\Profile;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
@@ -109,15 +112,22 @@ class UsersController extends ApiController
     public function groups($id){
 
         $user = User::find($id);
+
         if($user){
+
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
 
             $response = array();
 
             foreach($user->groups as $key => $group){
 
-                $response[$key]["name"] = $group->name;
-                $response[$key]["icon"] = $group->icon;
-                $response[$key]["id"] = $group->id;
+                $response[$group->id]["name"] = $group->name;
+                $response[$group->id]["icon"] = $group->icon;
+                $response[$group->id]["id"] = $group->id;
 
             }
 
@@ -171,13 +181,19 @@ class UsersController extends ApiController
 
         if($user){
 
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
+
             $response = [];
 
-            foreach($user->classes as $key => $value){
+            foreach($user->classes as $value){
 
-                $response[$key]["id"] = $value->id;
-                $response[$key]["name"] = $value->name;
-                $response[$key]["description"] = $value->description;
+                $response[$value->id]["id"] = $value->id;
+                $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["description"] = $value->description;
 
             }
 
