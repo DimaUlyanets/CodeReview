@@ -7,6 +7,7 @@ use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
+use App\Privacy;
 use App\Profile;
 use App\User;
 use Illuminate\Http\Request;
@@ -121,16 +122,28 @@ class UsersController extends ApiController
             }
 
             $response = array();
+            $groupArray = array();
+            $keyCounter = 0;
 
             foreach($user->groups as $key => $group){
 
-                $response[$key]["name"] = $group->name;
-                $response[$key]["icon"] = $group->icon;
-                $response[$key]["id"] = $group->id;
+                $response[$group->id]["name"] = $group->name;
+                $response[$group->id]["icon"] = $group->icon;
+                $response[$group->id]["id"] = $group->id;
 
             }
 
-            return $this->setStatusCode(200)->respondSuccess($response);
+            $externalFree = Group::wherePrivacyId(Privacy::whereType('External')->where('subtype', '=', 'Free')->first()->id)->get();
+
+            foreach($externalFree as $key => $value){
+
+                $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["icon"] = $value->icon;
+                $response[$value->id]["id"] = $value->id;
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess(array_values($response));
 
         }
 
