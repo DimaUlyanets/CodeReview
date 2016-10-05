@@ -61,8 +61,8 @@ class CreateLessonRequest extends Request
         return [
             'name' => 'required|max:255',
             'description' => 'max:255',
-            #'thumbnail' => 'image',
-            #'lesson_file' => 'required|file|mimes:mp4,pdf',
+            'thumbnail' => 'image',
+            'lesson_file' => 'required|file|mimes:mp4,pdf',
             'difficulty' => 'required|between:0,100|numeric',
             'type' => 'numeric|required',
             'group_id' => 'numeric|exists:groups,id',
