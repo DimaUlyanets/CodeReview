@@ -17,6 +17,15 @@ class Lesson extends Model
     ];
 
     /**
+     * The lessons has one group .
+     */
+
+    public function group()
+    {
+        return $this->belongsTo('App\Group');
+    }
+
+    /**
      * The lesson to many classes
      */
     public function classes()

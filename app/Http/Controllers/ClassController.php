@@ -6,6 +6,7 @@ use App\Classes;
 use App\Group;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
+use App\Privacy;
 use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
@@ -88,6 +89,8 @@ class ClassController extends ApiController
         $class = Classes::find($id);
 
         if($class){
+
+            if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondSuccess("Forbidden");
 
             $user = User::find($class->author_id);
 

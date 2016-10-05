@@ -201,11 +201,11 @@ class UsersController extends ApiController
 
             $response = [];
 
-            foreach($user->classes as $key => $value){
+            foreach($user->classes as $value){
 
-                $response[$key]["id"] = $value->id;
-                $response[$key]["name"] = $value->name;
-                $response[$key]["description"] = $value->description;
+                $response[$value->id]["id"] = $value->id;
+                $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["description"] = $value->description;
 
             }
 
