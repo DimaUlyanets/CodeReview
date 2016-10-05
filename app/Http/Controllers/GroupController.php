@@ -110,7 +110,7 @@ class GroupController extends ApiController
 
             if(!Group::userHasAccess($group)){
 
-                return $this->setStatusCode(403)->respondSuccess("Forbidden");
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             }
 

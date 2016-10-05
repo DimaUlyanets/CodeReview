@@ -76,7 +76,7 @@ class UsersController extends ApiController
 
         if(!$user){
 
-            return $this->respondNotFound('User does not exists', 404);
+            return $this->setStatusCode(404)->respondWithError("User does not exists");
 
         }
 

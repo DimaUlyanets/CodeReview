@@ -90,7 +90,7 @@ class ClassController extends ApiController
 
         if($class){
 
-            if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondSuccess("Forbidden");
+            if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $user = User::find($class->author_id);
 
