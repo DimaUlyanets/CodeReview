@@ -122,8 +122,6 @@ class UsersController extends ApiController
             }
 
             $response = array();
-            $groupArray = array();
-            $keyCounter = 0;
 
             foreach($user->groups as $key => $group){
 
@@ -133,17 +131,7 @@ class UsersController extends ApiController
 
             }
 
-            $externalFree = Group::wherePrivacyId(Privacy::whereType('External')->where('subtype', '=', 'Free')->first()->id)->get();
-
-            foreach($externalFree as $key => $value){
-
-                $response[$value->id]["name"] = $value->name;
-                $response[$value->id]["icon"] = $value->icon;
-                $response[$value->id]["id"] = $value->id;
-
-            }
-
-            return $this->setStatusCode(200)->respondSuccess(array_values($response));
+            return $this->setStatusCode(200)->respondSuccess($response);
 
         }
 
