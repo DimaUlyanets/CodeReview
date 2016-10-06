@@ -112,7 +112,7 @@ class LessonController extends ApiController
 
         if($lesson){
 
-            if(!User::LessonAndClassAccess($lesson))return $this->setStatusCode(403)->respondSuccess("Forbidden");
+            if(!User::LessonAndClassAccess($lesson))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $response = [
 
@@ -179,7 +179,7 @@ class LessonController extends ApiController
 
         }else{
 
-            return $this->setStatusCode(404)->respondSuccess("Not Found");
+            return $this->setStatusCode(404)->respondWithError("Not Found");
 
         }
 

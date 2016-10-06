@@ -84,7 +84,7 @@ class SkillController extends ApiController
 
         }else{
 
-            return $this->setStatusCode(404)->respondSuccess("Not Found");
+            return $this->setStatusCode(404)->respondWithError("Not Found");
 
         }
 
