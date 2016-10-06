@@ -19,6 +19,7 @@ Route::get('/', function () {
     $client = Elasticsearch\ClientBuilder::create()->build();
 
 
+
 //  echo   LessonSearch::addToIndex();
 
 //
@@ -183,12 +184,12 @@ Route::get('/', function () {
 //======================================================================
 
       $params = [
-          'index' => 'groups',
-          'type' => 'group',
+          'index' => 'lessons',
+          'type' => 'lesson',
           'body' => [
               'query' => [
                   'match' => [
-                      'groupName' => 'WORKERS'
+                      'Name' => 'qwer'
                   ]
               ]
           ]
@@ -240,9 +241,9 @@ Route::get('/', function () {
 //======================================================================
 //                Delete an index
 //======================================================================
-
+//
 //      $deleteParams = [
-//          'index' => 'classes'
+//          'index' => 'lessons'
 //      ];
 //      $response = $client->indices()->delete($deleteParams);
 //      dd($response);

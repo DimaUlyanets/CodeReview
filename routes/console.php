@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Inspiring;
 use App\ElasticSearch\ElasticGenerator;
+
 /*
 |--------------------------------------------------------------------------
 | Console Routes
