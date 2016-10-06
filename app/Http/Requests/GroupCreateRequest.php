@@ -37,7 +37,7 @@ class GroupCreateRequest extends Request
         return [
             'name' => 'required|max:255|unique:groups,name,NULL,id,organization_id,' . $this->organization_id,
             'description' => 'required|max:140',
-            'icon' => 'image',
+            'icon' => 'image|max:10240',
             'organization_id' => 'numeric|exists:organizations,id',
             'privacy_id' => 'numeric|required|exists:privacy,id',
             'tags' => 'array',
