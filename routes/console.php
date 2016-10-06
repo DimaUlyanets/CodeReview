@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
-
+use App\ElasticSearch\ElasticGenerator;
 /*
 |--------------------------------------------------------------------------
 | Console Routes
@@ -16,3 +16,19 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+
+Artisan::command('make:elastic', function () {
+
+    $generator = new ElasticGenerator();
+    $generator->addClassesToSearch();
+    $generator->addGroupsToSearch();
+    $generator->addLessonsToSearch();
+
+
+
+    $this->comment("Data successfully indexed!");
+})->describe('Add all data from Lessons Groups Classes to elastic');
+
+
+

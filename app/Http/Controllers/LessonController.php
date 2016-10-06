@@ -7,7 +7,7 @@ use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
 use App\Skill;
 use Illuminate\Http\Request;
-
+use App\ElasticSearch\LessonSearch;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +18,8 @@ class LessonController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function all()
     {
         //
@@ -65,6 +67,13 @@ class LessonController extends ApiController
             }
 
         }
+       //START BUILD  DATA TO SEARCH
+        $idLessonToSearch =  $lesson->id;
+        $nameLessonToSearch =  $data['name'];
+        $thumbnailLessontoSearch =  (isset($data['thumbnail'])) ? $data['thumbnail']: null;
+
+        $search = new LessonSearch();
+        $search->addToIndex($idLessonToSearch,$nameLessonToSearch,$thumbnailLessontoSearch);
 
         return $this->setStatusCode(200)->respondSuccess($lesson);
 
@@ -116,7 +125,16 @@ class LessonController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+
+
+
+
+        //Need complete method and pass (new name and new thumbnail)!!!
+
+//        $search = new LessonSearch();
+//        $search->updateIndex($id,$name,$thumbnail);
+
+
     }
 
     /**
@@ -127,7 +145,9 @@ class LessonController extends ApiController
      */
     public function delete($id)
     {
-        //
+        //Need complete method and pass (id)!!!
+        $search = new LessonSearch();
+        $search->deleteIndex($id);
     }
 
     public function suggest($tag){

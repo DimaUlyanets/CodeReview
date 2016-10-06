@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ElasticSearch\GroupSearch;
 use App\Group;
 use App\Http\Requests;
 use App\Http\Requests\GroupCreateRequest;
@@ -73,6 +74,14 @@ class GroupController extends ApiController
 
             }
 
+
+            //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
+            $idClassToSearch = $group->id;
+            $nameClassToSearch = $data['name'];
+            $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+
+            $search = new GroupSearch();
+            $search->addToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch);
             return Response::json($group->toArray(), 200);
 
         }
@@ -109,7 +118,10 @@ class GroupController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+        //Need complete method and pass (new name and new thumbnail)!!!
+
+//        $search = new GroupSearch();
+//        $search->updateIndex($id,$name,$thumbnail);
     }
 
     /**
@@ -120,7 +132,11 @@ class GroupController extends ApiController
      */
     public function delete($id)
     {
-        //
+
+//Need complete method and pass (id)!!!
+
+        $search = new GroupSearch();
+        $search->deleteIndex($id);
     }
 
     /**

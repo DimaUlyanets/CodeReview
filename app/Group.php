@@ -67,6 +67,10 @@ class Group extends Model
         return $this->belongsTo('App\Privacy');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
     /**
      * The organization has many groups.
      */

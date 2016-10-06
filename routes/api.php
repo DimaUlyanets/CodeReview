@@ -104,3 +104,12 @@ Route::group(['prefix' => 'skills' , 'middleware' => 'auth:api'] , function() {
     Route::get('/suggest/{tag}', 'SkillController@suggest')->where('id', '[0-9]+');
 
 });
+
+
+Route::group(['prefix' => 'search' , 'middleware' => 'auth:api'] , function() {
+
+    Route::post('/full', 'SearchController@fullSearch');
+    Route::post('/quick ', 'SearchController@quickSearch');
+
+
+});

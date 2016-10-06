@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
+use App\ElasticSearch\ClassSearch;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
 use App\Tag;
@@ -28,7 +29,7 @@ class ClassController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function create(ClassCreateRequest $request)
@@ -40,14 +41,14 @@ class ClassController extends ApiController
 
         $class = Classes::create($data);
 
-        if($class){
+        if ($class) {
 
-            if($request->tags){
+            if ($request->tags) {
 
-                foreach($request->tags as $value){
+                foreach ($request->tags as $value) {
 
                     $tag = Tag::whereName($value)->first();
-                    if(!$tag){
+                    if (!$tag) {
                         $tag = Tag::create(["name" => $value]);
                     }
                     $class->tags()->attach($tag->id);
@@ -55,6 +56,15 @@ class ClassController extends ApiController
                 }
 
             }
+
+
+            //START BUILD  DATA TO SEARCH
+            $idClassToSearch = $class->id;
+            $nameClassToSearch = $data['name'];
+            $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+
+            $search = new ClassSearch();
+            $search->addToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch);
 
             return Response::json($class->toArray(), 200);
 
@@ -66,19 +76,19 @@ class ClassController extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $class = Classes::find($id);
 
-        if($class){
+        if ($class) {
 
             $user = User::find($class->author_id);
 
             $lessons = [];
-            foreach($class->lessons as $key => $value){
+            foreach ($class->lessons as $key => $value) {
 
                 $lessons[$key]["name"] = $value->name;
                 $lessons[$key]["thumbnail"] = $value->thumbnail;
@@ -110,24 +120,29 @@ class ClassController extends ApiController
 
     public function update(Request $request, $id)
     {
-        //
+//        Need complete method and pass (new name and new thumbnail)!!!
+
+//        $search = new ClassSearch();
+//        $search->updateIndex($id,$name,$thumbnail);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function delete($id)
     {
-        //
+        //Need complete method and pass (id)!!!
+        $search = new ClassSearch();
+        $search->deleteIndex($id);
     }
 
     /**
      * User join to class
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
 
@@ -140,10 +155,10 @@ class ClassController extends ApiController
         $groups = Auth::guard('api')->user()->groups()->whereId($class->group_id)->first();
 
         #check is user already in group of this class
-        if($groups){
+        if ($groups) {
 
-            if(!$user->classes()->whereId($request->classes_id)->first()){
-                
+            if (!$user->classes()->whereId($request->classes_id)->first()) {
+
                 $user->classes()->attach($request->classes_id);
 
                 return $this->setStatusCode(200)->respondSuccess(
@@ -163,11 +178,12 @@ class ClassController extends ApiController
 
     }
 
-    public function leave($id){
+    public function leave($id)
+    {
 
         $user = Auth::guard('api')->user();
 
-        if($user->classes()->whereId($id)->first()){
+        if ($user->classes()->whereId($id)->first()) {
 
             $user->classes()->detach($id);
             exit;
