@@ -17,7 +17,7 @@
 
         var url = 'http://mitka.local/api/classes?api_token=f3apTDoR7ENRSZbn2I3y7S66YlmGRWkW0rnx7nZgnEd7J62R0tjR5wg8y3RX';
         var data = {
-            "name": "ClassPri vateGroup",
+            "name": "ClassPdri vateGroup",
             "difficulty": 100,
             "type": 1,
             "skills": ["PHP", "JS", "Math"],
