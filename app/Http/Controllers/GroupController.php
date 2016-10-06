@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Files;
 use App\Group;
 use App\Http\Requests;
 use App\Http\Requests\GroupCreateRequest;
@@ -77,7 +78,8 @@ class GroupController extends ApiController
         $group = Group::create($data);
 
         if(!empty($request->icon)){
-            $path = env("APP_S3") . $request->icon->store("organizations/{$data["organization_id"]}/groups/{$group->id}/icon", 's3');
+
+            $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
             $group->icon = $path;
             $group->save();
         }

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class Files extends Model
 {
@@ -12,10 +13,14 @@ class Files extends Model
         $result = [];
 
         if(!empty($request->cover)){
-            $result["cover"] = env("APP_S3") . $request->cover->store("users/{$user->id}/cover_photo", 's3');
+
+            $result["cover"] = self::qualityCompress($request->cover, "users/{$user->id}/cover_photo");
+
         }
         if(!empty($request->avatar)){
-            $result["avatar"] = env("APP_S3") . $request->avatar->store("users/{$user->id}/profile_avatar", 's3');
+
+            $result["avatar"] = self::qualityCompress($request->avatart, "users/{$user->id}/profile_avatar");
+
         }
 
         return $result;
@@ -23,11 +28,16 @@ class Files extends Model
 
     }
 
-    public static function saveEntityIcon($entity, $request, $type, $organization){
+    public static function qualityCompress($resource, $path){
 
-        #Storage::disk('s3')->put("organizations/{$user->id}/profile/kitty.jpg", file_get_contents("https://yomotherboard.com/wp-content/uploads/2015/02/laravel.png"));
+        $local = $resource->store($path, 'public');
+        $img = Image::make(storage_path('app/public').DIRECTORY_SEPARATOR .$local);
+        $img->save(storage_path('app/public').DIRECTORY_SEPARATOR .$local, env('COMPRESS_RATIO'));
+        Storage::disk('s3')->put($local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$local), 'public');
 
+        return env("APP_S3") . $local;
 
     }
+
 
 }

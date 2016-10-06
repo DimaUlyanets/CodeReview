@@ -38,8 +38,7 @@ class OrganizationController extends Controller
         $data = $request->all();
 
         $result = Organization::create($data);
-        $path = env("APP_S3") . $request->icon->store("organizations/{$result->id}/icon", 's3');
-        $result->icon = $path;
+        $result->icon = Files::qualityCompress($request->icon, "organizations/{$result->id}/icon");
         $result->save();
 
         if($result){

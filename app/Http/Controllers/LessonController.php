@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
+use App\Files;
 use App\Group;
 use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
@@ -58,8 +59,7 @@ class LessonController extends ApiController
         if(!empty($request->thumbnail)) {
 
             $organization = Group::find($data["group_id"])->organization;
-            $path = env("APP_S3") . $request->thumbnail->store("organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon", 's3');
-            $lesson->thumbnail = $path;
+            $lesson->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon");
             $lesson->save();
 
         }
