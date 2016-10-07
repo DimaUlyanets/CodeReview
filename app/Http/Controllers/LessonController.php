@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
+use App\Group;
 use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
 use App\Skill;
+use App\Tag;
+use App\User;
 use Illuminate\Http\Request;
 use App\ElasticSearch\LessonSearch;
 use App\Http\Requests;
@@ -54,6 +57,25 @@ class LessonController extends ApiController
 
         }
 
+        if(!empty($request->thumbnail)) {
+
+            $organization = Group::find($data["group_id"])->organization;
+            $path = env("APP_S3") . $request->thumbnail->store("organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon", 's3');
+            $lesson->thumbnail = $path;
+            $lesson->save();
+
+        }
+
+
+        if(!empty($request->lesson_file)){
+
+            $organization = Group::find($data["group_id"])->organization;
+            $path = env("APP_S3") . $request->lesson_file->store("organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/{$lesson->id}/lesson_file", 's3');
+            $lesson->lesson_file = $path;
+            $lesson->save();
+
+        }
+
         if($request->skills){
 
             foreach($request->skills as $value){
@@ -65,6 +87,14 @@ class LessonController extends ApiController
                 $lesson->skills()->attach($skill->id);
 
             }
+
+            $lesson->skills = $request->skills;
+
+        }
+
+        if($request->tags){
+
+            Tag::assignTag($lesson, $request);
 
         }
        //START BUILD  DATA TO SEARCH
@@ -91,7 +121,7 @@ class LessonController extends ApiController
 
         if($lesson){
 
-
+            if(!User::LessonAndClassAccess($lesson))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $response = [
 
@@ -152,7 +182,7 @@ class LessonController extends ApiController
 
     public function suggest($tag){
 
-        $data = Lesson::where('name', 'like', "{$tag}%")->get();
+        $data = Lesson::where('name', 'like', "%{$tag}%")->get();
 
         if(isset($data[0])){
 
@@ -166,6 +196,10 @@ class LessonController extends ApiController
             }
 
             return $this->setStatusCode(200)->respondSuccess($response);
+
+        }else{
+
+            return $this->setStatusCode(404)->respondWithError("Not Found");
 
         }
 

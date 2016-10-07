@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Group;
 use Illuminate\Foundation\Http\FormRequest;
 
 class JoinGroupRequest extends Request
@@ -13,7 +14,15 @@ class JoinGroupRequest extends Request
      */
     public function authorize()
     {
-        return true;
+
+        if(Group::userHasAccess(Group::find($this->group_id))){
+
+            return true;
+
+        }
+
+        return false;
+
     }
 
     /**

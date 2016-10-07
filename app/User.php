@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -27,6 +28,24 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+
+    public static function LessonAndClassAccess($entity){
+
+        $groupId = $entity->group->id;
+
+        $userInClassGroup = Auth::guard('api')->user()->groups()->whereId($groupId)->first();
+        $privacyId = Privacy::whereType('External')->where('subtype', '=', 'Free')->first()->id;
+        $freeExternalGroup = Group::wherePrivacyId($privacyId)->whereId($groupId)->first();
+
+        if(!$userInClassGroup && !$freeExternalGroup){
+
+            return false;
+
+        }
+
+        return true;
+
+    }
 
     /**
      * The organizations that belong to the user.
@@ -59,5 +78,7 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Profile');
     }
+
+
 
 }

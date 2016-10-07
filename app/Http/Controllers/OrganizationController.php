@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Files;
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
 use App\Tag;
@@ -33,22 +34,19 @@ class OrganizationController extends Controller
     public function create(OrganizationCreateRequest $request)
     {
 
-        $result = Organization::create($request->all());
+
+        $data = $request->all();
+
+        $result = Organization::create($data);
+        $path = env("APP_S3") . $request->icon->store("organizations/{$result->id}/icon", 's3');
+        $result->icon = $path;
+        $result->save();
 
         if($result){
 
             if($request->tags){
 
-                foreach($request->tags as $value){
-
-
-                    $tag = Tag::whereName($value)->first();
-                    if(!$tag){
-                        $tag = Tag::create(["name" => $value]);
-                    }
-                    $result->tags()->attach($tag->id);
-
-                }
+                Tag::assignTag($result, $request);
 
             }
 

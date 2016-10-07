@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
-use App\ElasticSearch\ClassSearch;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
 use App\Tag;
@@ -36,7 +35,19 @@ class ClassController extends ApiController
     {
 
         $data = (array)$request->all();
-        $data["group_id"] = $request->group_id;
+
+        if(!$request->group_id){
+
+            $user = Auth::guard('api')->user();
+            $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+
+        }else{
+
+            $data["group_id"] = $request->group_id;
+
+        }
+
+
         $data["author_id"] = Auth::guard('api')->user()->id;
 
         $class = Classes::create($data);
@@ -44,6 +55,16 @@ class ClassController extends ApiController
         if ($class) {
 
             if ($request->tags) {
+            if(!empty($request->thumbnail)){
+
+                $organization = Group::find($data["group_id"])->organization;
+                $path = env("APP_S3") . $request->thumbnail->store("organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon", 's3');
+                $class->thumbnail = $path;
+                $class->save();
+
+            }
+
+            if($request->tags){
 
                 foreach ($request->tags as $value) {
 
@@ -54,6 +75,7 @@ class ClassController extends ApiController
                     $class->tags()->attach($tag->id);
 
                 }
+                Tag::assignTag($class, $request);
 
             }
 
@@ -84,6 +106,8 @@ class ClassController extends ApiController
         $class = Classes::find($id);
 
         if ($class) {
+
+            if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $user = User::find($class->author_id);
 

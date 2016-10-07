@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Files;
+use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Organization;
+use App\Privacy;
 use App\Profile;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
@@ -72,7 +76,7 @@ class UsersController extends ApiController
 
         if(!$user){
 
-            return $this->respondNotFound('User does not exists', 404);
+            return $this->setStatusCode(404)->respondWithError("User does not exists");
 
         }
 
@@ -108,15 +112,22 @@ class UsersController extends ApiController
     public function groups($id){
 
         $user = User::find($id);
+
         if($user){
+
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
 
             $response = array();
 
             foreach($user->groups as $key => $group){
 
-                $response[$key]["name"] = $group->name;
-                $response[$key]["icon"] = $group->icon;
-                $response[$key]["id"] = $group->id;
+                $response[$group->id]["name"] = $group->name;
+                $response[$group->id]["icon"] = $group->icon;
+                $response[$group->id]["id"] = $group->id;
 
             }
 
@@ -146,6 +157,11 @@ class UsersController extends ApiController
 
             if(!$user->profile){
 
+                $files = Files::saveUserFiles($user, $request);
+
+                if(isset($files["cover"]))$data["cover"] = $files["cover"];
+                if(isset($files["avatar"]))$data["avatar"] = $files["avatar"];
+
                 $resutl = Profile::create($data);
                 return $this->setStatusCode(200)->respondSuccess($resutl);
 
@@ -165,13 +181,19 @@ class UsersController extends ApiController
 
         if($user){
 
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
+
             $response = [];
 
-            foreach($user->classes as $key => $value){
+            foreach($user->classes as $value){
 
-                $response[$key]["id"] = $value->id;
-                $response[$key]["name"] = $value->name;
-                $response[$key]["description"] = $value->description;
+                $response[$value->id]["id"] = $value->id;
+                $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["description"] = $value->description;
 
             }
 
@@ -181,6 +203,49 @@ class UsersController extends ApiController
         }
 
         return $this->setStatusCode(404)->respondWithError("User does not exists");
+
+    }
+
+    public function suggest(Request $request){
+
+        $user = User::whereUsername($request->username)->first();
+
+        if($user){
+
+            $suggestion = [];
+
+            $list = User::all();
+            $existing = [];
+
+            foreach($list as $value){
+
+                $existing[] = $value->username;
+
+            }
+
+            $year = date('Y');
+
+            if(!in_array("{$request->last_name}_{$request->first_name}", $existing))$suggestion[] = "{$request->last_name}_{$request->first_name}";
+            if(!in_array("{$request->first_name}_{$request->last_name}", $existing))$suggestion[] = "{$request->first_name}_{$request->last_name}";
+            if(!in_array("{$request->last_name}_{$request->first_name}_{$year}", $existing))$suggestion[] = "{$request->last_name}_{$request->first_name}_{$year}";
+            if(!in_array("{$year}_{$request->last_name}_{$request->first_name}", $existing))$suggestion[] = "{$year}_{$request->last_name}_{$request->first_name}";
+            if(!in_array("{$year}_{$request->username}", $existing))$suggestion[] = "{$year}_{$request->username}";
+            if(!in_array("{$request->username}_{$year}", $existing))$suggestion[] = "{$request->username}_{$year}";
+
+            #put any words to this array to combine with username
+            $listOfWords = [""];
+
+            foreach($listOfWords as $value){
+
+                if(!in_array("{$value}_{$request->username}", $existing))$suggestion[] = "{$value}_{$request->username}";
+
+            }
+
+            return $this->setStatusCode(409)->respondSuccess($suggestion);
+
+        }
+
+        return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
     }
 

@@ -18,6 +18,15 @@ class Lesson extends Model
     ];
 
     /**
+     * The lessons has one group .
+     */
+
+    public function group()
+    {
+        return $this->belongsTo('App\Group');
+    }
+
+    /**
      * The lesson to many classes
      */
     public function classes()
@@ -39,6 +48,15 @@ class Lesson extends Model
     public function skills()
     {
         return $this->belongsToMany('App\Skill')->withTimestamps();
+    }
+
+    /**
+     * The tag belongs to many lessons.
+     */
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
     }
 
 }

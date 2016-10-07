@@ -67,7 +67,7 @@ class TagController extends ApiController
 
     public function suggest($tag){
 
-        $data = Tag::where('name', 'like', "{$tag}%")->get();
+        $data = Tag::where('name', 'like', "%{$tag}%")->get();
 
         if(isset($data[0])){
 
@@ -81,6 +81,10 @@ class TagController extends ApiController
             }
 
             return $this->setStatusCode(200)->respondSuccess($response);
+
+        }else{
+
+            return $this->setStatusCode(404)->respondWithError("Not Found");
 
         }
 

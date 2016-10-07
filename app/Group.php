@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Group extends Model
 {
@@ -59,6 +60,25 @@ class Group extends Model
 
     }
 
+    public static function userHasAccess($group){
+
+        $user =  Auth::guard('api')->user();
+
+        if(!$group) return false;
+
+        $member = $user->groups()->whereId($group->id)->first();
+        $privacy = $group->privacy;
+
+        if($member || "{$privacy->type} {$privacy->subtype}" == "External Free"){
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
     /**
      * The privacy that belong to the group.
      */
@@ -106,6 +126,14 @@ class Group extends Model
     public function tags()
     {
         return $this->belongsToMany('App\Tag');
+    }
+
+    /**
+     * The organizations that belong to the user.
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\Users')->withTimestamps();;
     }
 
 }

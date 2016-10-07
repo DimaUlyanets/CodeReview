@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CreateProfileRequest extends Request
 {
@@ -13,7 +14,10 @@ class CreateProfileRequest extends Request
      */
     public function authorize()
     {
-        return true;
+
+        if($this->id == Auth::guard('api')->user()->id)return true;
+        return false;
+
     }
 
     /**
@@ -28,9 +32,8 @@ class CreateProfileRequest extends Request
     {
 
         return [
-            'avatar' => 'max:255',
-            'icon' => 'max:255',
-            'cover' => 'max:255',
+            'avatar' => 'image',
+            'cover' => 'image',
             'bio' => 'max:255',
             'color' => 'max:255',
         ];
