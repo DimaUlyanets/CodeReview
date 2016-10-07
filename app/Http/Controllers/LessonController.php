@@ -59,7 +59,8 @@ class LessonController extends ApiController
         if(!empty($request->thumbnail)) {
 
             $organization = Group::find($data["group_id"])->organization;
-            $lesson->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon");
+            $path = "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon";
+            $lesson->thumbnail = Files::qualityCompress($request->thumbnail, $path);
             $lesson->save();
 
         }
@@ -68,9 +69,8 @@ class LessonController extends ApiController
         if(!empty($request->lesson_file)){
 
             $organization = Group::find($data["group_id"])->organization;
-            $path = env("APP_S3") . $request->lesson_file->store("organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/{$lesson->id}/lesson_file", 's3');
-            $lesson->lesson_file = $path;
-            $lesson->save();
+            $path = "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/{$lesson->id}/lesson_file";
+            Files::uploadLessonFile($request->lesson_file, $path, $lesson);
 
         }
 

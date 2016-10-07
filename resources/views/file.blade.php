@@ -15,12 +15,11 @@
 
     function sendData() {
 
-        var url = 'http://mitka.local/api/classes?api_token=f3apTDoR7ENRSZbn2I3y7S66YlmGRWkW0rnx7nZgnEd7J62R0tjR5wg8y3RX';
+        var url = 'http://mitka.local/api/lessons?api_token=f3apTDoR7ENRSZbn2I3y7S66YlmGRWkW0rnx7nZgnEd7J62R0tjR5wg8y3RX';
         var data = {
-            "name": "ClassPdsri vateGroup",
+            "name": "ClassPddddsdddddri vateGroup",
             "difficulty": 100,
             "type": 1,
-            "skills": ["PHP", "JS", "Math"],
             "tags[0]": "poc",
             "is_collaborative": 1
         };
@@ -30,7 +29,7 @@
             formData.append(name, data[name]);
         }
 
-        formData.append('thumbnail', document.getElementById("file").files[0]);
+        formData.append('lesson_file', document.getElementById("file").files[0]);
         fetch(url, {
             method: 'POST',
             body: formData
