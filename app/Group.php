@@ -131,9 +131,6 @@ class Group extends Model
     /**
      * The organizations that belong to the user.
      */
-    public function users()
-    {
-        return $this->belongsToMany('App\Users')->withTimestamps();;
-    }
+
 
 }
