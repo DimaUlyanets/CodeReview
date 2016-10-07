@@ -70,7 +70,7 @@ class LessonController extends ApiController
 
             $organization = Group::find($data["group_id"])->organization;
             $path = "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/{$lesson->id}/lesson_file";
-            Files::uploadLessonFile($request->lesson_file, $path, $lesson);
+            $lesson->lesson_file = Files::uploadLessonFile($request->lesson_file, $path, $lesson);
 
         }
 

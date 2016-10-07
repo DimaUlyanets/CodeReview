@@ -56,6 +56,8 @@ class Files extends Model
             $lesson->lesson_file = env("APP_S3") . $resource->store($path, 's3');
             $lesson->save();
 
+            return $lesson->lesson_file ;
+
         }
 
         $lesson->lesson_file = "processing";
@@ -63,6 +65,8 @@ class Files extends Model
 
         $local = $resource->store($path, 'public');
         dispatch(new UploadVideo($local, $lesson));
+
+        return "processing";
 
     }
 

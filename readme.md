@@ -25,10 +25,3 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-
-##Instalation
-
-composer install
-php artisan migrate:refresh --seed
-set QUEUE_DRIVER in env to Beanstalkd
-install drivers for php-ffmpeg
