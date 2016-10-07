@@ -2,7 +2,7 @@
 1. composer install
 2. php artisan migrate:refresh --seed
 3. php artisan serve
-4. set QUEUE_DRIVER in env to Beanstalkd
+4. set QUEUE_DRIVER=Beanstalkd in env
 5. install drivers for php-ffmpeg
 
 ### Backend requirements ###
