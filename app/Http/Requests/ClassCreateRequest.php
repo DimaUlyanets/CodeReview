@@ -34,7 +34,7 @@ class ClassCreateRequest extends Request
         }
 
         return [
-            'name' => 'required|max:255|unique:classes,name,NULL,id,group_id,' . $this->group_id,
+            #'name' => 'required|max:255|unique:classes,name,NULL,id,group_id,' . $this->group_id,
             'description' => 'max:140',
             'thumbnail' => 'image|max:10240',
             'group_id' => 'exists:groups,id|numeric',

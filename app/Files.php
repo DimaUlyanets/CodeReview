@@ -32,16 +32,14 @@ class Files extends Model
 
     public static function qualityCompress($resource, $path){
 
-        $extension = $resource->extension();
-
-
         $local = $resource->store($path, 'public');
-        $img = Image::make(storage_path('app/public').DIRECTORY_SEPARATOR .$local);
+        $localPath = storage_path('app/public').DIRECTORY_SEPARATOR .$local;
 
-        $img->save(storage_path('app/public').DIRECTORY_SEPARATOR .$local, env('COMPRESS_RATIO'));
+        $img = Image::make($localPath);
+        $img->save($localPath, env('COMPRESS_RATIO'));
 
-        Storage::disk('s3')->put($local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$local), 'public');
-        unlink(storage_path('app/public').DIRECTORY_SEPARATOR .$local);
+        Storage::disk('s3')->put($local, file_get_contents($localPath), 'public');
+        unlink($localPath);
 
         return env("APP_S3") . $local;
 
@@ -58,15 +56,19 @@ class Files extends Model
 
             return $lesson->lesson_file ;
 
+        }else if($extension == "mp4"){
+
+            $lesson->lesson_file = "processing";
+            $lesson->save();
+
+            $local = $resource->store($path, 'public');
+            dispatch(new UploadVideo($local, $lesson));
+
+            return "processing";
+
+
         }
 
-        $lesson->lesson_file = "processing";
-        $lesson->save();
-
-        $local = $resource->store($path, 'public');
-        dispatch(new UploadVideo($local, $lesson));
-
-        return "processing";
 
     }
 
