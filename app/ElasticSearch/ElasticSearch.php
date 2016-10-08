@@ -7,24 +7,19 @@ use Elasticsearch\ClientBuilder;
 
 class ElasticSearch
 {
-
     private $client;
 
-    function __construct()
-    {
-
-        $this->client = ClientBuilder::create()->build();
-
+    function __construct(){
+        $this->client = ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function fullSearch($itemToSearch)
-    {
+    public function fullSearch($itemToSearch){
         $params = [
-            'index' => 'classes,groups,lessons',
-            'type' => 'class,group,lesson',
-            'body' => [
-                'query' => [
-                    'bool' => [
+            "index" => "classes,groups,lessons",
+            "type" => "class,group,lesson",
+            "body" => [
+                "query" => [
+                    "bool" => [
                         "should" => [
                             ["match" => ["Name" => $itemToSearch]],
                             ["match" => ["Thumbnail" => $itemToSearch]],
@@ -33,21 +28,18 @@ class ElasticSearch
                 ]
             ]
         ];
-
         $searchResult = $this->client->search($params);
-        return $searchResult['hits']['hits'];
-
+        return $searchResult["hits"]["hits"];
     }
 
-    public function quickSearch($itemToSearch)
-    {
+    public function quickSearch($itemToSearch){
         $params = [
-            'index' => 'classes,groups,lessons',
-            'type' => 'class,group,lesson',
-            'body' => [
+            "index" => "classes,groups,lessons",
+            "type" => "class,group,lesson",
+            "body" => [
                 "from" => 0, "size" => 2,
-                'query' => [
-                    'bool' => [
+                "query" => [
+                    "bool" => [
                         "should" => [
                             ["match" => ["Name" => $itemToSearch]],
                             ["match" => ["Thumbnail" => $itemToSearch]],
@@ -56,11 +48,8 @@ class ElasticSearch
                 ]
             ]
         ];
-
         $searchResult = $this->client->search($params);
-        return $searchResult['hits']['hits'];
-
-
+        return $searchResult["hits"]["hits"];
     }
 
 }

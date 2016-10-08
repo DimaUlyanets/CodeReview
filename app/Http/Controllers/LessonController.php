@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
+use App\Events\ElasticLessonAddToIndex;
+use App\Events\ElasticLessonDeleteIndex;
+use App\Events\ElasticLessonUpdateIndex;
 use App\Files;
 use App\Group;
 use App\Http\Requests\CreateLessonRequest;
@@ -100,10 +103,8 @@ class LessonController extends ApiController
        //START BUILD  DATA TO SEARCH
         $idLessonToSearch =  $lesson->id;
         $nameLessonToSearch =  $data['name'];
-        $thumbnailLessontoSearch =  (isset($data['thumbnail'])) ? $data['thumbnail']: null;
-
-        $search = new LessonSearch();
-        $search->addToIndex($idLessonToSearch,$nameLessonToSearch,$thumbnailLessontoSearch);
+        $thumbnailLessonToSearch =  (isset($data['thumbnail'])) ? $data['thumbnail']: null;
+        event(new ElasticLessonAddToIndex($idLessonToSearch, $nameLessonToSearch, $thumbnailLessonToSearch));
 
         return $this->setStatusCode(200)->respondSuccess($lesson);
 
@@ -155,16 +156,8 @@ class LessonController extends ApiController
      */
     public function update(Request $request, $id)
     {
-
-
-
-
         //Need complete method and pass (new name and new thumbnail)!!!
-
-//        $search = new LessonSearch();
-//        $search->updateIndex($id,$name,$thumbnail);
-
-
+        //event(new ElasticLessonUpdateIndex($id,$name,$thumbnail));
     }
 
     /**
@@ -176,8 +169,7 @@ class LessonController extends ApiController
     public function delete($id)
     {
         //Need complete method and pass (id)!!!
-        $search = new LessonSearch();
-        $search->deleteIndex($id);
+        event(new ElasticLessonDeleteIndex($id));
     }
 
     public function suggest($tag){

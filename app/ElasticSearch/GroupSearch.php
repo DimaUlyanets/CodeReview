@@ -8,49 +8,41 @@ class GroupSearch implements IElasticSearch{
     private $client;
 
     function __construct() {
-
-        $this->client = Elasticsearch\ClientBuilder::create()->build();
-
+        $this->client = Elasticsearch\ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function addToIndex($id, $name, $thumbnail)
-    {
+    public function addToIndex($id, $name, $thumbnail){
         $params = [
-            'index' => 'groups',
-            'type' => 'group',
-            'id' => $id,
-            'body' => [
+            "index" => "groups",
+            "type" => "group",
+            "id" => $id,
+            "body" => [
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
             ]
         ];
-
         $this->client->index($params);
     }
 
-    public function updateIndex($id, $name, $thumbnail)
-    {
+    public function updateIndex($id, $name, $thumbnail){
         $params = [
-            'index' => 'groups',
-            'type' => 'group',
-            'id' => $id,
-            'body' => [
+            "index" => "groups",
+            "type" => "group",
+            "id" => $id,
+            "body" => [
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
             ]
         ];
-
         $this->client->update($params);
     }
 
-    public function deleteIndex($id)
-    {
+    public function deleteIndex($id){
         $params = [
-            'index' => 'groups',
-            'type' => 'group',
-            'id' => $id
+            "index" => "groups",
+            "type" => "group",
+            "id" => $id
         ];
-
         $this->client->delete($params);
     }
 }

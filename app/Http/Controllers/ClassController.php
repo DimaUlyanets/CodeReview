@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
+use App\Events\ElasticClassAddToIndex;
+use App\Events\ElasticClassDeleteIndex;
+use App\Events\ElasticClassUpdateIndex;
 use App\Files;
 use App\Group;
 use App\Http\Requests\ClassCreateRequest;
@@ -39,12 +42,12 @@ class ClassController extends ApiController
 
         $data = (array)$request->all();
 
-        if(!$request->group_id){
+        if (!$request->group_id) {
 
             $user = Auth::guard('api')->user();
             $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
 
-        }else{
+        } else {
 
             $data["group_id"] = $request->group_id;
 
@@ -55,47 +58,44 @@ class ClassController extends ApiController
 
         $class = Classes::create($data);
 
-        if($class){
+        if ($class) {
 
             if ($request->tags) {
-            if(!empty($request->thumbnail)){
+                if (!empty($request->thumbnail)) {
 
-                $organization = Group::find($data["group_id"])->organization;
+                    $organization = Group::find($data["group_id"])->organization;
 
-                $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
-                $class->save();
-
-            }
-
-            if($request->tags){
-
-                foreach ($request->tags as $value) {
-
-                    $tag = Tag::whereName($value)->first();
-                    if (!$tag) {
-                        $tag = Tag::create(["name" => $value]);
-                    }
-                    $class->tags()->attach($tag->id);
+                    $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
+                    $class->save();
 
                 }
-                Tag::assignTag($class, $request);
+
+                if ($request->tags) {
+
+                    foreach ($request->tags as $value) {
+
+                        $tag = Tag::whereName($value)->first();
+                        if (!$tag) {
+                            $tag = Tag::create(["name" => $value]);
+                        }
+                        $class->tags()->attach($tag->id);
+
+                    }
+                    Tag::assignTag($class, $request);
+
+                }
+                //START BUILD  DATA TO SEARCH
+                $idClassToSearch = $class->id;
+                $nameClassToSearch = $data['name'];
+                $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+                event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
+
+                return Response::json($class->toArray(), 200);
 
             }
 
 
-            //START BUILD  DATA TO SEARCH
-            $idClassToSearch = $class->id;
-            $nameClassToSearch = $data['name'];
-            $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
-
-            $search = new ClassSearch();
-            $search->addToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch);
-
-            return Response::json($class->toArray(), 200);
-
         }
-
-
     }
 
     /**
@@ -148,9 +148,7 @@ class ClassController extends ApiController
     public function update(Request $request, $id)
     {
 //        Need complete method and pass (new name and new thumbnail)!!!
-
-//        $search = new ClassSearch();
-//        $search->updateIndex($id,$name,$thumbnail);
+//        event(new ElasticClassUpdateIndex($id,$name,$thumbnail));
     }
 
     /**
@@ -162,8 +160,7 @@ class ClassController extends ApiController
     public function delete($id)
     {
         //Need complete method and pass (id)!!!
-        $search = new ClassSearch();
-        $search->deleteIndex($id);
+        event(new ElasticClassDeleteIndex($id));
     }
 
     /**

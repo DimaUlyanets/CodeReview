@@ -2,9 +2,6 @@
 
 namespace App\ElasticSearch;
 
-
-
-
 interface IElasticSearch
 {
     public function addToIndex($id,$name,$thumbnail);
