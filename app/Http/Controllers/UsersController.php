@@ -109,7 +109,9 @@ class UsersController extends ApiController
         //
     }
 
-    public function groups($id){
+    public function groups($id = null){
+
+        $id = $id ? $id : Auth::guard('api')->user()->id;
 
         $user = User::find($id);
 
@@ -122,16 +124,17 @@ class UsersController extends ApiController
             }
 
             $response = array();
-
             foreach($user->groups as $key => $group){
 
-                $response[$group->id]["name"] = $group->name;
-                $response[$group->id]["icon"] = $group->icon;
-                $response[$group->id]["id"] = $group->id;
+                if (!$group->default) {
+                    $response[$group->id]["name"] = $group->name;
+                    $response[$group->id]["thumbnail"] = $group->icon;
+                    $response[$group->id]["id"] = $group->id;
+                }
 
             }
 
-            return $this->setStatusCode(200)->respondSuccess($response);
+            return $this->setStatusCode(200)->respondSuccess(array_values($response));
 
         }
 

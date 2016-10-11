@@ -40,7 +40,7 @@ class GroupCreateRequest extends Request
             'icon' => 'image|max:10240',
             'organization_id' => 'numeric|exists:organizations,id',
             'privacy_id' => 'numeric|required|exists:privacy,id',
-            'tags' => 'array',
+            'tags' => 'max:255',
         ];
     }
 }

@@ -20,6 +20,7 @@ class Group extends Model
     public static function getGroupInfo($group){
 
         $classes = $group->classes;
+        $users = $group->users;
         $lessons = $group->lessons;
 
         $response = [
@@ -29,7 +30,7 @@ class Group extends Model
             "description" => $group->description,
             "thumbnail" => $group->icon,
             "lessons_num" => $lessons->count(),
-            "classes_num" => $classes->count(),
+            "users_num" => $users->count(),
 
         ];
 
@@ -129,7 +130,7 @@ class Group extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\Users')->withTimestamps();;
+        return $this->belongsToMany('App\User');
     }
 
 }

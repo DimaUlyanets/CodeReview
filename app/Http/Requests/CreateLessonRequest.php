@@ -58,6 +58,7 @@ class CreateLessonRequest extends Request
      */
     public function rules()
     {
+
         return [
             'name' => 'required|max:255',
             'description' => 'max:255',
