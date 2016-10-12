@@ -1,10 +1,12 @@
 ## Backend install ##
 1. composer install
+2. cp .env.example .env
+2. create database and provide credentials in .env
 2. php artisan migrate:refresh --seed
 3. php artisan key:generate
 4. php artisan config:clear
-5. Set 755 permissions for /storage
-6. set QUEUE_DRIVER=Beanstalkd in env
+5. chmod -R 755 storage
+6. set QUEUE_DRIVER=Beanstalkd in .env
 7. install drivers for php-ffmpeg
 
  php artisan serve for local development
