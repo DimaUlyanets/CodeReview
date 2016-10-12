@@ -1,9 +1,12 @@
 ## Backend install ##
 1. composer install
 2. php artisan migrate:refresh --seed
-3. php artisan serve
+3. php artisan key:generate
+4. php artisan config:clear
 4. set QUEUE_DRIVER=Beanstalkd in env
 5. install drivers for php-ffmpeg
+
+ php artisan serve for local development
 
 ### Backend requirements ###
 1. PHP >= 5.6.4
