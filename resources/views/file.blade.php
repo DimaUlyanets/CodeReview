@@ -15,7 +15,7 @@
 
     function sendData() {
 
-        var url = 'http://mitka.local/api/lessons?api_token=f3apTDoR7ENRSZbn2I3y7S66YlmGRWkW0rnx7nZgnEd7J62R0tjR5wg8y3RX';
+        var url = 'http://mitka.local/api/lessons?api_token=2yYuwzRnUF5A3H6Kf84PmTcMNnkgRrJbXNnOALWXhmRCqKTZemNWCYTzeoZ3';
         var data = {
             "name": "ClassPddddsdddddri vateGroup",
             "difficulty": 100,

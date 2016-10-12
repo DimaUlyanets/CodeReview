@@ -40,7 +40,7 @@ class Group extends Model
             $relatedLessons[$key]["id"] = $value->id;
             $relatedLessons[$key]["thumbnail"] = $value->thumbnail;
             $relatedLessons[$key]["name"] = $value->name;
-            $relatedLessons[$key]["author_id"] = $value->author_id;
+            $relatedLessons[$key]["author_id"] = User::whereId($value->author_id)->first()->name;
 
         }
 
@@ -50,7 +50,7 @@ class Group extends Model
             $relatedClasses[$key]["id"] = $value->id;
             $relatedClasses[$key]["thumbnail"] = $value->thumbnail;
             $relatedClasses[$key]["name"] = $value->name;
-            $relatedClasses[$key]["author_id"] = $value->author_id;
+            $relatedClasses[$key]["author_id"] = User::whereId($value->author_id)->first()->name;
 
         }
 
