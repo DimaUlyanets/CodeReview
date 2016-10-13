@@ -43,25 +43,27 @@ class ElasticGenerator{
     public function addGroupsToSearch(){
         $groups = Group::all();
         foreach ($groups as $group) {
-            $groupId = $group->id;
-            $groupName = $group->name;
-            $groupThumbnail = $group->thumbnail;
-            $groupUsers = [];
-            foreach ($group->users as $user) {
-                $groupUserName = $user->name;
-                array_push($groupUsers, $groupUserName);
-            }
-            $params = [
-                "index" => "groups",
-                "type" => "group",
-                "id" => $groupId,
-                "body" => [
-                    "Name" => $groupName,
-                    "Thumbnail" => $groupThumbnail,
-                    "Users" => $groupUsers
-                ]
-            ];
-          $this->client->index($params);
+            if (!$group->default) {
+                $groupId = $group->id;
+                $groupName = $group->name;
+                $groupThumbnail = $group->thumbnail;
+                $groupUsers = [];
+                foreach ($group->users as $user) {
+                    $groupUserName = $user->name;
+                    array_push($groupUsers, $groupUserName);
+                }
+                $params = [
+                    "index" => "groups",
+                    "type" => "group",
+                    "id" => $groupId,
+                    "body" => [
+                        "Name" => $groupName,
+                        "Thumbnail" => $groupThumbnail,
+                        "Users" => $groupUsers
+                    ]
+                ];
+              $this->client->index($params);
+        }
         }
     }
     public function addLessonsToSearch(){
@@ -77,7 +79,7 @@ class ElasticGenerator{
                 "body" => [
                     "Name" => $lessonName,
                     "Thumbnail" => $lessonThumbnail,
-                    "views" => 0
+                    "views" => $lesson->views
                 ]
             ];
           $this->client->index($params);
