@@ -75,7 +75,7 @@ class LessonController extends ApiController
         }
 
         if($request->skills){
-
+            $request->skills = explode(',', $request->skills);
             foreach($request->skills as $value){
                 
                 $skill = Skill::whereName($value)->first();
@@ -91,7 +91,7 @@ class LessonController extends ApiController
         }
 
         if($request->tags){
-
+            $request->tags = explode(',', $request->tags);
             Tag::assignTag($lesson, $request);
 
         }
@@ -113,6 +113,7 @@ class LessonController extends ApiController
         if($lesson){
 
             if(!User::LessonAndClassAccess($lesson))return $this->setStatusCode(403)->respondWithError("Forbidden");
+            $group = $lesson->group;
 
             $response = [
 
@@ -122,7 +123,10 @@ class LessonController extends ApiController
                 "thumbnail" => $lesson->thumbnail,
                 "lesson_file" => $lesson->lesson_file,
                 "difficulty" => $lesson->difficulty,
+                "type" => $lesson->type,
                 "views" => ++$lesson->views,
+                "group_name" => $group->name,
+                "group_icon" => $group->icon
 
             ];
 

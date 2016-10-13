@@ -108,7 +108,7 @@ class GroupController extends ApiController
 
         if($group){
 
-            if(!Group::userHasAccess($group)){
+            if(!Group::userHasAccess($group) || $group->default){
 
                 return $this->setStatusCode(403)->respondWithError("Forbidden");
 
@@ -181,12 +181,7 @@ class GroupController extends ApiController
 
                $user->groups()->attach($group->id);
 
-               return $this->setStatusCode(200)->respondSuccess(
-                   array(
-                       "user_id" => $user->id,
-                       "group_id" => $request->group_id
-                   )
-               );
+               return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
            }
 
@@ -205,7 +200,7 @@ class GroupController extends ApiController
         if($user->groups()->whereId($id)->whereDefault(0)->first()){
 
             $user->groups()->detach($id);
-            exit;
+            return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
         }
 

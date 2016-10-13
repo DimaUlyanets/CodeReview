@@ -98,9 +98,11 @@ class ClassController extends ApiController
             $lessons = [];
             foreach($class->lessons as $key => $value){
 
+                $lessons[$key]["id"] = $value->id;
                 $lessons[$key]["name"] = $value->name;
                 $lessons[$key]["thumbnail"] = $value->thumbnail;
                 $lessons[$key]["author_name"] = $value->author->name;
+                $lessons[$key]["views"] = $value->views;
 
             }
 
@@ -108,6 +110,7 @@ class ClassController extends ApiController
 
             $response = [
 
+                "id" => $class->id,
                 "name" => $class->name,
                 "description" => $class->description,
                 "author_name" => $user->name,
@@ -164,12 +167,7 @@ class ClassController extends ApiController
                 
                 $user->classes()->attach($request->classes_id);
 
-                return $this->setStatusCode(200)->respondSuccess(
-                    array(
-                        "user_id" => $user->id,
-                        "class_id" => $request->classes_id
-                    )
-                );
+                 return $this->setStatusCode(204)->respondSuccess([]);
 
             }
 
@@ -188,7 +186,7 @@ class ClassController extends ApiController
         if($user->classes()->whereId($id)->first()){
 
             $user->classes()->detach($id);
-            exit;
+            return $this->setStatusCode(204)->respondSuccess([]);
 
         }
 

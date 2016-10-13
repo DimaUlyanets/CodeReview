@@ -68,8 +68,8 @@ class CreateLessonRequest extends Request
             'type' => 'numeric|required',
             'group_id' => 'numeric|exists:groups,id',
             'class_id' => 'numeric|exists:classes,id',
-            'skills' => 'array',
-            'tags' => 'array',
+            'skills' => 'max:255',
+            'tags' => 'max:255',
         ];
     }
 }
