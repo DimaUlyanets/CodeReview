@@ -31,7 +31,6 @@ class LessonsTableSeeder extends Seeder
             'lesson_file' => 'avi.avi',
             'difficulty' => '55',
             'group_id' => '2',
-            'class_id' => '1',
             'type' => '1',
             'author_id' => '2',
             'views' => 20
