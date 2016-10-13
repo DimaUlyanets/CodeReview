@@ -11,6 +11,8 @@
 |
 */
 
+use App\Events\ElasticClassAddToIndex;
+
 Route::get('/', function () {
     return view('welcome');
 });

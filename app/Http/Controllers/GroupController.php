@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ElasticSearch\GroupSearch;
+use App\Events\ElasticGroupAddToIndex;
+use App\Events\ElasticGroupDeleteIndex;
+use App\Events\ElasticGroupUpdateIndex;
 use App\Files;
 use App\Group;
 use App\Http\Requests;
@@ -90,6 +94,13 @@ class GroupController extends ApiController
                 Tag::assignTag($group, $request);
             }
 
+
+            //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
+            $idGroupToSearch = $group->id;
+            $nameGroupToSearch = $data['name'];
+            $thumbnailGroupToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+            event(new ElasticGroupAddToIndex($idGroupToSearch, $nameGroupToSearch, $thumbnailGroupToSearch));
+
             return Response::json($group->toArray(), 200);
 
         }
@@ -132,7 +143,8 @@ class GroupController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+        //Need complete method and pass (new name and new thumbnail)!!!
+       // event(new ElasticGroupUpdateIndex($id,$name,$thumbnail));
     }
 
     /**
@@ -143,7 +155,9 @@ class GroupController extends ApiController
      */
     public function delete($id)
     {
-        //
+
+        //Need complete method and pass (id)!!!
+        event(new ElasticGroupDeleteIndex($id));
     }
 
     /**
