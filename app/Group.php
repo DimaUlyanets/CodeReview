@@ -20,6 +20,7 @@ class Group extends Model
     public static function getGroupInfo($group){
 
         $classes = $group->classes;
+        $users = $group->users;
         $lessons = $group->lessons;
 
         $response = [
@@ -29,7 +30,7 @@ class Group extends Model
             "description" => $group->description,
             "thumbnail" => $group->icon,
             "lessons_num" => $lessons->count(),
-            "classes_num" => $classes->count(),
+            "users_num" => $users->count(),
 
         ];
 
@@ -39,17 +40,17 @@ class Group extends Model
             $relatedLessons[$key]["id"] = $value->id;
             $relatedLessons[$key]["thumbnail"] = $value->thumbnail;
             $relatedLessons[$key]["name"] = $value->name;
-            $relatedLessons[$key]["author_id"] = $value->author_id;
+            $relatedLessons[$key]["author_name"] = User::whereId($value->author_id)->first()->name;
+            $relatedLessons[$key]["views"] = $value->views;
 
         }
 
         $relatedClasses = [];
         foreach($classes as $key => $value){
-
             $relatedClasses[$key]["id"] = $value->id;
             $relatedClasses[$key]["thumbnail"] = $value->thumbnail;
             $relatedClasses[$key]["name"] = $value->name;
-            $relatedClasses[$key]["author_id"] = $value->author_id;
+            $relatedClasses[$key]["author_name"] = User::whereId($value->author_id)->first()->name;
 
         }
 
@@ -131,6 +132,9 @@ class Group extends Model
     /**
      * The organizations that belong to the user.
      */
-
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
+    }
 
 }

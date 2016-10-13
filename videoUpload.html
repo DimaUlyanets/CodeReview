@@ -15,13 +15,13 @@
 
     function sendData() {
 
-        var url = 'http://localhost:8000/api/lessons?api_token=5mJ16zcHqS0iJbl1KOyeC8lE78lyG92r0AGQsSaxoa7BCkUCyRV4K5LINlRV';
+        var url = 'http://localhost:8000/api/lessons?api_token=SoK4HisYULnA6OSt4NOeQYCpUVpwY9x22inue25ziERWXhu1DdlANPVmIAAx';
         var data = {
-            "name": "ClassPddddsdddddri vateGroup",
+            "name": "ClassPri vateGroup",
             "difficulty": 100,
             "type": 1,
-            "tags[0]": "poc",
-            "is_collaborative": 1
+            "skills": ["PHP", "JS", "Math"],
+            "tags[0]": "poc"
         };
         var formData  = new FormData();
 
@@ -29,6 +29,7 @@
             formData.append(name, data[name]);
         }
 
+        formData.append('thumbnail', document.getElementById("file").files[0]);
         formData.append('lesson_file', document.getElementById("file").files[0]);
         fetch(url, {
             method: 'POST',

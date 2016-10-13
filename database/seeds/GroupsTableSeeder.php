@@ -21,7 +21,7 @@ class GroupsTableSeeder extends Seeder
         ]);
 
         DB::table('groups')->insert([
-            'name' => 'Custom Group',
+            'name' => 'Engineering Group',
             'description' => 'Custom',
             'icon' => 'icon.png',
             'default' => 0,

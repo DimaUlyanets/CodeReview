@@ -34,21 +34,20 @@ class GroupController extends ApiController
         $user = Auth::guard('api')->user();
 
         foreach($user->groups as $key => $group){
-
+        if (!$group->default) {
             $response[$group->id]["name"] = $group->name;
-            $response[$group->id]["icon"] = $group->icon;
+            $response[$group->id]["thumbnail"] = $group->icon;
             $response[$group->id]["id"] = $group->id;
-
+           }
         }
 
         $externalFree = Group::wherePrivacyId(Privacy::whereType('External')->where('subtype', '=', 'Free')->first()->id)->get();
-
         foreach($externalFree as $key => $value){
-
-            $response[$value->id]["name"] = $value->name;
-            $response[$value->id]["icon"] = $value->icon;
-            $response[$value->id]["id"] = $value->id;
-
+            if (!$value->default) {
+                $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["thumbnail"] = $value->icon;
+                $response[$value->id]["id"] = $value->id;
+            }
         }
 
         return $this->setStatusCode(200)->respondSuccess(array_values($response));
@@ -91,9 +90,8 @@ class GroupController extends ApiController
         if($group){
 
             if($request->tags){
-
+                $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
-
             }
 
 
@@ -121,7 +119,7 @@ class GroupController extends ApiController
 
         if($group){
 
-            if(!Group::userHasAccess($group)){
+            if(!Group::userHasAccess($group) || $group->default){
 
                 return $this->setStatusCode(403)->respondWithError("Forbidden");
 
@@ -197,12 +195,7 @@ class GroupController extends ApiController
 
                $user->groups()->attach($group->id);
 
-               return $this->setStatusCode(200)->respondSuccess(
-                   array(
-                       "user_id" => $user->id,
-                       "group_id" => $request->group_id
-                   )
-               );
+               return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
            }
 
@@ -221,7 +214,7 @@ class GroupController extends ApiController
         if($user->groups()->whereId($id)->whereDefault(0)->first()){
 
             $user->groups()->detach($id);
-            exit;
+            return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
         }
 

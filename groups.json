@@ -1,0 +1,8 @@
+{"index":{"_id":"1"}}
+{"id": 1, "name": "1 group", "description": "Everything about physics", "thumbnail": "https://cdn2.iconfinder.com/data/icons/solar_system_png/128/Mars.png", "members": 300}
+{"index":{"_id":"2"}}
+{"id": 2, "name": "2 group", "description": "Everything about chemistry", "thumbnail": "https://cdn2.iconfinder.com/data/icons/solar_system_png/128/Mars.png", "members": 120}
+{"index":{"_id":"3"}}
+{"id": 3, "name": "3 group", "description": "Everything about math", "thumbnail": "https://cdn2.iconfinder.com/data/icons/solar_system_png/128/Mars.png", "members": 1300}
+{"index":{"_id":"4"}}
+{"id": 4, "name": "4 group", "description": "Everything about biology", "thumbnail": "https://cdn2.iconfinder.com/data/icons/solar_system_png/128/Mars.png", "members": 1100}

@@ -58,17 +58,18 @@ class CreateLessonRequest extends Request
      */
     public function rules()
     {
+
         return [
             'name' => 'required|max:255',
-            'description' => 'max:255',
+            'description' => 'required|max:255',
             'thumbnail' => 'image|max:10240',
             'lesson_file' => 'required|file|mimes:mp4,pdf',
             'difficulty' => 'required|between:0,100|numeric',
             'type' => 'numeric|required',
             'group_id' => 'numeric|exists:groups,id',
             'class_id' => 'numeric|exists:classes,id',
-            'skills' => 'array',
-            'tags' => 'array',
+            'skills' => 'max:255',
+            'tags' => 'max:255',
         ];
     }
 }
