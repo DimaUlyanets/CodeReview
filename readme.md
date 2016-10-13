@@ -1,13 +1,15 @@
 ## Backend install ##
-1. composer install
-2. cp .env.example .env
-2. create database and provide credentials in .env
-2. php artisan migrate:refresh --seed
-3. php artisan key:generate
-4. php artisan config:clear
-5. chmod -R 755 storage
-6. set QUEUE_DRIVER=Beanstalkd in .env
-7. install drivers for php-ffmpeg
+* composer install
+* cp .env.example .env
+* create database and provide credentials in .env
+* php artisan migrate:refresh --seed
+* php artisan key:generate
+* php artisan config:clear
+* chmod -R 755 storage
+* set QUEUE_DRIVER=Beanstalkd in .env
+* install drivers for php-ffmpeg
+* install elasticsearch on server
+* ELASTIC_SEARCH_HOST=localhost:9200 in .env
 
  php artisan serve for local development
 
