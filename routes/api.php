@@ -40,6 +40,7 @@ Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
     Route::get('/groups', 'UsersController@groups');
     Route::post('/{id}/profile', 'UsersController@profile')->where('id', '[0-9]+');
     Route::get('/{id}/classes', 'UsersController@classes')->where('id', '[0-9]+');
+    Route::get('/classes', 'UsersController@classes');
 
 });
 

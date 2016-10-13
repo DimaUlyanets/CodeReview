@@ -165,8 +165,8 @@ class UsersController extends ApiController
                 if(isset($files["cover"]))$data["cover"] = $files["cover"];
                 if(isset($files["avatar"]))$data["avatar"] = $files["avatar"];
 
-                $resutl = Profile::create($data);
-                return $this->setStatusCode(200)->respondSuccess($resutl);
+                $result = Profile::create($data);
+                return $this->setStatusCode(200)->respondSuccess($result);
 
             }
 
@@ -178,8 +178,9 @@ class UsersController extends ApiController
 
     }
 
-    public function classes($id){
+    public function classes($id = null){
 
+        $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::find($id);
 
         if($user){
@@ -197,10 +198,11 @@ class UsersController extends ApiController
                 $response[$value->id]["id"] = $value->id;
                 $response[$value->id]["name"] = $value->name;
                 $response[$value->id]["description"] = $value->description;
+                $response[$value->id]["group_id"] = $value->group_id;
 
             }
 
-            return $this->setStatusCode(200)->respondSuccess($response);
+            return $this->setStatusCode(200)->respondSuccess(array_values($response));
 
 
         }

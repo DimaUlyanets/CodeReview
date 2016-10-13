@@ -67,7 +67,7 @@ class ClassController extends ApiController
             }
 
             if($request->tags){
-
+                $request->tags = explode(',', $request->tags);
                 Tag::assignTag($class, $request);
 
             }
