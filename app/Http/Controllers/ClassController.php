@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
-use App\Events\ElasticClassAddToIndex;
-use App\Events\ElasticClassDeleteIndex;
-use App\Events\ElasticClassUpdateIndex;
 use App\Files;
 use App\Group;
+use App\Events\ElasticClassAddToIndex;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
 use App\Privacy;
@@ -34,7 +32,7 @@ class ClassController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function create(ClassCreateRequest $request)
@@ -42,12 +40,12 @@ class ClassController extends ApiController
 
         $data = (array)$request->all();
 
-        if (!$request->group_id) {
+        if(!$request->group_id){
 
             $user = Auth::guard('api')->user();
             $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
 
-        } else {
+        }else{
 
             $data["group_id"] = $request->group_id;
 
@@ -58,55 +56,51 @@ class ClassController extends ApiController
 
         $class = Classes::create($data);
 
-        if ($class) {
+        if($class){
 
-            if ($request->tags) {
-                if (!empty($request->thumbnail)) {
+            if(!empty($request->thumbnail)){
 
-                    $organization = Group::find($data["group_id"])->organization;
+                $organization = Group::find($data["group_id"])->organization;
 
-                    $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
-                    $class->save();
+                $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
+                $class->save();
 
-                }
+            }
 
-            if ($request->tags) {
+            if($request->tags){
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($class, $request);
 
-                }
-                //START BUILD  DATA TO SEARCH
+            }
                 $idClassToSearch = $class->id;
                 $nameClassToSearch = $data['name'];
                 $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
                 event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
-
                 return Response::json($class->toArray(), 200);
 
-            }
-
-
         }
+
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $class = Classes::find($id);
 
-        if ($class) {
+        if($class){
 
             if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $user = User::find($class->author_id);
 
             $lessons = [];
-            foreach ($class->lessons as $key => $value) {
+            foreach($class->lessons as $key => $value){
 
                 $lessons[$key]["id"] = $value->id;
                 $lessons[$key]["name"] = $value->name;
@@ -141,26 +135,24 @@ class ClassController extends ApiController
 
     public function update(Request $request, $id)
     {
-//        Need complete method and pass (new name and new thumbnail)!!!
-//        event(new ElasticClassUpdateIndex($id,$name,$thumbnail));
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function delete($id)
     {
-        //Need complete method and pass (id)!!!
-        event(new ElasticClassDeleteIndex($id));
+        //
     }
 
     /**
      * User join to class
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
 
@@ -173,10 +165,10 @@ class ClassController extends ApiController
         $groups = Auth::guard('api')->user()->groups()->whereId($class->group_id)->first();
 
         #check is user already in group of this class
-        if ($groups) {
+        if($groups){
 
-            if (!$user->classes()->whereId($request->classes_id)->first()) {
-
+            if(!$user->classes()->whereId($request->classes_id)->first()){
+                
                 $user->classes()->attach($request->classes_id);
 
                  return $this->setStatusCode(204)->respondSuccess([]);
@@ -191,12 +183,11 @@ class ClassController extends ApiController
 
     }
 
-    public function leave($id)
-    {
+    public function leave($id){
 
         $user = Auth::guard('api')->user();
 
-        if ($user->classes()->whereId($id)->first()) {
+        if($user->classes()->whereId($id)->first()){
 
             $user->classes()->detach($id);
             return $this->setStatusCode(204)->respondSuccess([]);

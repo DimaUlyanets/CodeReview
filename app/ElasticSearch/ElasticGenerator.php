@@ -85,5 +85,12 @@ class ElasticGenerator{
           $this->client->index($params);
         }
     }
+
+    public function clearIndices() {
+        $deleteParams = [
+            'index' => '_all'
+        ];
+        $response = $this->client->indices()->delete($deleteParams);
+    }
     
 }
