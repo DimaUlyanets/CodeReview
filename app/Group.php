@@ -41,12 +41,12 @@ class Group extends Model
             $relatedLessons[$key]["thumbnail"] = $value->thumbnail;
             $relatedLessons[$key]["name"] = $value->name;
             $relatedLessons[$key]["author_id"] = $value->author_id;
+            $relatedLessons[$key]["views"] = $value->views;
 
         }
 
         $relatedClasses = [];
         foreach($classes as $key => $value){
-
             $relatedClasses[$key]["id"] = $value->id;
             $relatedClasses[$key]["thumbnail"] = $value->thumbnail;
             $relatedClasses[$key]["name"] = $value->name;
