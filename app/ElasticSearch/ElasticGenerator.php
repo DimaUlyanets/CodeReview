@@ -32,6 +32,7 @@ class ElasticGenerator{
                 "type" => "class",
                 "id" => $classId,
                 "body" => [
+                    "id"=>$classId,
                     "Name" => $className,
                     "Thumbnail" => $classThumbnail,
                     "Users" => $classUsers
@@ -56,6 +57,7 @@ class ElasticGenerator{
                 "type" => "group",
                 "id" => $groupId,
                 "body" => [
+                    "id" => $groupId,
                     "Name" => $groupName,
                     "Thumbnail" => $groupThumbnail,
                     "Users" => $groupUsers
@@ -75,6 +77,7 @@ class ElasticGenerator{
                 "type" => "lesson",
                 "id" => $lessonId,
                 "body" => [
+                    "id" => $lessonId,
                     "Name" => $lessonName,
                     "Thumbnail" => $lessonThumbnail,
                     "views" => 0
