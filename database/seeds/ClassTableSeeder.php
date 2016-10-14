@@ -13,10 +13,10 @@ class ClassTableSeeder extends Seeder
     {
 
         DB::table('classes')->insert([
-            'name' => 'Class 1',
+            'name' => 'Math',
             'description' => 'Basic',
             'thumbnail' => 'icon.png',
-            'group_id' => 1,
+            'group_id' => 2,
             'is_collaborative' => 0,
             'author_id' => 1
 

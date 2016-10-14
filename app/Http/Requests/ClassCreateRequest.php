@@ -34,12 +34,12 @@ class ClassCreateRequest extends Request
         }
 
         return [
-            #'name' => 'required|max:255|unique:classes,name,NULL,id,group_id,' . $this->group_id,
-            'description' => 'max:140',
+            'name' => 'required|max:255|unique:classes,name,NULL,id,group_id,' . $this->group_id,
+            'description' => 'required|max:140',
             'thumbnail' => 'image|max:10240',
             'group_id' => 'exists:groups,id|numeric',
             'is_collaborative' => 'numeric|required|boolean',
-            'tags' => 'array',
+            'tags' => 'max:255',
         ];
     }
 }
