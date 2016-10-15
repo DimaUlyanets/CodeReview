@@ -15,7 +15,7 @@ class LessonsTableSeeder extends Seeder
         DB::table('lessons')->insert([
             'name' => 'Lesson 1',
             'description' => 'description',
-            'thumbnail' => 'https://unsplash.it/200/300',
+            'thumbnail' => 'https://unsplash.it/200/200',
             'lesson_file' => 'avi.avi',
             'difficulty' => '44',
             'type' => '0',
@@ -27,7 +27,7 @@ class LessonsTableSeeder extends Seeder
         DB::table('lessons')->insert([
             'name' => 'Geometry',
             'description' => 'Geometry is a branch of mathematics concerned with questions of shape, size, relative position of figures, and the properties of space.',
-            'thumbnail' => 'https://unsplash.it/200/300',
+            'thumbnail' => 'https://unsplash.it/200/200',
             'lesson_file' => 'avi.avi',
             'difficulty' => '55',
             'group_id' => '2',

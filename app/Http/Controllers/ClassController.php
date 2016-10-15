@@ -66,7 +66,7 @@ class ClassController extends ApiController
                 $class->save();
 
             } else {
-                $class->thumbnail = 'https://unsplash.it/200/300'; //TODO: temporary
+                $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
             }
             if($request->tags){
                 $request->tags = explode(',', $request->tags);

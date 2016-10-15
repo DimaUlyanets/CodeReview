@@ -69,7 +69,7 @@ class LessonController extends ApiController
             $lesson->save();
 
         } else {
-            $class->thumbnail = 'https://unsplash.it/200/300'; //TODO: temporary
+            $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
         }
 
 
