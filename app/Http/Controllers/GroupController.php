@@ -85,6 +85,8 @@ class GroupController extends ApiController
             $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
             $group->icon = $path;
             $group->save();
+        } else {
+            $class->icon = 'https://unsplash.it/200/300'; //TODO: temporary
         }
 
         if($group){

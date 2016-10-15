@@ -65,8 +65,9 @@ class ClassController extends ApiController
                 $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
                 $class->save();
 
+            } else {
+                $class->thumbnail = 'https://unsplash.it/200/300'; //TODO: temporary
             }
-
             if($request->tags){
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($class, $request);

@@ -14,7 +14,7 @@ class GroupsTableSeeder extends Seeder
         DB::table('groups')->insert([
             'name' => 'Basic Group',
             'description' => 'Basic',
-            'icon' => 'icon.png',
+            'icon' => 'https://unsplash.it/200/300',
             'default' => 1,
             'organization_id' => '1',
             'privacy_id' => 4
@@ -23,7 +23,7 @@ class GroupsTableSeeder extends Seeder
         DB::table('groups')->insert([
             'name' => 'Engineering Group',
             'description' => 'Custom',
-            'icon' => 'icon.png',
+            'icon' => 'https://unsplash.it/200/300',
             'default' => 0,
             'organization_id' => '1',
             'privacy_id' => 4

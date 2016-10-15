@@ -68,6 +68,8 @@ class LessonController extends ApiController
             $lesson->thumbnail = Files::qualityCompress($request->thumbnail, $path);
             $lesson->save();
 
+        } else {
+            $class->thumbnail = 'https://unsplash.it/200/300'; //TODO: temporary
         }
 
 
