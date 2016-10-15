@@ -50,6 +50,7 @@ class ClassController extends ApiController
             $data["group_id"] = $request->group_id;
 
         }
+
         $user = Auth::guard('api')->user();
         $data["author_id"] = $user->id;
 
@@ -128,6 +129,8 @@ class ClassController extends ApiController
                 "lessons" => $lessons
 
             ];
+
+            $response['memberOf'] = Auth::guard('api')->user()->id === $class->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 

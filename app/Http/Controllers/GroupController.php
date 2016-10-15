@@ -77,6 +77,8 @@ class GroupController extends ApiController
         }
 
         $data["default"] = 0;
+        $user = Auth::guard('api')->user();
+        $data["author_id"] = $user->id;
 
         $group = Group::create($data);
 
@@ -96,7 +98,6 @@ class GroupController extends ApiController
                 Tag::assignTag($group, $request);
             }
             //Assign user to group
-            $user = Auth::guard('api')->user();
             $user->groups()->attach($group->id);
 
 
@@ -131,6 +132,8 @@ class GroupController extends ApiController
             }
 
             $response = Group::getGroupInfo($group);
+            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
+
             return $this->setStatusCode(200)->respondSuccess($response);
 
         }
