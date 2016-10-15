@@ -117,6 +117,7 @@ class ClassController extends ApiController
                 "id" => $class->id,
                 "name" => $class->name,
                 "description" => $class->description,
+                "thumbnail" => $class->thumbnail,
                 "author_name" => $user->name,
                 "author_avatar" => $avatar,
                 "members" => $class->users()->count(),

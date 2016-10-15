@@ -22,7 +22,6 @@ class ElasticSearch
                     "bool" => [
                         "should" => [
                             ["match" => ["Name" => $itemToSearch]],
-                            ["match" => ["Thumbnail" => $itemToSearch]],
                         ]
                     ]
                 ]
@@ -42,7 +41,6 @@ class ElasticSearch
                     "bool" => [
                         "should" => [
                             ["match" => ["Name" => $itemToSearch]],
-                            ["match" => ["Thumbnail" => $itemToSearch]],
                         ]
                     ]
                 ]
