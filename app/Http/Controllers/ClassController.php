@@ -50,9 +50,8 @@ class ClassController extends ApiController
             $data["group_id"] = $request->group_id;
 
         }
-
-
-        $data["author_id"] = Auth::guard('api')->user()->id;
+        $user = Auth::guard('api')->user();
+        $data["author_id"] = $user->id;
 
         $class = Classes::create($data);
 
@@ -68,16 +67,20 @@ class ClassController extends ApiController
             } else {
                 $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
             }
+
             if($request->tags){
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($class, $request);
-
             }
-                $idClassToSearch = $class->id;
-                $nameClassToSearch = $data['name'];
-                $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
-                event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
-                return Response::json($class->toArray(), 200);
+
+            //Assign user to class
+            $user->classes()->attach($class->id);
+
+            $idClassToSearch = $class->id;
+            $nameClassToSearch = $data['name'];
+            $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+            event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
+            return Response::json($class->toArray(), 200);
 
         }
 

@@ -95,6 +95,9 @@ class GroupController extends ApiController
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
             }
+            //Assign user to group
+            $user = Auth::guard('api')->user();
+            $user->groups()->attach($group->id);
 
 
             //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
