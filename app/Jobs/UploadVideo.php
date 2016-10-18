@@ -40,12 +40,16 @@ class UploadVideo implements ShouldQueue
         #https://github.com/PHP-FFMpeg/PHP-FFMpeg
         #local vidoe stored here: storage_path('app/public').DIRECTORY_SEPARATOR .$this->local
 
-        $ffmpeg = FFMpeg::create(array(
-            'ffmpeg.binaries'  => '/opt/local/ffmpeg/bin/ffmpeg',
-            'ffprobe.binaries' => '/opt/local/ffmpeg/bin/ffprobe',
-            'timeout'          => 3600, // The timeout for the underlying process
-            'ffmpeg.threads'   => 12,   // The number of threads that FFMpeg should use
-        ));
+        FFMpeg::fromDisk('videos')
+            ->open('steve_howe.mp4')
+            ->addFilter(function ($filters) {
+                $filters->resize(new \FFMpeg\Coordinate\Dimension(640, 480));
+            })
+            ->export()
+            ->toDisk('converted_videos')
+            ->inFormat(new \FFMpeg\Format\Video\X264)
+            ->save('small_steve.mkv');
+
 
 
         Storage::disk('s3')->put($this->local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local), 'public');
