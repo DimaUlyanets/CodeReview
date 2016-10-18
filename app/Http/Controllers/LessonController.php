@@ -18,6 +18,8 @@ use App\ElasticSearch\LessonSearch;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class LessonController extends ApiController
 {
     /**
@@ -69,7 +71,7 @@ class LessonController extends ApiController
             $lesson->save();
 
         } else {
-            $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
+            #$class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
         }
 
 

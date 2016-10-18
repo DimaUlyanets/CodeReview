@@ -3,12 +3,15 @@
 namespace App\Jobs;
 
 use App\Lesson;
-use FFMpeg\FFMpeg;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
+
+use Pbmedia\LaravelFFMpeg;
+
 
 class UploadVideo implements ShouldQueue
 {
