@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         GrahamCampbell\Flysystem\FlysystemServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -228,7 +229,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Flysystem' => GrahamCampbell\Flysystem\Facades\Flysystem::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class
     ],
 
 ];
