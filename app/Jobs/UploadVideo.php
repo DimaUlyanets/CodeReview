@@ -46,6 +46,10 @@ class UploadVideo implements ShouldQueue
         $ffmpeg = \FFMpeg\FFMpeg::create();
         $video = $ffmpeg->open(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
 
+        $format = new FFMpeg\Format\Video\X264();
+        $format
+            -> setKiloBitrate(env('VIDEO_BITRATE'));
+        $video->save($format, storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
 
 
         Storage::disk('s3')->put($this->local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local), 'public');
