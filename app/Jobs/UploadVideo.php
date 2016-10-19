@@ -40,20 +40,14 @@ class UploadVideo implements ShouldQueue
         #convert  video here
         #https://github.com/PHP-FFMpeg/PHP-FFMpeg
         #local vidoe stored here: storage_path('app/public').DIRECTORY_SEPARATOR .$this->local
+        $file = storage_path('app/public').DIRECTORY_SEPARATOR .$this->local;
 
-        $ffmpeg = \FFMpeg\FFMpeg::create();
-        $video = $ffmpeg->open(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
-
-        $format = new \FFMpeg\Format\Video\X264();
-        $format
-            -> setKiloBitrate(env('VIDEO_BITRATE'));
-        $video->save($format, storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
-
+        exec('ffmpeg -i '. $file . ' -y -s 640x480 -b:v ' .env('VIDEO_BITRATE'). 'k -vcodec libx264 -acodec libmp3lame '. $file);
 
         Storage::disk('s3')->put($this->local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local), 'public');
         $this->lesson->lesson_file = env("APP_S3") . $this->local;
         $this->lesson->save();
-        unlink(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
+        #unlink(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
 
     }
 }
