@@ -13,7 +13,8 @@ class ElasticSearch
         $this->client = ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function fullSearch($itemToSearch){
+    public function fullSearch($itemToSearch)
+    {
         $params = [
             "index" => "classes,groups,lessons",
             "type" => "class,group,lesson",
@@ -21,8 +22,9 @@ class ElasticSearch
                 "query" => [
                     "bool" => [
                         "should" => [
-                            ["match" => ["Name" => $itemToSearch]],
-                            ["match" => ["Thumbnail" => $itemToSearch]],
+                            "match_phrase_prefix" => [
+                                "Name" => $itemToSearch
+                            ]
                         ]
                     ]
                 ]
@@ -41,8 +43,9 @@ class ElasticSearch
                 "query" => [
                     "bool" => [
                         "should" => [
-                            ["match" => ["Name" => $itemToSearch]],
-                            ["match" => ["Thumbnail" => $itemToSearch]],
+                            "match_phrase_prefix" => [
+                                "Name" => $itemToSearch
+                            ]
                         ]
                     ]
                 ]
