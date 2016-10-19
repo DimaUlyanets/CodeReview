@@ -10,8 +10,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
 
-use Pbmedia\LaravelFFMpeg;
-
 
 class UploadVideo implements ShouldQueue
 {
@@ -46,7 +44,7 @@ class UploadVideo implements ShouldQueue
         $ffmpeg = \FFMpeg\FFMpeg::create();
         $video = $ffmpeg->open(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
 
-        $format = new FFMpeg\Format\Video\X264();
+        $format = new \FFMpeg\Format\Video\X264();
         $format
             -> setKiloBitrate(env('VIDEO_BITRATE'));
         $video->save($format, storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
