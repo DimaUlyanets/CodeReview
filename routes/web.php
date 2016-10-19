@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,14 +9,10 @@
 | to using a Closure or controller method. Build something great!
 |
 */
-
 use App\Events\ElasticClassAddToIndex;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
 Auth::routes();
 Route::get('/home', 'HomeController@index');
-
-
