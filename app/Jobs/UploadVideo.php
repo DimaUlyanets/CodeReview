@@ -43,15 +43,8 @@ class UploadVideo implements ShouldQueue
         #https://github.com/PHP-FFMpeg/PHP-FFMpeg
         #local vidoe stored here: storage_path('app/public').DIRECTORY_SEPARATOR .$this->local
 
-        FFMpeg::fromDisk('videos')
-            ->open('steve_howe.mp4')
-            ->addFilter(function ($filters) {
-                $filters->resize(new \FFMpeg\Coordinate\Dimension(640, 480));
-            })
-            ->export()
-            ->toDisk('converted_videos')
-            ->inFormat(new \FFMpeg\Format\Video\X264)
-            ->save('small_steve.mkv');
+        $ffmpeg = \FFMpeg\FFMpeg::create();
+        $video = $ffmpeg->open(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
 
 
 
