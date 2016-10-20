@@ -22,6 +22,7 @@ class ElasticSearch
                     "bool" => [
                         "should" => [
                             "match_phrase_prefix" => [
+
                                 "Name" => $itemToSearch
                             ]
                         ]
