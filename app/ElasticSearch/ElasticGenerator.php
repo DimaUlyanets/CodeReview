@@ -2,7 +2,6 @@
 
 namespace App\ElasticSearch;
 
-
 use App\Classes;
 use App\Group;
 use App\Lesson;
