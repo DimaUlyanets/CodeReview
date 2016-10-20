@@ -45,6 +45,7 @@ class ElasticSearch
                            "match_phrase_prefix" => [
                                "Name" => $itemToSearch
                            ]
+                        ]
                     ]
                 ]
             ]
