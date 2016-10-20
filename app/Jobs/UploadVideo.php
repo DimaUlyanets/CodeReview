@@ -47,7 +47,7 @@ class UploadVideo implements ShouldQueue
         $file = storage_path('app/public').DIRECTORY_SEPARATOR . $localfile;
         $file2 = storage_path('app/public').DIRECTORY_SEPARATOR . $resized;
 
-        exec('ffmpeg -i '. $file . ' -y -s WxH -b:v ' .env('VIDEO_BITRATE'). 'k -vcodec libx264 -acodec libmp3lame '. $file2);
+        exec('ffmpeg -i '. $file . ' -b:v ' .env('VIDEO_BITRATE'). 'k -vcodec libx264 -acodec libmp3lame '. $file2);
 
         Storage::disk('s3')->put($resized, file_get_contents($file2), 'public');
         $this->lesson->lesson_file = env("APP_S3") . $resized;
