@@ -42,6 +42,7 @@ class ElasticSearch
                 "query" => [
                     "bool" => [
                         "should" => [
+
                             ["match" => ["Name" => $itemToSearch]],
                         ]
                     ]
