@@ -77,6 +77,8 @@ class GroupController extends ApiController
         }
 
         $data["default"] = 0;
+        $user = Auth::guard('api')->user();
+        $data["author_id"] = $user->id;
 
         $group = Group::create($data);
 
@@ -85,6 +87,8 @@ class GroupController extends ApiController
             $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
             $group->icon = $path;
             $group->save();
+        } else {
+            $class->icon = 'https://unsplash.it/200/200'; //TODO: temporary
         }
 
         if($group){
@@ -93,6 +97,8 @@ class GroupController extends ApiController
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
             }
+            //Assign user to group
+            $user->groups()->attach($group->id);
 
 
             //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
@@ -126,6 +132,8 @@ class GroupController extends ApiController
             }
 
             $response = Group::getGroupInfo($group);
+            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
+
             return $this->setStatusCode(200)->respondSuccess($response);
 
         }

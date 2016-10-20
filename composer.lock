@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1fd1e0d4ec34c1213c3a4f2c37428721",
-    "content-hash": "cdd0419a11f16d2ea0a45d5683684534",
+    "hash": "28a06fdbaf8a9d0b99f8e1a1adb25595",
+    "content-hash": "3df9b552f6632dcd0f7cda783b2f1f6d",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -1715,6 +1715,60 @@
                 "random"
             ],
             "time": "2016-04-03 06:00:07"
+        },
+        {
+            "name": "pbmedia/laravel-ffmpeg",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pascalbaljetmedia/laravel-ffmpeg.git",
+                "reference": "b322c452e19d455c3993e9fbba0c759024a19a64"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pascalbaljetmedia/laravel-ffmpeg/zipball/b322c452e19d455c3993e9fbba0c759024a19a64",
+                "reference": "b322c452e19d455c3993e9fbba0c759024a19a64",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "^5.1",
+                "illuminate/filesystem": "^5.1",
+                "illuminate/log": "^5.1",
+                "league/flysystem": "^1.0",
+                "php": "^7.0",
+                "php-ffmpeg/php-ffmpeg": "^0.6",
+                "symfony/process": "^2.5|^3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "5.*",
+                "scrutinizer/ocular": "^1.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pbmedia\\LaravelFFMpeg\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pascal Baljet",
+                    "email": "pascal@pascalbaljetmedia.com",
+                    "homepage": "http://www.pascalbaljetmedia.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "FFMpeg for Laravel 5.1 and higher",
+            "homepage": "https://github.com/pbmedia/laravel-ffmpeg",
+            "keywords": [
+                "laravel-ffmpeg",
+                "pbmedia"
+            ],
+            "time": "2016-09-19 18:40:10"
         },
         {
             "name": "php-ffmpeg/php-ffmpeg",

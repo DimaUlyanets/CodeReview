@@ -19,7 +19,7 @@ Artisan::command('inspire', function () {
 })->describe('Display an inspiring quote');
 
 
-Artisan::command('make:elastic', function () {
+Artisan::command('elastic:sync', function () {
 
     $generator = new ElasticGenerator();
     $generator->addClassesToSearch();
@@ -30,6 +30,16 @@ Artisan::command('make:elastic', function () {
 
     $this->comment("Data successfully indexed!");
 })->describe('Add all data from Lessons Groups Classes to elastic');
+
+
+
+Artisan::command('elastic:clear', function () {
+
+    $generator = new ElasticGenerator();
+    $generator->clearIndices();
+
+    $this->comment("Data successfully cleared!");
+})->describe('Remove all data from elastic');
 
 
 

@@ -13,7 +13,7 @@ class EventLessonAddToIndex
 
     }
 
-    public function handle(ElasticClassAddToIndex $event){
+    public function handle(ElasticLessonAddToIndex $event){
         $search = new LessonSearch();
         $search->addToIndex($event->id,$event->name,$event->thumbnail);
     }

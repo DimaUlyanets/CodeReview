@@ -18,6 +18,8 @@ use App\ElasticSearch\LessonSearch;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class LessonController extends ApiController
 {
     /**
@@ -68,6 +70,8 @@ class LessonController extends ApiController
             $lesson->thumbnail = Files::qualityCompress($request->thumbnail, $path);
             $lesson->save();
 
+        } else {
+            #$class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
         }
 
 

@@ -31,7 +31,6 @@ class ElasticGenerator{
                 "type" => "class",
                 "id" => $classId,
                 "body" => [
-                    "id"=>$classId,
                     "Name" => $className,
                     "Thumbnail" => $classThumbnail,
                     "Users" => $classUsers
@@ -43,26 +42,27 @@ class ElasticGenerator{
     public function addGroupsToSearch(){
         $groups = Group::all();
         foreach ($groups as $group) {
-            $groupId = $group->id;
-            $groupName = $group->name;
-            $groupThumbnail = $group->thumbnail;
-            $groupUsers = [];
-            foreach ($group->users as $user) {
-                $groupUserName = $user->name;
-                array_push($groupUsers, $groupUserName);
-            }
-            $params = [
-                "index" => "groups",
-                "type" => "group",
-                "id" => $groupId,
-                "body" => [
+            if (!$group->default) {
+                $groupId = $group->id;
+                $groupName = $group->name;
+                $groupThumbnail = $group->thumbnail;
+                $groupUsers = [];
+                foreach ($group->users as $user) {
+                    $groupUserName = $user->name;
+                    array_push($groupUsers, $groupUserName);
+                }
+                $params = [
+                    "index" => "groups",
+                    "type" => "group",
                     "id" => $groupId,
-                    "Name" => $groupName,
-                    "Thumbnail" => $groupThumbnail,
-                    "Users" => $groupUsers
-                ]
-            ];
-          $this->client->index($params);
+                    "body" => [
+                        "Name" => $groupName,
+                        "Thumbnail" => $groupThumbnail,
+                        "Users" => $groupUsers
+                    ]
+                ];
+              $this->client->index($params);
+        }
         }
     }
     public function addLessonsToSearch(){
@@ -76,14 +76,20 @@ class ElasticGenerator{
                 "type" => "lesson",
                 "id" => $lessonId,
                 "body" => [
-                    "id" => $lessonId,
                     "Name" => $lessonName,
                     "Thumbnail" => $lessonThumbnail,
-                    "views" => 0
+                    "views" => $lesson->views
                 ]
             ];
           $this->client->index($params);
         }
+    }
+
+    public function clearIndices() {
+        $deleteParams = [
+            'index' => '_all'
+        ];
+        $response = $this->client->indices()->delete($deleteParams);
     }
     
 }

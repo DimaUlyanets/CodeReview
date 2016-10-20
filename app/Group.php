@@ -14,7 +14,7 @@ class Group extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'description', 'icon', 'default', 'organization_id', 'privacy_id'
+        'id', 'name', 'description', 'icon', 'default', 'organization_id', 'privacy_id', 'author_id'
     ];
 
     public static function getGroupInfo($group){
@@ -127,14 +127,6 @@ class Group extends Model
     public function tags()
     {
         return $this->belongsToMany('App\Tag');
-    }
-
-    /**
-     * The organizations that belong to the user.
-     */
-    public function users()
-    {
-        return $this->belongsToMany('App\User');
     }
 
 }
