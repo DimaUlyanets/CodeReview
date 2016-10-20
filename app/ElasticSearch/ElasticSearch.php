@@ -21,7 +21,9 @@ class ElasticSearch
                 "query" => [
                     "bool" => [
                         "should" => [
-                            ["match" => ["Name" => $itemToSearch]],
+                            "match_phrase_prefix" => [
+                                "Name" => $itemToSearch
+                            ]
                         ]
                     ]
                 ]
@@ -40,8 +42,9 @@ class ElasticSearch
                 "query" => [
                     "bool" => [
                         "should" => [
-                            ["match" => ["Name" => $itemToSearch]],
-                        ]
+                           "match_phrase_prefix" => [
+                               "Name" => $itemToSearch
+                           ]
                     ]
                 ]
             ]
