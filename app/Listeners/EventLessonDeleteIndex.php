@@ -13,7 +13,7 @@ class EventLessonDeleteIndex
 
     }
 
-    public function handle(ElasticClassDeleteIndex $event){
+    public function handle(ElasticLessonDeleteIndex $event){
         $search = new LessonSearch();
         $search->deleteIndex($event->id);
     }

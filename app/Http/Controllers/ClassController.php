@@ -58,6 +58,12 @@ class ClassController extends ApiController
 
         $class = Classes::create($data);
 
+        //START BUILD  DATA TO SEARCH
+        $idClassToSearch = $class->id;
+        $nameClassToSearch = $data['name'];
+        $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+        event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
+
         if ($class) {
 
             if ($request->tags) {
@@ -75,17 +81,8 @@ class ClassController extends ApiController
                 Tag::assignTag($class, $request);
 
                 }
-                //START BUILD  DATA TO SEARCH
-                $idClassToSearch = $class->id;
-                $nameClassToSearch = $data['name'];
-                $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
-                event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
-
                 return Response::json($class->toArray(), 200);
-
             }
-
-
         }
     }
 

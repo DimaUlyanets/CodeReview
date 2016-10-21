@@ -13,7 +13,7 @@ class EventGroupDeleteIndex
 
     }
 
-    public function handle(ElasticClassDeleteIndex $event){
+    public function handle(ElasticGroupDeleteIndex $event){
         $search = new GroupSearch();
         $search->deleteIndex($event->id);
     }
