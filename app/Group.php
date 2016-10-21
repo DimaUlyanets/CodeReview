@@ -14,7 +14,7 @@ class Group extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'description', 'icon', 'default', 'organization_id', 'privacy_id'
+        'id', 'name', 'description', 'icon', 'default', 'organization_id', 'privacy_id', 'author_id'
     ];
 
     public static function getGroupInfo($group){

@@ -42,10 +42,9 @@ class ElasticSearch
                 "query" => [
                     "bool" => [
                         "should" => [
-                            "match_phrase_prefix" => [
-                                "Name" => $itemToSearch
-                            ]
-                        ]
+                           "match_phrase_prefix" => [
+                               "Name" => $itemToSearch
+                           ]
                     ]
                 ]
             ]

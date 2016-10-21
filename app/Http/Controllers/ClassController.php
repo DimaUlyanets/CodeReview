@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Classes;
-use App\Events\ElasticClassAddToIndex;
-use App\Events\ElasticClassDeleteIndex;
-use App\Events\ElasticClassUpdateIndex;
 use App\Files;
 use App\Group;
+use App\Events\ElasticClassAddToIndex;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
 use App\Privacy;
@@ -34,7 +32,7 @@ class ClassController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function create(ClassCreateRequest $request)
@@ -42,19 +40,19 @@ class ClassController extends ApiController
 
         $data = (array)$request->all();
 
-        if (!$request->group_id) {
+        if(!$request->group_id){
 
             $user = Auth::guard('api')->user();
             $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
 
-        } else {
+        }else{
 
             $data["group_id"] = $request->group_id;
 
         }
 
-
-        $data["author_id"] = Auth::guard('api')->user()->id;
+        $user = Auth::guard('api')->user();
+        $data["author_id"] = $user->id;
 
         $class = Classes::create($data);
 
@@ -64,46 +62,51 @@ class ClassController extends ApiController
         $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
         event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
 
-        if ($class) {
+        if($class){
 
-            if ($request->tags) {
-                if (!empty($request->thumbnail)) {
+            if(!empty($request->thumbnail)){
 
-                    $organization = Group::find($data["group_id"])->organization;
+                $organization = Group::find($data["group_id"])->organization;
 
-                    $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
-                    $class->save();
+                $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
+                $class->save();
 
-                }
+            } else {
+                $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
+            }
 
-            if ($request->tags) {
+            if($request->tags){
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($class, $request);
-
-                }
-                return Response::json($class->toArray(), 200);
             }
+
+            //Assign user to class
+            $user->classes()->attach($class->id);
+            return Response::json($class->toArray(), 200);
+
         }
+
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $class = Classes::find($id);
 
-        if ($class) {
+        if($class){
 
             if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $user = User::find($class->author_id);
 
             $lessons = [];
-            foreach ($class->lessons as $key => $value) {
+            foreach($class->lessons as $key => $value){
 
                 $lessons[$key]["id"] = $value->id;
                 $lessons[$key]["name"] = $value->name;
@@ -120,12 +123,15 @@ class ClassController extends ApiController
                 "id" => $class->id,
                 "name" => $class->name,
                 "description" => $class->description,
+                "thumbnail" => $class->thumbnail,
                 "author_name" => $user->name,
                 "author_avatar" => $avatar,
                 "members" => $class->users()->count(),
                 "lessons" => $lessons
 
             ];
+
+            $response['memberOf'] = Auth::guard('api')->user()->id === $class->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 
@@ -145,7 +151,7 @@ class ClassController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function delete($id)
@@ -157,7 +163,7 @@ class ClassController extends ApiController
     /**
      * User join to class
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
 
@@ -170,9 +176,9 @@ class ClassController extends ApiController
         $groups = Auth::guard('api')->user()->groups()->whereId($class->group_id)->first();
 
         #check is user already in group of this class
-        if ($groups) {
+        if($groups){
 
-            if (!$user->classes()->whereId($request->classes_id)->first()) {
+            if(!$user->classes()->whereId($request->classes_id)->first()){
 
                 $user->classes()->attach($request->classes_id);
 
@@ -188,12 +194,11 @@ class ClassController extends ApiController
 
     }
 
-    public function leave($id)
-    {
+    public function leave($id){
 
         $user = Auth::guard('api')->user();
 
-        if ($user->classes()->whereId($id)->first()) {
+        if($user->classes()->whereId($id)->first()){
 
             $user->classes()->detach($id);
             return $this->setStatusCode(204)->respondSuccess([]);

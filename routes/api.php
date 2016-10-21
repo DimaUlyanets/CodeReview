@@ -21,7 +21,19 @@ Route::group(['middleware' => 'guest'] , function() {
     Route::any('/test', 'AuthController@test');
     Route::post('/users/suggest/', 'UsersController@suggest')->where('id', '[0-9]+');
     Route::get('/file', function () {
-        return view('file');
+
+        $link = '/Users/dulyanets/projects/graspe/storage/app/public/organizations/1/groups/1/lessons/31/lesson_file/d55bddf8d62910879ed9f605522149a8.mp4';
+        $ffmpeg = \FFMpeg\FFMpeg::create();
+
+        $video = $ffmpeg->open($link);
+        #$video->filters()
+        #          ->resize(new FFMpeg\Coordinate\Dimension(320, 240))
+        #          ->synchronize();
+
+        $video
+            ->save(new FFMpeg\Format\Video\X264(), '/Users/dulyanets/projects/graspe/export-x2641.mp4');
+
+        #return view('file');
     });
 
 });

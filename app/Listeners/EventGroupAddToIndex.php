@@ -13,7 +13,7 @@ class EventGroupAddToIndex
 
     }
 
-    public function handle(ElasticGroupAddToIndex$event){
+    public function handle(ElasticGroupAddToIndex $event){
         $search = new GroupSearch();
         $search->addToIndex($event->id,$event->name,$event->thumbnail);
     }
