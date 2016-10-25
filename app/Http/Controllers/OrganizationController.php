@@ -9,7 +9,7 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 
 class OrganizationController extends Controller
@@ -77,7 +77,29 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $organization = Organization::find($id);
+        isset($request['name'])?$organization->name = $request['name']:"";
+        isset($request['logo'])?$organization->icon = $request['logo']:"";
+        isset($request['cover'])?$organization->cover = $request['cover']:"";
+        isset($request['topics'])?$organization->topics = $request['topics']:"";
+        isset($request['description'])?$organization->description = $request['description']:"";
+        $organization->save();
+        if(isset($request['addAdmins'])){
+           $addAdmins = $request['addAdmins'];
+            foreach ($addAdmins as $id) {
+                DB::table('organization_user')->where('user_id',$id)->update(
+                    ['role' => "admin"]
+                );
+            }
+       }
+        if(isset($request['removeAdmins'])){
+            $removeAdmins  = $request['removeAdmins'];
+            foreach ($removeAdmins as $id) {
+                DB::table('organization_user')->where('user_id',$id)->update(
+                    ['role' => null]
+                );
+            }
+        }
     }
 
     /**
