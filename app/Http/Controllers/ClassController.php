@@ -67,6 +67,7 @@ class ClassController extends ApiController
 
             } else {
                 $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
+                $class->save();
             }
 
             if($request->tags){

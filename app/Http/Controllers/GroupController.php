@@ -88,7 +88,8 @@ class GroupController extends ApiController
             $group->icon = $path;
             $group->save();
         } else {
-            $class->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
         }
 
         if($group){
