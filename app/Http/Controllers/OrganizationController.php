@@ -81,8 +81,17 @@ class OrganizationController extends Controller
         isset($request['name'])?$organization->name = $request['name']:"";
         isset($request['logo'])?$organization->icon = $request['logo']:"";
         isset($request['cover'])?$organization->cover = $request['cover']:"";
-        isset($request['topics'])?$organization->topics = $request['topics']:"";
         isset($request['description'])?$organization->description = $request['description']:"";
+
+        if(isset($request['topics'])){
+          $idTag = DB::table('tags')->insertGetId(
+                ['name' => $request['topics']]
+            );
+            DB::table('organization_tag')->insert(
+                ['organization_id' => $id, 'tag_id' => $idTag]
+            );
+        }
+
         $organization->save();
         if(isset($request['addAdmins'])){
            $addAdmins = $request['addAdmins'];
