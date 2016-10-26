@@ -68,14 +68,41 @@ class OrganizationController extends Controller
     }
     public function addMembers(Request $request, $id)
     {
-           if(isset($request['userIds'])) {
-               $addMembers = $request['userIds'];
-               foreach ($addMembers as $idMember) {
-                       DB::table('organization_user')->insert(
-                           ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
-                       );
-                   }
-           }
+        if (isset($request['userIds'])) {
+            $addMembers = $request['userIds'];
+            foreach ($addMembers as $idMember) {
+                $userRole = DB::table('organization_user')
+                    ->select("role")
+                    ->where('user_id', '=', $idMember)->get();
+                if(($userRole->count()==0)){
+                    DB::table('organization_user')->insert(
+                        ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
+                    );
+                }else {
+                    $role = $userRole->toArray()[0]->role;
+                    if ($role != 'admin' && $role != 'owner') {
+                        DB::table('organization_user')->insert(
+                            ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
+                        );
+                    }
+                }
+            }
+        }
+    }
+    public function deleteMembers(Request $request, $id)
+    {
+        if (isset($request['userIds'])) {
+            $addMembers = $request['userIds'];
+            foreach ($addMembers as $idMember) {
+                $userRole = DB::table('organization_user')
+                    ->select("role")
+                    ->where('user_id', '=', $idMember)->get();
+                $role = $userRole->toArray()[0]->role;
+                if ($role != 'admin' && $role != 'owner') {
+                    DB::table('organization_user')->where('user_id' , $idMember)->where('organization_id',$id)->delete();
+                }
+            }
+        }
     }
 
 
