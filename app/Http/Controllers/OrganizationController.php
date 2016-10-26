@@ -9,7 +9,7 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 
 class OrganizationController extends Controller
@@ -65,6 +65,17 @@ class OrganizationController extends Controller
     public function show($id)
     {
         //
+    }
+    public function addMembers(Request $request, $id)
+    {
+           if(isset($request['userIds'])) {
+               $addMembers = $request['userIds'];
+               foreach ($addMembers as $idMember) {
+                       DB::table('organization_user')->insert(
+                           ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
+                       );
+                   }
+           }
     }
 
 
