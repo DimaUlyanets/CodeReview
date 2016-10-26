@@ -131,8 +131,6 @@ class ClassController extends ApiController
 
             ];
 
-            $response['memberOf'] = Auth::guard('api')->user()->id === $class->author_id;
-
             return $this->setStatusCode(200)->respondSuccess($response);
 
         }
