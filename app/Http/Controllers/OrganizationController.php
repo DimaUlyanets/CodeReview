@@ -83,13 +83,9 @@ class OrganizationController extends Controller
         isset($request['cover'])?$organization->cover = $request['cover']:"";
         isset($request['description'])?$organization->description = $request['description']:"";
 
-        if(isset($request['topics'])){
-          $idTag = DB::table('tags')->insertGetId(
-                ['name' => $request['topics']]
-            );
-            DB::table('organization_tag')->insert(
-                ['organization_id' => $id, 'tag_id' => $idTag]
-            );
+        if(isset($request['tags'])){
+            $request['tags'] = explode(',', $request['tags']);
+            Tag::assignTag($organization, $request);
         }
 
         $organization->save();
@@ -109,6 +105,7 @@ class OrganizationController extends Controller
                 );
             }
         }
+        return Response::json($organization->toArray(), 200);
     }
 
     /**
