@@ -8,6 +8,7 @@ use App\Organization;
 use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
@@ -80,6 +81,7 @@ class OrganizationController extends Controller
             }
         }
 
+        Organization::createDefaultGroup($result);
 
         return Response::json($result->toArray(), 200);
 
