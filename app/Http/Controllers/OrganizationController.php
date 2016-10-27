@@ -80,8 +80,8 @@ class OrganizationController extends Controller
                 );
             }
         }
-
-        Organization::createDefaultGroup($result);
+        $userId = Auth::guard('api')->user()->id;
+        Organization::createDefaultGroup($result, $userId);
 
         return Response::json($result->toArray(), 200);
 
