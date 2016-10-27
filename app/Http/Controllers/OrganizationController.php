@@ -64,7 +64,18 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        //
+        $organization = Organization::find($id);
+
+        $organizationGroups = $organization->group->toArray();
+        $lessons = [];
+        foreach ($organization->group as $group) {
+            array_push($lessons, $group->lessons->toArray());
+        }
+        $classes = [];
+        foreach ($organization->group as $group) {
+            array_push($classes, $group->classes->toArray());
+        }
+        return Response::json($organization, 200);
     }
 
 
