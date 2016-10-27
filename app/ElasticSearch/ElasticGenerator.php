@@ -5,6 +5,7 @@ namespace App\ElasticSearch;
 use App\Classes;
 use App\Group;
 use App\Lesson;
+use App\Organization;
 use Elasticsearch;
 use Illuminate\Support\Facades\DB;
 
