@@ -19,6 +19,7 @@ class CreateOrganisationsTable extends Migration
             $table->string('description')->nullable();
             $table->string('icon');
             $table->boolean('default')->default(0);
+            $table->char('color', 7);
             $table->timestamps();
         });
     }

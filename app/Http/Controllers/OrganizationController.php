@@ -49,6 +49,9 @@ class OrganizationController extends Controller
         } else {
             $result->cover = 'https://unsplash.it/200/200'; //TODO: temporary
         }
+        if(isset($request['color'])){
+            $result->color = $request['color'];
+        }
         $result->save();
         if($result){
             if($request->tags){
@@ -76,6 +79,7 @@ class OrganizationController extends Controller
                 );
             }
         }
+
 
         return Response::json($result->toArray(), 200);
 
