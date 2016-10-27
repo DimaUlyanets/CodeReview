@@ -6,6 +6,7 @@ use App\Classes;
 use App\Group;
 use App\Lesson;
 use Elasticsearch;
+use Illuminate\Support\Facades\DB;
 
 class ElasticGenerator{
     
@@ -82,6 +83,26 @@ class ElasticGenerator{
                 ]
             ];
           $this->client->index($params);
+        }
+    }
+    public function addOrganizationsToSearch(){
+        $organizations = Organization::all();
+        foreach ($organizations as $organization) {
+            $organizationId = $organization->id;
+            $organizationName = $organization->name;
+            $organizationThumbnail = $organization->thumbnail;
+            $members = DB::table('organization_user')->where('organization_id', $organizationId)->where('role', 'member')->count();
+            $params = [
+                "index" => "organizations",
+                "type" => "organization",
+                "id" => $organizationId,
+                "body" => [
+                    "Name" => $organizationName,
+                    "Thumbnail" => $organizationThumbnail,
+                    "Members" => $members
+                ]
+            ];
+            $this->client->index($params);
         }
     }
 

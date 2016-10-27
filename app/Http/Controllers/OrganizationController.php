@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ElasticOrganizationAddToIndex;
+use App\Events\ElasticOrganizationDeleteIndex;
+use App\Events\ElasticOrganizationUpdateIndex;
 use App\Files;
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
@@ -53,6 +56,10 @@ class OrganizationController extends Controller
             return Response::json($result->toArray(), 200);
 
         }
+        $idOrganizationToSearch = $result->id;
+        $nameOrganizationToSearch = $result['name'];
+        $thumbnailOrganizationToSearch = (isset($result->icon)) ? $result->icon : null;
+        event(new ElasticOrganizationAddToIndex($idOrganizationToSearch, $nameOrganizationToSearch, $thumbnailOrganizationToSearch));
 
     }
 
@@ -77,7 +84,7 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
     }
 
     /**
@@ -88,6 +95,6 @@ class OrganizationController extends Controller
      */
     public function delete($id)
     {
-        //
+        event(new ElasticOrganizationDeleteIndex($id));
     }
 }
