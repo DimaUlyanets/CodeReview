@@ -16,7 +16,7 @@ class ElasticSearch
     public function fullSearch($itemToSearch){
         $params = [
             "index" => "classes,groups,lessons,organizations",
-            "type" => "class,group,lesson",
+            "type" => "class,group,lesson,organization",
             "body" => [
                 "query" => [
                     "bool" => [
