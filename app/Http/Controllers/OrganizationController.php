@@ -65,13 +65,14 @@ class OrganizationController extends Controller
     public function show($id)
     {
         $organization = Organization::find($id);
-        $orgaInfo = [];
-        $orgaInfo['id']= $organization->id;
-        $orgaInfo['name']= $organization->name;
-        $orgaInfo['description']= $organization->description;
-        $orgaInfo['thumbnail']= $organization->thumbnail;
-        $orgaInfo['cover']= $organization->cover;
-        $organizationGroups = $organization->group->toArray();
+        $orgInfo = [];
+        $orgInfo['id']= $organization->id;
+        $orgInfo['name']= $organization->name;
+        $orgInfo['description']= $organization->description;
+        $orgInfo['thumbnail']= $organization->thumbnail;
+        $orgInfo['cover']= $organization->cover;
+        $organizationGroups = self::_excludeDefault($organization->group->toArray());
+
         $lessons = [];
         foreach ($organization->group as $group) {
             if(count($group->lessons)>0) {
@@ -104,13 +105,20 @@ class OrganizationController extends Controller
                 }
             }
         }
-        $response['organization']=$orgaInfo;
-        $response['lessons']= $lessons;
-        $response['classes']= $classes;
-        $response['groups']= $organizationGroups;
+        $response = $orgInfo;
+        $response['lessons'] = $lessons;
+        $response['classes'] = $classes;
+        $response['groups'] = $organizationGroups;
         return Response::json($response, 200);
     }
 
+    private function _excludeDefault($groups) {
+        return array_values(array_filter($groups,
+                function($group){
+                    return !$group['default'];
+                }
+            ));
+    }
 
     /**
      * Update the specified resource in storage.
