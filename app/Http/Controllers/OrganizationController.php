@@ -64,18 +64,57 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
+
         $organization = Organization::find($id);
+        $test = [];
+        $test['id']= $organization->id;
+        $test['name']= $organization->name;
+        $test['description']= $organization->description;
+        $test['thumbnail']= $organization->thumbnail;
+        $test['cover']= $organization->cover;
 
         $organizationGroups = $organization->group->toArray();
         $lessons = [];
         foreach ($organization->group as $group) {
-            array_push($lessons, $group->lessons->toArray());
+            if(count($group->lessons)>0) {
+                $lessonInfo = [];
+                foreach($group->lessons as $lesson) {
+                    $lessonInfo['id'] = $lesson->id;
+                    $lessonInfo['name'] = $lesson->name;
+                    $lessonInfo['description'] = $lesson->description;
+                    $lessonInfo['thumbnail'] = $lesson->thumbnail;
+                    $idAuthor =  $lesson->author_id;
+                    $author = User::find($idAuthor);
+                    $lessonInfo['author'] = $author->name;
+                    array_push($lessons, $lessonInfo);
+                }
+            }
         }
         $classes = [];
         foreach ($organization->group as $group) {
-            array_push($classes, $group->classes->toArray());
+            if(count($group->classes)>0) {
+                $classInfo = [];
+                foreach ($group->classes as $class) {
+                    $classInfo['id'] =  $class->id;
+                    $classInfo['name'] =  $class->name;
+                    $classInfo['description'] =  $class->description;
+                    $classInfo['thumbnail'] =  $class->thumbnail;
+                    $idAuthor =  $class->author_id;
+                    $author = User::find($idAuthor);
+                    $classInfo['author']=$author->name;
+                    array_push($classes, $classInfo);
+                }
+            }
         }
-        return Response::json($organization, 200);
+
+
+
+        $response['organization']=$test;
+        $response['lessons']= $lessons;
+        $response['classes']= $classes;
+        $response['groups']= $organizationGroups;
+
+        return Response::json($response, 200);
     }
 
 
