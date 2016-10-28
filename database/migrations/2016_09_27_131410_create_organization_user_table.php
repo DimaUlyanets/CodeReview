@@ -19,7 +19,7 @@ class CreateOrganizationUserTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('role')->nullable();
+            $table->string('role');
             $table->timestamps();
 
         });

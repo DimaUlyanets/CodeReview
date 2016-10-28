@@ -117,18 +117,16 @@ class OrganizationController extends Controller
         $organization->save();
         if(isset($request['addAdmins'])){
            $addAdmins = $request['addAdmins'];
-            foreach ($addAdmins as $id) {
-                DB::table('organization_user')->where('user_id',$id)->update(
-                    ['role' => "admin"]
+            foreach ($addAdmins as $idUser) {
+                DB::table('organization_user')->insert(
+                    ['user_id' => $idUser, 'organization_id' => $organization->id,'role' => 'admin']
                 );
             }
        }
         if(isset($request['removeAdmins'])){
             $removeAdmins  = $request['removeAdmins'];
             foreach ($removeAdmins as $id) {
-                DB::table('organization_user')->where('user_id',$id)->update(
-                    ['role' => null]
-                );
+                DB::table('organization_user')->where('user_id',$id)->delete();
             }
         }
         return Response::json($organization->toArray(), 200);
