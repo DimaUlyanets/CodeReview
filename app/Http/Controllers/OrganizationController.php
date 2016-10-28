@@ -64,15 +64,13 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-
         $organization = Organization::find($id);
-        $test = [];
-        $test['id']= $organization->id;
-        $test['name']= $organization->name;
-        $test['description']= $organization->description;
-        $test['thumbnail']= $organization->thumbnail;
-        $test['cover']= $organization->cover;
-
+        $orgaInfo = [];
+        $orgaInfo['id']= $organization->id;
+        $orgaInfo['name']= $organization->name;
+        $orgaInfo['description']= $organization->description;
+        $orgaInfo['thumbnail']= $organization->thumbnail;
+        $orgaInfo['cover']= $organization->cover;
         $organizationGroups = $organization->group->toArray();
         $lessons = [];
         foreach ($organization->group as $group) {
@@ -106,14 +104,10 @@ class OrganizationController extends Controller
                 }
             }
         }
-
-
-
-        $response['organization']=$test;
+        $response['organization']=$orgaInfo;
         $response['lessons']= $lessons;
         $response['classes']= $classes;
         $response['groups']= $organizationGroups;
-
         return Response::json($response, 200);
     }
 
