@@ -94,6 +94,7 @@ class GroupController extends ApiController
             $group->save();
         } else {
             $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
         }
 
         if($group){
@@ -137,7 +138,6 @@ class GroupController extends ApiController
             }
 
             $response = Group::getGroupInfo($group);
-            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 

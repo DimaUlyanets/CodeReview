@@ -8,8 +8,8 @@ use App\Organization;
 use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,6 +50,9 @@ class OrganizationController extends Controller
         } else {
             $result->cover = 'https://unsplash.it/200/200'; //TODO: temporary
         }
+        if(isset($request['color'])){
+            $result->color = $request['color'];
+        }
         $result->save();
         if($result){
             if($request->tags){
@@ -77,9 +80,9 @@ class OrganizationController extends Controller
                 );
             }
         }
-
+        $userId = Auth::guard('api')->user()->id;
+        Organization::createDefaultGroup($result, $userId);
         return Response::json($result->toArray(), 200);
-
     }
 
     /**
@@ -90,9 +93,61 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        //
+        $organization = Organization::find($id);
+        $orgInfo = [];
+        $orgInfo['id']= $organization->id;
+        $orgInfo['name']= $organization->name;
+        $orgInfo['description']= $organization->description;
+        $orgInfo['thumbnail']= $organization->thumbnail;
+        $orgInfo['cover']= $organization->cover;
+        $organizationGroups = self::_excludeDefault($organization->group->toArray());
+
+        $lessons = [];
+        foreach ($organization->group as $group) {
+            if(count($group->lessons)>0) {
+                $lessonInfo = [];
+                foreach($group->lessons as $lesson) {
+                    $lessonInfo['id'] = $lesson->id;
+                    $lessonInfo['name'] = $lesson->name;
+                    $lessonInfo['description'] = $lesson->description;
+                    $lessonInfo['thumbnail'] = $lesson->thumbnail;
+                    $idAuthor =  $lesson->author_id;
+                    $author = User::find($idAuthor);
+                    $lessonInfo['author'] = $author->name;
+                    array_push($lessons, $lessonInfo);
+                }
+            }
+        }
+        $classes = [];
+        foreach ($organization->group as $group) {
+            if(count($group->classes)>0) {
+                $classInfo = [];
+                foreach ($group->classes as $class) {
+                    $classInfo['id'] =  $class->id;
+                    $classInfo['name'] =  $class->name;
+                    $classInfo['description'] =  $class->description;
+                    $classInfo['thumbnail'] =  $class->thumbnail;
+                    $idAuthor =  $class->author_id;
+                    $author = User::find($idAuthor);
+                    $classInfo['author']=$author->name;
+                    array_push($classes, $classInfo);
+                }
+            }
+        }
+        $response = $orgInfo;
+        $response['lessons'] = $lessons;
+        $response['classes'] = $classes;
+        $response['groups'] = $organizationGroups;
+        return Response::json($response, 200);
     }
 
+    private function _excludeDefault($groups) {
+        return array_values(array_filter($groups,
+                function($group){
+                    return !$group['default'];
+                }
+            ));
+    }
 
     /**
      * Update the specified resource in storage.

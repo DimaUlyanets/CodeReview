@@ -38,7 +38,6 @@ class ElasticSearch
             "index" => "classes,groups,lessons",
             "type" => "class,group,lesson",
             "body" => [
-                "from" => 0, "size" => 2,
                 "query" => [
                     "bool" => [
                         "should" => [
