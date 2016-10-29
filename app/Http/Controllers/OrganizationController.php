@@ -108,12 +108,11 @@ class OrganizationController extends Controller
         isset($request['logo'])?$organization->icon = $request['logo']:"";
         isset($request['cover'])?$organization->cover = $request['cover']:"";
         isset($request['description'])?$organization->description = $request['description']:"";
-
+        isset($request['color'])?$organization->color = $request['color']:"";
         if(isset($request['tags'])){
             $request['tags'] = explode(',', $request['tags']);
             Tag::assignTag($organization, $request);
         }
-
         $organization->save();
         if(isset($request['addAdmins'])){
            $addAdmins = $request['addAdmins'];
@@ -126,7 +125,7 @@ class OrganizationController extends Controller
         if(isset($request['removeAdmins'])){
             $removeAdmins  = $request['removeAdmins'];
             foreach ($removeAdmins as $id) {
-                DB::table('organization_user')->where('user_id',$id)->delete();
+                DB::table('organization_user')->where('user_id',$id)->where('role','admin')->delete();
             }
         }
         return Response::json($organization->toArray(), 200);

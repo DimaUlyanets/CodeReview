@@ -19,6 +19,7 @@ class CreateOrganisationsTable extends Migration
             $table->string('description')->nullable();
             $table->string('icon');
             $table->string('cover')->nullable();
+            $table->char('color',7)->nullable();
             $table->boolean('default')->default(0);
             $table->timestamps();
         });
