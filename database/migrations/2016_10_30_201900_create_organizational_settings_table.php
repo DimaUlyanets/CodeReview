@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrganizationUserTable extends Migration
+class CreateOrganizationalSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateOrganizationUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('organization_user', function (Blueprint $table) {
-
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->string('role');
+        Schema::create('organizational_settings', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations')->onUpdate('cascade')->onDelete('cascade');
+            $table->boolean('includeDefaultMaterials');
             $table->timestamps();
-
         });
     }
 
@@ -32,6 +29,6 @@ class CreateOrganizationUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization_user');
+        Schema::dropIfExists('organizational_settings');
     }
 }

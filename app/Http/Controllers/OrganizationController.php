@@ -80,6 +80,11 @@ class OrganizationController extends Controller
                 );
             }
         }
+
+        DB::table('organizational_settings')->insert(
+            ['organization_id'=>$result->id,'includeDefaultMaterials'=>1]
+        );
+
         $userId = Auth::guard('api')->user()->id;
         Organization::createDefaultGroup($result, $userId);
 
@@ -161,6 +166,13 @@ class OrganizationController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+    public function settings(Request $request, $id)
+    {
+        DB::table('organizational_settings')
+            ->where('organization_id',$id)
+            ->update(['includeDefaultMaterials' => $request['includeDefaultMaterials']]);
+        return Response::json($request['includeDefaultMaterials'], 200);
     }
 
     /**
