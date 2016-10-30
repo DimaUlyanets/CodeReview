@@ -159,7 +159,11 @@ class OrganizationController extends Controller
     public function update(Request $request, $id)
     {
         $organization = Organization::find($id);
-        isset($request['name'])?$organization->name = $request['name']:"";
+        if(isset($request['name'])){
+            $orgaName = Organization::where('name', $request['name'])->first();
+            if($orgaName!= null){return response()->json(['error' => 'name must be unique'], 403); }
+            $organization->name = $request['name'];
+        }
         isset($request['logo'])?$organization->icon = $request['logo']:"";
         isset($request['cover'])?$organization->cover = $request['cover']:"";
         isset($request['description'])?$organization->description = $request['description']:"";
@@ -179,8 +183,8 @@ class OrganizationController extends Controller
        }
         if(isset($request['removeAdmins'])){
             $removeAdmins  = $request['removeAdmins'];
-            foreach ($removeAdmins as $id) {
-                DB::table('organization_user')->where('user_id',$id)->where('role','admin')->delete();
+            foreach ($removeAdmins as $idUser) {
+                DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
             }
         }
         return Response::json($organization->toArray(), 200);
