@@ -20,6 +20,7 @@ class CreateTableGroupUser extends Migration
             $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
             $table->string('role')->default("owner");
             $table->timestamps();
+
         });
     }
 
