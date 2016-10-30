@@ -17,6 +17,7 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class GroupController extends ApiController
@@ -166,6 +167,28 @@ class GroupController extends ApiController
 
         //Need complete method and pass (id)!!!
         event(new ElasticGroupDeleteIndex($id));
+    }
+    public function addMembers(Request $request, $id){
+        $group = Group::find($id);
+        if(isset($request['addMembers'])){
+            $addMembers = $request['addMembers'];
+            foreach ($addMembers as $idUser) {
+                DB::table('group_user')->insert(
+                    ['user_id' => $idUser, 'group_id' => $group->id,'role' => 'member']
+                );
+            }
+        }
+        return Response::json($group->toArray(), 200);
+    }
+    public function deleteMembers(Request $request, $id){
+        $group = Group::find($id);
+        if(isset($request['deleteMembers'])){
+            $deleteMembers = $request['deleteMembers'];
+            foreach ($deleteMembers as $idUser) {
+                DB::table('group_user')->where('user_id',$idUser)->where('group_id',$group->id)->where('role','member')->delete();
+            }
+        }
+        return Response::json($group->toArray(), 200);
     }
 
     /**
