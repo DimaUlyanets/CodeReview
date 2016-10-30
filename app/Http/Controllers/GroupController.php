@@ -133,7 +133,6 @@ class GroupController extends ApiController
             }
 
             $response = Group::getGroupInfo($group);
-            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 
