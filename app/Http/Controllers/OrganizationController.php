@@ -160,8 +160,12 @@ class OrganizationController extends Controller
     {
         $organization = Organization::find($id);
         if(isset($request['name'])){
-            $orgaName = Organization::where('name', $request['name'])->first();
-            if($orgaName!= null){return response()->json(['error' => 'name must be unique'], 403); }
+            if($request['name']!= $organization->name) {
+                $orgaName = Organization::where('name', $request['name'])->first();
+                if ($orgaName != null) {
+                    return response()->json(['error' => 'name must be unique'], 403);
+                }
+            }
             $organization->name = $request['name'];
         }
         isset($request['logo'])?$organization->icon = $request['logo']:"";
