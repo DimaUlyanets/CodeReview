@@ -17,6 +17,7 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class GroupController extends ApiController
@@ -75,13 +76,10 @@ class GroupController extends ApiController
             $data["organization_id"] = $request->organization_id;
 
         }
-
         $data["default"] = 0;
         $user = Auth::guard('api')->user();
         $data["author_id"] = $user->id;
-
         $group = Group::create($data);
-
         if(!empty($request->icon)){
 
             $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
@@ -98,9 +96,9 @@ class GroupController extends ApiController
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
             }
+
             //Assign user to group
             $user->groups()->attach($group->id);
-
 
             //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
             $idGroupToSearch = $group->id;

@@ -13,12 +13,14 @@ class GroupUserSeeder extends Seeder
     {
         DB::table('group_user')->insert([
             'user_id' => '1',
-            'group_id' => '1'
+            'group_id' => '1',
+            'role'=>'admin'
         ]);
 
         DB::table('group_user')->insert([
             'user_id' => '2',
-            'group_id' => '1'
+            'group_id' => '1',
+            'role'=>'member'
         ]);
     }
 }
