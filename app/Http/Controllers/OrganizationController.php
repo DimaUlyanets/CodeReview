@@ -162,6 +162,25 @@ class OrganizationController extends Controller
     {
         //
     }
+    public function searchUsers(Request $request, $id)
+    {
+        $findQuery = '%'.$request['query'].'%';
+        $findUser =  User::where('name','LIKE', $findQuery)->get();
+        $responseUsers = [];
+        foreach($findUser as $user){
+            if(count($user->organizations->toArray())>0) {
+                if ($user->organizations->toArray()[0]['id'] == $id) {
+                    $userInfo = [];
+                    $userInfo['id']= $user->id;
+                    $userInfo['name']= $user->name;
+                    //need implement avatar for user
+                   // $userInfo['avatar']= $user->avatar;
+                   array_push($responseUsers, $userInfo);
+                }
+            }
+        }
+        return Response::json($responseUsers, 200);
+    }
 
     /**
      * Remove the specified resource from storage.

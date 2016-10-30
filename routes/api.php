@@ -63,6 +63,8 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
     Route::get('/{id}', 'OrganizationController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'OrganizationController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'OrganizationController@delete')->where('id', '[0-9]+');
+    Route::get('/{id}/users', 'OrganizationController@searchUsers');
+
 
 });
 
