@@ -17,8 +17,8 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends ApiController
 {
@@ -100,6 +100,7 @@ class GroupController extends ApiController
             //Assign user to group
             $user->groups()->attach($group->id);
 
+
             //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
             $idGroupToSearch = $group->id;
             $nameGroupToSearch = $data['name'];
@@ -131,6 +132,7 @@ class GroupController extends ApiController
             }
 
             $response = Group::getGroupInfo($group);
+            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 
