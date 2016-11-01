@@ -10,8 +10,8 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
@@ -82,9 +82,7 @@ class OrganizationController extends Controller
         }
         $userId = Auth::guard('api')->user()->id;
         Organization::createDefaultGroup($result, $userId);
-
         return Response::json($result->toArray(), 200);
-
     }
 
     /**
@@ -160,7 +158,40 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $organization = Organization::find($id);
+        if(isset($request['name'])){
+            if($request['name']!= $organization->name) {
+                $orgaName = Organization::where('name', $request['name'])->first();
+                if ($orgaName != null) {
+                    return response()->json(['error' => 'name must be unique'], 403);
+                }
+            }
+            $organization->name = $request['name'];
+        }
+        isset($request['logo'])?$organization->icon = $request['logo']:"";
+        isset($request['cover'])?$organization->cover = $request['cover']:"";
+        isset($request['description'])?$organization->description = $request['description']:"";
+        isset($request['color'])?$organization->color = $request['color']:"";
+        if(isset($request['tags'])){
+            $request['tags'] = explode(',', $request['tags']);
+            Tag::assignTag($organization, $request);
+        }
+        $organization->save();
+        if(isset($request['addAdmins'])){
+           $addAdmins = $request['addAdmins'];
+            foreach ($addAdmins as $idUser) {
+                DB::table('organization_user')->insert(
+                    ['user_id' => $idUser, 'organization_id' => $organization->id,'role' => 'admin']
+                );
+            }
+       }
+        if(isset($request['removeAdmins'])){
+            $removeAdmins  = $request['removeAdmins'];
+            foreach ($removeAdmins as $idUser) {
+                DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
+            }
+        }
+        return Response::json($organization->toArray(), 200);
     }
 
     /**
