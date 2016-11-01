@@ -16,9 +16,10 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
 
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('description');
             $table->string('icon')->nullable();
+            $table->string('cover')->nullable();
             $table->integer('organization_id')->unsigned();
             $table->foreign('organization_id')->references('id')->on('organizations')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('privacy_id')->unsigned();
