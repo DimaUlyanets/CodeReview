@@ -150,48 +150,29 @@ class OrganizationController extends Controller
         $response['groups'] = $organizationGroups;
         return Response::json($response, 200);
     }
-    public function addMembers(Request $request, $id)
-    {
-        if (isset($request['userIds'])) {
-            $addMembers = $request['userIds'];
-            foreach ($addMembers as $idMember) {
-                $userRole = DB::table('organization_user')
-                    ->select("role")
-                    ->where('organization_id', '=', $id)
-                    ->where('user_id', '=', $idMember)->get();
-                if(($userRole->count()==0)){
-                    DB::table('organization_user')->insert(
-                        ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
-                    );
-                }else {
-                    $role = $userRole->toArray()[0]->role;
-                    if ($role != 'admin' && $role != 'owner') {
-                        DB::table('organization_user')->insert(
-                            ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
-                        );
-                    }
-                }
+
+    public function addMembers(Request $request, $id){
+        $organization = Organization::find($id);
+        if(isset($request['addMembers'])){
+            $addMembers = $request['addMembers'];
+            foreach ($addMembers as $idUser) {
+                DB::table('organization_user')->insert(
+                    ['user_id' => $idUser, 'organization_id' => $organization->id,'role' => 'member']
+                );
             }
         }
+        return Response::json($organization->toArray(), 200);
     }
-    public function deleteMembers(Request $request, $id)
-    {
-        if (isset($request['userIds'])) {
-            $delMembers = $request['userIds'];
-            foreach ($delMembers as $idMember) {
-                $userRole = DB::table('organization_user')
-                    ->select("role")
-                    ->where('organization_id', '=', $id)
-                    ->where('user_id', '=', $idMember)->get();
-                if(($userRole->count()==0)){
-                    continue;
-                }
-                $role = $userRole->toArray()[0]->role;
-                if ($role != 'admin' && $role != 'owner') {
-                    DB::table('organization_user')->where('user_id' , $idMember)->where('organization_id',$id)->delete();
-                }
+
+    public function deleteMembers(Request $request, $id){
+        $organization = Organization::find($id);
+        if(isset($request['deleteMembers'])){
+            $deleteMembers = $request['deleteMembers'];
+            foreach ($deleteMembers as $idUser) {
+                DB::table('organization_user')->where('user_id',$idUser)->where('organization_id',$organization->id)->where('role','member')->delete();
             }
         }
+        return Response::json($organization->toArray(), 200);
     }
 
     private function _excludeDefault($groups) {
