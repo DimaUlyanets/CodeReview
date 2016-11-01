@@ -62,7 +62,7 @@ class ElasticGenerator{
                     ]
                 ];
               $this->client->index($params);
-        }
+            }
         }
     }
     public function addLessonsToSearch(){
