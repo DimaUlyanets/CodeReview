@@ -32,9 +32,11 @@ class LessonSearch implements IElasticSearch{
             "type" => "lesson",
             "id" => $id,
             "body" => [
-                "id" => $id,
-                "Name" => $name,
-                "Thumbnail" => $thumbnail
+                "doc"=>[
+                    "id" => $id,
+                    "Name" => $name,
+                    "Thumbnail" => $thumbnail,
+                ]
             ]
         ];
         $this->client->update($params);

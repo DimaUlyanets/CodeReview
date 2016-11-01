@@ -168,7 +168,7 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, $id)
     {
-         event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
+
         $organization = Organization::find($id);
         if(isset($request['name'])){
             if($request['name']!= $organization->name) {
@@ -202,6 +202,7 @@ class OrganizationController extends Controller
                 DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
             }
         }
+        event(new ElasticOrganizationUpdateIndex($organization->id,$organization->name,$organization->icon));
         return Response::json($organization->toArray(), 200);
     }
 

@@ -31,12 +31,15 @@ class OrganizationSearch implements IElasticSearch{
             "type" => "organization",
             "id" => $id,
             "body" => [
-                "id" => $id,
-                "Name" => $name,
-                "Thumbnail" => $thumbnail
+                "doc"=>[
+                    "id" => $id,
+                    "Name" => $name,
+                    "Thumbnail" => $thumbnail,
+                ]
             ]
         ];
         $this->client->update($params);
+
     }
 
     public function deleteIndex($id){
