@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends ApiController
 {
@@ -82,6 +83,10 @@ class GroupController extends ApiController
         $data["author_id"] = $user->id;
 
         $group = Group::create($data);
+        //Need add Role when create group in group_user
+        DB::table('group_user')->insert(
+            ['user_id' => $user->id, 'group_id' => $group->id]
+        );
 
         if(!empty($request->icon)){
 
