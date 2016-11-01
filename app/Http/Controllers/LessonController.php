@@ -10,6 +10,7 @@ use App\Files;
 use App\Group;
 use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
+use App\Organization;
 use App\Skill;
 use App\Tag;
 use App\User;
@@ -17,7 +18,7 @@ use Illuminate\Http\Request;
 use App\ElasticSearch\LessonSearch;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Response;
 
 
 class LessonController extends ApiController
@@ -31,7 +32,19 @@ class LessonController extends ApiController
 
     public function all()
     {
-        //
+        if(isset($_SERVER['HTTP_ORGANIZATIONID'])) {
+            $lessonArray = [];
+            $organizationId = $_SERVER['HTTP_ORGANIZATIONID'];
+            $organization = Organization::find($organizationId);
+            if($organization!= null) {
+                foreach ($organization->group as $group) {
+                    foreach ($group->lessons as $lesson) {
+                        array_push($lessonArray, $lesson);
+                    }
+                }
+                return Response::json($lessonArray, 200);
+            }
+        }
     }
 
     /**

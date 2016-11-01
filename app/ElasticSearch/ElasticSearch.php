@@ -14,6 +14,11 @@ class ElasticSearch
     }
 
     public function fullSearch($itemToSearch){
+
+        if(isset($_SERVER['HTTP_ORGANIZATIONID'])){
+            $organizationId = $_SERVER['HTTP_ORGANIZATIONID'];
+
+        }
         $params = [
             "index" => "classes,groups,lessons",
             "type" => "class,group,lesson",

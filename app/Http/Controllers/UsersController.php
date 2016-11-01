@@ -111,6 +111,15 @@ class UsersController extends ApiController
 
     public function groups($id = null){
 
+
+        if(isset($_SERVER['HTTP_ORGANIZATIONID'])){
+            $organizationId = $_SERVER['HTTP_ORGANIZATIONID'];
+            $organization = Organization::find($organizationId);
+            if($organization!= null) {
+                return Response::json($organization->users, 200);
+            }
+        }
+
         $id = $id ? $id : Auth::guard('api')->user()->id;
 
         $user = User::find($id);
@@ -179,6 +188,21 @@ class UsersController extends ApiController
     }
 
     public function classes($id = null){
+
+        if(isset($_SERVER['HTTP_ORGANIZATIONID'])){
+            $organizationId = $_SERVER['HTTP_ORGANIZATIONID'];
+            $organization = Organization::find($organizationId);
+            if($organization!= null) {
+                $userArray = [];
+                foreach ($organization->group as $group) {
+                    foreach ($group->users as $user) {
+                        array_push($userArray, $user);
+                    }
+                }
+                return Response::json($organization->users, 200);
+            }
+
+        }
 
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::find($id);
