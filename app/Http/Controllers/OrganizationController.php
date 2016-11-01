@@ -95,8 +95,6 @@ class OrganizationController extends Controller
 
     }
 
-
-
     /**
      * Display the specified resource.
      *
@@ -171,6 +169,40 @@ class OrganizationController extends Controller
     public function update(Request $request, $id)
     {
          event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
+        $organization = Organization::find($id);
+        if(isset($request['name'])){
+            if($request['name']!= $organization->name) {
+                $orgaName = Organization::where('name', $request['name'])->first();
+                if ($orgaName != null) {
+                    return response()->json(['error' => 'name must be unique'], 403);
+                }
+            }
+            $organization->name = $request['name'];
+        }
+        isset($request['logo'])?$organization->icon = $request['logo']:"";
+        isset($request['cover'])?$organization->cover = $request['cover']:"";
+        isset($request['description'])?$organization->description = $request['description']:"";
+        isset($request['color'])?$organization->color = $request['color']:"";
+        if(isset($request['tags'])){
+            $request['tags'] = explode(',', $request['tags']);
+            Tag::assignTag($organization, $request);
+        }
+        $organization->save();
+        if(isset($request['addAdmins'])){
+           $addAdmins = $request['addAdmins'];
+            foreach ($addAdmins as $idUser) {
+                DB::table('organization_user')->insert(
+                    ['user_id' => $idUser, 'organization_id' => $organization->id,'role' => 'admin']
+                );
+            }
+       }
+        if(isset($request['removeAdmins'])){
+            $removeAdmins  = $request['removeAdmins'];
+            foreach ($removeAdmins as $idUser) {
+                DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
+            }
+        }
+        return Response::json($organization->toArray(), 200);
     }
 
     /**
