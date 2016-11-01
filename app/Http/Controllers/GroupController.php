@@ -158,13 +158,40 @@ class GroupController extends ApiController
     {
         $group = Group::find($id);
 
+        if(!$request->organization_id){
+            $organization = Organization::whereDefault(1)->first();
+            $organizationId = $organization->id;
+        }else{
+            $organizationId = $request->organization_id;
+        }
+
         if(isset($request['name'])){
-            $groupName = Group::where('name', $request['name'])->first();
-            if($groupName!= null){return response()->json(['error' => 'name must be unique'], 403); }
+            if($request['name']!= $group->name) {
+                $groupName = Group::where('name', $request['name'])->first();
+                if ($groupName != null) {
+                    return response()->json(['error' => 'name must be unique'], 403);
+                }
+            }
             $group->name = $request['name'];
         }
-        isset($request['thumbnail'])?$group->icon = $request['thumbnail']:"";
-        isset($request['cover'])?$group->cover = $request['cover']:"";
+        if(!empty($request['thumbnail'])){
+
+            $path = Files::qualityCompress($request['thumbnail'], "organizations/{$organizationId}/groups/{$group->id}/icon");
+            $group->icon = $path;
+            $group->save();
+        } else {
+            $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
+        }
+        if(!empty($request['cover'])){
+            $path = Files::qualityCompress($request['cover'], "organizations/{$organizationId}/groups/{$group->id}/cover");
+            $group->cover = $path;
+            $group->save();
+        } else {
+            $group->cover = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
+        }
+
         isset($request['description'])?$group->description = $request['description']:"";
         if(isset($request['tags'])){
             $request['tags'] = explode(',', $request['tags']);
