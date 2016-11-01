@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-//use App\Events\ElasticOrganizationAddToIndex;
-//use App\Events\ElasticOrganizationDeleteIndex;
-//use App\Events\ElasticOrganizationUpdateIndex;
+use App\Events\ElasticOrganizationAddToIndex;
+use App\Events\ElasticOrganizationDeleteIndex;
+use App\Events\ElasticOrganizationUpdateIndex;
 use App\Files;
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
