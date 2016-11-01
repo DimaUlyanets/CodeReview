@@ -76,11 +76,9 @@ class GroupController extends ApiController
             $data["organization_id"] = $request->organization_id;
 
         }
-
         $data["default"] = 0;
         $user = Auth::guard('api')->user();
         $data["author_id"] = $user->id;
-
         $group = Group::create($data);
         //Need add Role when create group in group_user
         DB::table('group_user')->insert(
@@ -103,6 +101,7 @@ class GroupController extends ApiController
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
             }
+
             //Assign user to group
             $user->groups()->attach($group->id);
 
@@ -138,6 +137,7 @@ class GroupController extends ApiController
             }
 
             $response = Group::getGroupInfo($group);
+            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 
