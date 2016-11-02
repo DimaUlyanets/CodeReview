@@ -26,6 +26,8 @@ class ElasticGenerator{
                 $classUserName = $user->name;
                 array_push($classUsers, $classUserName);
             }
+            $group= Group::find($class->group_id);
+            $classOrganizationId = $group->organization_id;
             $params = [
                 "index" => "classes",
                 "type" => "class",
@@ -33,7 +35,8 @@ class ElasticGenerator{
                 "body" => [
                     "Name" => $className,
                     "Thumbnail" => $classThumbnail,
-                    "Users" => $classUsers
+                    "Users" => $classUsers,
+                    'OrganizationId'=>$classOrganizationId
                 ]
             ];
           $this->client->index($params);
@@ -46,6 +49,7 @@ class ElasticGenerator{
                 $groupId = $group->id;
                 $groupName = $group->name;
                 $groupThumbnail = $group->thumbnail;
+                $groupOrganizationId =$group->organization_id;
                 $groupUsers = [];
                 foreach ($group->users as $user) {
                     $groupUserName = $user->name;
@@ -58,7 +62,8 @@ class ElasticGenerator{
                     "body" => [
                         "Name" => $groupName,
                         "Thumbnail" => $groupThumbnail,
-                        "Users" => $groupUsers
+                        "Users" => $groupUsers,
+                        'OrganizationId'=>$groupOrganizationId
                     ]
                 ];
               $this->client->index($params);
@@ -71,6 +76,8 @@ class ElasticGenerator{
             $lessonId = $lesson->id;
             $lessonName = $lesson->name;
             $lessonThumbnail = $lesson->thumbnail;
+            $group= Group::find($lesson->group_id);
+            $lessonOrganizationId = $group->organization_id;
             $params = [
                 "index" => "lessons",
                 "type" => "lesson",
@@ -78,7 +85,8 @@ class ElasticGenerator{
                 "body" => [
                     "Name" => $lessonName,
                     "Thumbnail" => $lessonThumbnail,
-                    "views" => $lesson->views
+                    "views" => $lesson->views,
+                    'OrganizationId'=>$lessonOrganizationId
                 ]
             ];
           $this->client->index($params);
