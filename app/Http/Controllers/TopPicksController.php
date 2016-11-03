@@ -28,16 +28,18 @@ class TopPicksController extends ApiController
                 foreach($user->groups as $key => $group){
 
                     foreach($group->classes as $classKey => $class){
-
+                        $user = User::find($class->author_id);
                         $response['classes'][$class->id]["name"] = $class->name;
                         $response['classes'][$class->id]["thumbnail"] = $class->thumbnail;
                         $response['classes'][$class->id]["id"] = $class->id;
                         $response['classes'][$class->id]["users"] = sizeOf($class->users);
+                        $response['classes'][$class->id]["author"] = $user->name;
                         foreach($class->lessons as $lessonKey => $lesson){
                             $response['lessons'][$lesson->id]["name"] = $lesson->name;
                             $response['lessons'][$lesson->id]["thumbnail"] = $lesson->thumbnail;
                             $response['lessons'][$lesson->id]["id"] = $lesson->id;
                             $response['lessons'][$lesson->id]["views"] = $lesson->views;
+                            $response['lessons'][$lesson->id]["author"] = $lesson->author->name;
                         }
                     }
                 }
