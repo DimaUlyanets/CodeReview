@@ -10,10 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 538e88760b47b60ab55e4e3baefdce4aed3f9273
 class UploadVideo implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
