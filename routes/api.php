@@ -77,6 +77,8 @@ Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+')->middleware('GroupProtection');
     Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');
+    Route::post('/{id}/users/members', 'GroupController@addMembers')->where('id', '[0-9]+')->middleware('GroupProtection');
+    Route::delete('/{id}/users/members', 'GroupController@deleteMembers')->where('id', '[0-9]+')->middleware('GroupProtection');
 
 });
 
