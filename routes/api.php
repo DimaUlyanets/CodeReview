@@ -135,3 +135,10 @@ Route::group(['prefix' => 'search' , 'middleware' => 'auth:api'] , function() {
 
 
 });
+
+Route::group(['prefix' => 'topPicks' , 'middleware' => 'auth:api'] , function() {
+
+    Route::get('/', 'TopPicksController@all');
+
+
+});
