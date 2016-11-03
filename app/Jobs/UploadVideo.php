@@ -3,15 +3,12 @@
 namespace App\Jobs;
 
 use App\Lesson;
-
+use FFMpeg\FFMpeg;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
-
-use Pbmedia\LaravelFFMpeg;
-
 
 class UploadVideo implements ShouldQueue
 {
@@ -54,6 +51,7 @@ class UploadVideo implements ShouldQueue
             ->save('small_steve.mkv');
 
 
+        #\Pbmedia\LaravelFFMpeg\FFMpeg::
 
         Storage::disk('s3')->put($this->local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local), 'public');
         $this->lesson->lesson_file = env("APP_S3") . $this->local;
