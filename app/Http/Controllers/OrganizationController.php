@@ -162,19 +162,22 @@ class OrganizationController extends Controller
     {
         //
     }
+
     public function searchUsers(Request $request, $id)
     {
         $findQuery = '%'.$request['query'].'%';
         $findUser =  User::where('name','LIKE', $findQuery)->get();
         $responseUsers = [];
         foreach($findUser as $user){
-            if(count($user->organizations->toArray())>0) {
-                if ($user->organizations->toArray()[0]['id'] == $id) {
+            if(($user->organizations->count())>0) {
+                if ($user->organizations->where('id',$id)){
                     $userInfo = [];
                     $userInfo['id']= $user->id;
                     $userInfo['name']= $user->name;
-                    //need implement avatar for user
-                   // $userInfo['avatar']= $user->avatar;
+                    $avatar = DB::table('profiles')->select('avatar')->where('user_id','=', $user->id)->get();
+                    if($avatar!=null) {
+                        $userInfo['avatar'] = $avatar[0]->avatar;
+                    }
                    array_push($responseUsers, $userInfo);
                 }
             }
