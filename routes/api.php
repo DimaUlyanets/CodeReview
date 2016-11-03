@@ -21,7 +21,19 @@ Route::group(['middleware' => 'guest'] , function() {
     Route::any('/test', 'AuthController@test');
     Route::post('/users/suggest/', 'UsersController@suggest')->where('id', '[0-9]+');
     Route::get('/file', function () {
-        return view('file');
+
+        $link = '/Users/dulyanets/projects/graspe/storage/app/public/organizations/1/groups/1/lessons/31/lesson_file/d55bddf8d62910879ed9f605522149a8.mp4';
+        $ffmpeg = \FFMpeg\FFMpeg::create();
+
+        $video = $ffmpeg->open($link);
+        #$video->filters()
+        #          ->resize(new FFMpeg\Coordinate\Dimension(320, 240))
+        #          ->synchronize();
+
+        $video
+            ->save(new FFMpeg\Format\Video\X264(), '/Users/dulyanets/projects/graspe/export-x2641.mp4');
+
+        #return view('file');
     });
 
 });
@@ -51,7 +63,9 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
     Route::get('/{id}', 'OrganizationController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'OrganizationController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'OrganizationController@delete')->where('id', '[0-9]+');
-
+    Route::patch('/{id}', 'OrganizationController@update')->where('id', '[0-9]+')->middleware('OrganizationProtection');
+    Route::post('/{id}/users/members', 'OrganizationController@addMembers')->where('id', '[0-9]+')->middleware('OrganizationProtection');
+    Route::delete('/{id}/users/members', 'OrganizationController@deleteMembers')->where('id', '[0-9]+')->middleware('OrganizationProtection');
 });
 
 Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
@@ -61,8 +75,10 @@ Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
     Route::post('/join', 'GroupController@join');
     Route::get('/{id}/leave', 'GroupController@leave');
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
-    Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+');
+    Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+')->middleware('GroupProtection');
     Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');
+    Route::post('/{id}/users/members', 'GroupController@addMembers')->where('id', '[0-9]+')->middleware('GroupProtection');
+    Route::delete('/{id}/users/members', 'GroupController@deleteMembers')->where('id', '[0-9]+')->middleware('GroupProtection');
 
 });
 

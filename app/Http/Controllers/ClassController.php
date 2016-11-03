@@ -67,6 +67,7 @@ class ClassController extends ApiController
 
             } else {
                 $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
+                $class->save();
             }
 
             if($request->tags){
@@ -129,8 +130,6 @@ class ClassController extends ApiController
                 "lessons" => $lessons
 
             ];
-
-            $response['memberOf'] = Auth::guard('api')->user()->id === $class->author_id;
 
             return $this->setStatusCode(200)->respondSuccess($response);
 

@@ -17,6 +17,7 @@ class LessonSearch implements IElasticSearch{
             "type" => "lesson",
             "id" => $id,
             "body" => [
+                "id" => $id,
                 "Name" => $name,
                 "Thumbnail" => $thumbnail,
                 "views" => 0
@@ -31,6 +32,7 @@ class LessonSearch implements IElasticSearch{
             "type" => "lesson",
             "id" => $id,
             "body" => [
+                "id" => $id,
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
             ]

@@ -17,6 +17,7 @@ class GroupSearch implements IElasticSearch{
             "type" => "group",
             "id" => $id,
             "body" => [
+                "id" => $id,
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
             ]
@@ -30,6 +31,7 @@ class GroupSearch implements IElasticSearch{
             "type" => "group",
             "id" => $id,
             "body" => [
+                "id" => $id,
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
             ]

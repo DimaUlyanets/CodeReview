@@ -17,6 +17,7 @@ use App\Tag;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 class GroupController extends ApiController
@@ -75,12 +76,14 @@ class GroupController extends ApiController
             $data["organization_id"] = $request->organization_id;
 
         }
-
         $data["default"] = 0;
         $user = Auth::guard('api')->user();
         $data["author_id"] = $user->id;
-
         $group = Group::create($data);
+        //Need add Role when create group in group_user
+        DB::table('group_user')->insert(
+            ['user_id' => $user->id, 'group_id' => $group->id]
+        );
 
         if(!empty($request->icon)){
 
@@ -88,7 +91,8 @@ class GroupController extends ApiController
             $group->icon = $path;
             $group->save();
         } else {
-            $class->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
         }
 
         if($group){
@@ -97,6 +101,7 @@ class GroupController extends ApiController
                 $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
             }
+
             //Assign user to group
             $user->groups()->attach($group->id);
 
@@ -151,8 +156,74 @@ class GroupController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //Need complete method and pass (new name and new thumbnail)!!!
-       // event(new ElasticGroupUpdateIndex($id,$name,$thumbnail));
+        $group = Group::find($id);
+
+        if(!$request->organization_id){
+            $organization = Organization::whereDefault(1)->first();
+            $organizationId = $organization->id;
+        }else{
+            $organizationId = $request->organization_id;
+        }
+
+        if(isset($request['name'])){
+            if($request['name']!= $group->name) {
+                $groupName = Group::where('name', $request['name'])->first();
+                if ($groupName != null) {
+                    return response()->json(['error' => 'name must be unique'], 403);
+                }
+            }
+            $group->name = $request['name'];
+        }
+        if(!empty($request['thumbnail'])){
+
+            $path = Files::qualityCompress($request['thumbnail'], "organizations/{$organizationId}/groups/{$group->id}/icon");
+            $group->icon = $path;
+            $group->save();
+        } else {
+            $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
+        }
+        if(!empty($request['cover'])){
+            $path = Files::qualityCompress($request['cover'], "organizations/{$organizationId}/groups/{$group->id}/cover");
+            $group->cover = $path;
+            $group->save();
+        } else {
+            $group->cover = 'https://unsplash.it/200/200'; //TODO: temporary
+            $group->save();
+        }
+
+        isset($request['description'])?$group->description = $request['description']:"";
+        if(isset($request['tags'])){
+            $request['tags'] = explode(',', $request['tags']);
+            Tag::assignTag($group, $request);
+        }
+        $group->save();
+
+        $user = Auth::guard('api')->user();
+        $userRole = DB::table('group_user')->select('role')->where('user_id', '=', $user->id)->where('group_id', '=', $group->id)->get();
+        if(count($userRole)>0) {
+            if ($userRole->toArray()[0]->role == "owner") {
+                if(isset($request['addAdmins'])){
+                    $addAdmins = $request['addAdmins'];
+                    foreach ($addAdmins as $idUser) {
+                        DB::table('group_user')->insert(
+                            ['user_id' => $idUser, 'group_id' => $group->id,'role' => 'admin']
+                        );
+                    }
+                }
+                if(isset($request['removeAdmins'])){
+                    $removeAdmins  = $request['removeAdmins'];
+                    foreach ($removeAdmins as $idUser) {
+                        DB::table('group_user')->where('user_id',$idUser)->where('role','admin')->where('group_id',$group->id)->delete();
+                    }
+                }
+            }
+        }
+
+
+        return Response::json($group->toArray(), 200);
+
+        event(new ElasticGroupUpdateIndex($group->id, $group->name, $group->icon));
     }
 
     /**
@@ -166,6 +237,28 @@ class GroupController extends ApiController
 
         //Need complete method and pass (id)!!!
         event(new ElasticGroupDeleteIndex($id));
+    }
+    public function addMembers(Request $request, $id){
+        $group = Group::find($id);
+        if(isset($request['addMembers'])){
+            $addMembers = $request['addMembers'];
+            foreach ($addMembers as $idUser) {
+                DB::table('group_user')->insert(
+                    ['user_id' => $idUser, 'group_id' => $group->id,'role' => 'member']
+                );
+            }
+        }
+        return Response::json($group->toArray(), 200);
+    }
+    public function deleteMembers(Request $request, $id){
+        $group = Group::find($id);
+        if(isset($request['deleteMembers'])){
+            $deleteMembers = $request['deleteMembers'];
+            foreach ($deleteMembers as $idUser) {
+                DB::table('group_user')->where('user_id',$idUser)->where('group_id',$group->id)->where('role','member')->delete();
+            }
+        }
+        return Response::json($group->toArray(), 200);
     }
 
     /**

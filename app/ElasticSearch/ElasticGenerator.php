@@ -2,7 +2,6 @@
 
 namespace App\ElasticSearch;
 
-
 use App\Classes;
 use App\Group;
 use App\Lesson;
@@ -63,7 +62,7 @@ class ElasticGenerator{
                     ]
                 ];
               $this->client->index($params);
-        }
+            }
         }
     }
     public function addLessonsToSearch(){

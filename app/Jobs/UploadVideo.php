@@ -10,6 +10,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 538e88760b47b60ab55e4e3baefdce4aed3f9273
 class UploadVideo implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
@@ -40,23 +44,19 @@ class UploadVideo implements ShouldQueue
         #https://github.com/PHP-FFMpeg/PHP-FFMpeg
         #local vidoe stored here: storage_path('app/public').DIRECTORY_SEPARATOR .$this->local
 
-        FFMpeg::fromDisk('videos')
-            ->open('steve_howe.mp4')
-            ->addFilter(function ($filters) {
-                $filters->resize(new \FFMpeg\Coordinate\Dimension(640, 480));
-            })
-            ->export()
-            ->toDisk('converted_videos')
-            ->inFormat(new \FFMpeg\Format\Video\X264)
-            ->save('small_steve.mkv');
+        $localfile = $this->local;
+        $resized = str_replace('.mp4', 'resized.mp4', $this->local);
 
+        $file = storage_path('app/public').DIRECTORY_SEPARATOR . $localfile;
+        $file2 = storage_path('app/public').DIRECTORY_SEPARATOR . $resized;
 
-        #\Pbmedia\LaravelFFMpeg\FFMpeg::
+        exec('ffmpeg -i '. $file . ' -b:v ' .env('VIDEO_BITRATE'). 'k -vcodec libx264 -acodec libmp3lame '. $file2);
 
-        Storage::disk('s3')->put($this->local, file_get_contents(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local), 'public');
-        $this->lesson->lesson_file = env("APP_S3") . $this->local;
+        Storage::disk('s3')->put($resized, file_get_contents($file2), 'public');
+        $this->lesson->lesson_file = env("APP_S3") . $resized;
         $this->lesson->save();
-        unlink(storage_path('app/public').DIRECTORY_SEPARATOR .$this->local);
+        unlink($file);
+        unlink($file2);
 
     }
 }

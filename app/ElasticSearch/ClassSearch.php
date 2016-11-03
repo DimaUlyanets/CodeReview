@@ -17,6 +17,7 @@ class ClassSearch implements IElasticSearch{
             "type" => "class",
             "id" => $id,
             "body" => [
+                "id"=>$id,
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
               ]
@@ -30,6 +31,7 @@ class ClassSearch implements IElasticSearch{
             "type" => "class",
             "id" => $id,
             "body" => [
+                "id"=>$id,
                 "Name" => $name,
                 "Thumbnail" => $thumbnail
             ]

@@ -15,10 +15,10 @@ class Organization extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'description', 'icon', 'default'
+        'id', 'name', 'description', 'icon', 'default', 'color'
     ];
 
-    public static function createDefaultGroup($organization){
+    public static function createDefaultGroup($organization, $authorId){
 
         $privacy = Privacy::whereType("External")->where("subtype", "=", "Free")->first();
 
@@ -28,6 +28,7 @@ class Organization extends Model
                 'icon' => 'icon.jpg',
                 'default' => 1,
                 'privacy_id' => $privacy->id,
+                'author_id' => $authorId,
                 'organization_id' => $organization->id
             ]
 
