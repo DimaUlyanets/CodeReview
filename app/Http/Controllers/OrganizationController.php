@@ -170,7 +170,7 @@ class OrganizationController extends Controller
         $responseUsers = [];
         foreach($findUser as $user){
             if(($user->organizations->count())>0) {
-                if ($user->organizations->where('id',$id)){
+                if (count($user->organizations->where('id',$id))>0){
                     $userInfo = [];
                     $userInfo['id']= $user->id;
                     $userInfo['name']= $user->name;
