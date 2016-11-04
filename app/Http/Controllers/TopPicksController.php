@@ -14,7 +14,7 @@ class TopPicksController extends ApiController
     public function all(Request $request){
         $id = Auth::guard('api')->user()->id;
 
-            $user = User::find($id);
+            $user = User::with('groups.classes.lessons')->find($id);
 
             if($user){
 
@@ -43,8 +43,8 @@ class TopPicksController extends ApiController
                         }
                     }
                 }
-                $response['classes'] = array_values($response['classes']);
-                $response['lessons'] = array_values($response['lessons']);
+                if(!empty($response['classes']))$response['classes'] = array_values($response['classes']);
+                if(!empty($response['lessons']))$response['lessons'] = array_values($response['lessons']);
 
                 return $this->setStatusCode(200)->respondSuccess($response);
 

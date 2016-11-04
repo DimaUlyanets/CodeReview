@@ -80,6 +80,24 @@ class Group extends Model
 
     }
 
+    public static function createRelatedArray($entity){
+
+        $result = [];
+
+        foreach($entity as $item) {
+            $result['id'] = $item->id;
+            $result['name'] = $item->name;
+            $result['description'] = $item->description;
+            $result['thumbnail'] = $item->thumbnail;
+            $idAuthor =  $item->author_id;
+            $author = User::find($idAuthor);
+            $result['author'] = $author->name;
+        }
+
+        return $result;
+
+    }
+
     /**
      * The privacy that belong to the group.
      */
