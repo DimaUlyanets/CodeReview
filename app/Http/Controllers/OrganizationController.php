@@ -6,6 +6,7 @@ use App\Events\ElasticOrganizationAddToIndex;
 use App\Events\ElasticOrganizationDeleteIndex;
 use App\Events\ElasticOrganizationUpdateIndex;
 use App\Files;
+use App\Group;
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Organization;
 use App\Tag;
@@ -13,8 +14,8 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
@@ -103,7 +104,7 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $organization = Organization::find($id);
+        $organization = Organization::with('group.lessons', 'group.classes')->find($id);
         $orgInfo = [];
         $orgInfo['id']= $organization->id;
         $orgInfo['name']= $organization->name;
@@ -114,41 +115,66 @@ class OrganizationController extends Controller
 
         $lessons = [];
         foreach ($organization->group as $group) {
-            if(count($group->lessons)>0) {
-                $lessonInfo = [];
-                foreach($group->lessons as $lesson) {
-                    $lessonInfo['id'] = $lesson->id;
-                    $lessonInfo['name'] = $lesson->name;
-                    $lessonInfo['description'] = $lesson->description;
-                    $lessonInfo['thumbnail'] = $lesson->thumbnail;
-                    $idAuthor =  $lesson->author_id;
-                    $author = User::find($idAuthor);
-                    $lessonInfo['author'] = $author->name;
-                    array_push($lessons, $lessonInfo);
-                }
-            }
+            if(!empty($group->lessons))$lessons = Group::createRelatedArray($group->lessons);
         }
+
         $classes = [];
         foreach ($organization->group as $group) {
-            if(count($group->classes)>0) {
-                $classInfo = [];
-                foreach ($group->classes as $class) {
-                    $classInfo['id'] =  $class->id;
-                    $classInfo['name'] =  $class->name;
-                    $classInfo['description'] =  $class->description;
-                    $classInfo['thumbnail'] =  $class->thumbnail;
-                    $idAuthor =  $class->author_id;
-                    $author = User::find($idAuthor);
-                    $classInfo['author']=$author->name;
-                    array_push($classes, $classInfo);
-                }
-            }
+            if(!empty($group->classes))$classes = Group::createRelatedArray($group->classes);
         }
+
         $response = $orgInfo;
         $response['lessons'] = $lessons;
         $response['classes'] = $classes;
         $response['groups'] = $organizationGroups;
         return Response::json($response, 200);
+    }
+    public function addMembers(Request $request, $id)
+    {
+        if (isset($request['userIds'])) {
+            $addMembers = $request['userIds'];
+            foreach ($addMembers as $idMember) {
+
+                $userRole = DB::table('organization_user')
+                    ->select("role")
+                    ->where('organization_id', '=', $id)
+                    ->where('user_id', '=', $idMember)->get();
+
+                if(($userRole->count()==0)){
+
+                    DB::table('organization_user')->insert(
+                        ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
+                    );
+
+                }else {
+                    $role = $userRole->toArray()[0]->role;
+                    if ($role != 'admin' && $role != 'owner') {
+                        DB::table('organization_user')->insert(
+                            ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
+                        );
+                    }
+                }
+            }
+        }
+    }
+    public function deleteMembers(Request $request, $id)
+    {
+        if (isset($request['userIds'])) {
+            $delMembers = $request['userIds'];
+            foreach ($delMembers as $idMember) {
+                $userRole = DB::table('organization_user')
+                    ->select("role")
+                    ->where('organization_id', '=', $id)
+                    ->where('user_id', '=', $idMember)->get();
+                if(($userRole->count()==0)){
+                    continue;
+                }
+                $role = $userRole->toArray()[0]->role;
+                if ($role != 'admin' && $role != 'owner') {
+                    DB::table('organization_user')->where('user_id' , $idMember)->where('organization_id',$id)->delete();
+                }
+            }
+        }
     }
 
     private function _excludeDefault($groups) {
@@ -202,7 +228,7 @@ class OrganizationController extends Controller
                 DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
             }
         }
-        event(new ElasticOrganizationUpdateIndex($organization->id,$organization->name,$organization->icon));
+        event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
         return Response::json($organization->toArray(), 200);
     }
 

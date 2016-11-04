@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Lesson;
-
+use FFMpeg\FFMpeg;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
