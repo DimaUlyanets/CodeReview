@@ -23,7 +23,7 @@ class Organization extends Model
         $privacy = Privacy::whereType("External")->where("subtype", "=", "Free")->first();
 
         Group::create([
-                'name' => 'Base group',
+                'name' => 'Base group '.$organization->id,
                 'description' => 'Base group',
                 'icon' => 'icon.jpg',
                 'default' => 1,
