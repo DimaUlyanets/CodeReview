@@ -232,9 +232,9 @@ class OrganizationController extends Controller
         return Response::json($organization->toArray(), 200);
     }
 
-    public function searchUsers(Request $request, $id)
+    public function searchUsers(Request $request, $id, $query)
     {
-        $findQuery = '%'.$request['query'].'%';
+        $findQuery = '%'.$query.'%';
         $findUser =  User::where('name','LIKE', $findQuery)->get();
         $responseUsers = [];
         foreach($findUser as $user){
