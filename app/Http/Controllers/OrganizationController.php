@@ -60,7 +60,6 @@ class OrganizationController extends Controller
         $result->save();
         if($result){
             if($request->tags){
-                $request->tags = explode(',', $request->tags);
                 Tag::assignTag($result, $request);
             }
         }
@@ -68,15 +67,14 @@ class OrganizationController extends Controller
         DB::table('organization_user')->insert(
             ['user_id' => $user->id, 'organization_id' => $result->id ,'role'=>'owner']
         );
-        if(isset($request['members'])){
-            $addMembers = $request['members'];
-            foreach ($addMembers as $id) {
+        if(is_array($request['members']) && count($request['members']) > 0){
+            foreach ($request['members'] as $id) {
                 DB::table('organization_user')->insert(
                     ['user_id'=>$id,'organization_id'=>$result->id,'role'=>'member']
                 );
             }
         }
-        if(isset($request['admins'])){
+        if(is_array($request['admins']) && count($request['admins']) > 0){
             $addAdmins = $request['admins'];
             foreach ($addAdmins as $id) {
                 DB::table('organization_user')->insert(
