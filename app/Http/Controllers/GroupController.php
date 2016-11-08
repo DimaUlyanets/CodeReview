@@ -192,9 +192,8 @@ class GroupController extends ApiController
             $group->save();
         }
 
-        isset($request['description'])?$group->description = $request['description']:"";
+        isset($request['description']) ? $group->description = $request['description'] : "";
         if(isset($request['tags'])){
-            $request['tags'] = explode(',', $request['tags']);
             Tag::assignTag($group, $request);
         }
         $group->save();
