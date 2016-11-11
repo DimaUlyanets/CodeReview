@@ -30,6 +30,14 @@ class GroupController extends ApiController
     public function all()
     {
 
+        if(isset($_SERVER['HTTP_ORGANIZATIONID'])){
+            $organizationId = $_SERVER['HTTP_ORGANIZATIONID'];
+            $organization = Organization::find($organizationId);
+            if($organization!= null) {
+                return Response::json($organization->group, 200);
+            }
+        }
+
         $response = array();
 
         $user = Auth::guard('api')->user();

@@ -8,6 +8,7 @@ use App\Group;
 use App\Events\ElasticClassAddToIndex;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
+use App\Organization;
 use App\Privacy;
 use App\Tag;
 use App\User;
@@ -26,7 +27,19 @@ class ClassController extends ApiController
      */
     public function all()
     {
-        //
+        if(isset($_SERVER['HTTP_ORGANIZATIONID'])) {
+            $classArray = [];
+            $organizationId = $_SERVER['HTTP_ORGANIZATIONID'];
+            $organization = Organization::find($organizationId);
+            if($organization!= null) {
+                foreach ($organization->group as $group) {
+                    foreach ($group->classes as $class) {
+                        array_push($classArray, $class);
+                    }
+                }
+                return Response::json($classArray, 200);
+            }
+        }
     }
 
     /**
