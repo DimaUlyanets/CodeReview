@@ -67,6 +67,7 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
     Route::get('/{id}/users/{query}', 'OrganizationController@searchUsers')->where('id', '[0-9]+');
     Route::post('/{id}/users/members', 'OrganizationController@addMembers')->where('id', '[0-9]+')->middleware('OrganizationProtection');
     Route::delete('/{id}/users/members', 'OrganizationController@deleteMembers')->where('id', '[0-9]+')->middleware('OrganizationProtection');
+    Route::get('/id/{id}', 'OrganizationController@getUserOrganization')->where('id', '[0-9]+');
 });
 
 Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {

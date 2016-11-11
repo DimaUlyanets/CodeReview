@@ -127,6 +127,25 @@ class OrganizationController extends Controller
         $response['groups'] = $organizationGroups;
         return Response::json($response, 200);
     }
+
+    public function getUserOrganization($id){
+
+        $user = Auth::guard('api')->user();
+        $response = [];
+
+        $organization = $user->organizations()->whereId($id)->first();
+        $response["organization"] = $organization;
+        $groups = $user->groups()->whereOrganizationId($organization->id)->get();
+        foreach($groups as $group){
+            $response["classes"] = $user->classes()->whereGroupId($group->id)->get();
+        }
+
+        $response["groups"] = $groups;
+
+        return Response::json($response, 200);
+
+    }
+
     public function addMembers(Request $request, $id)
     {
         if (isset($request['userIds'])) {
