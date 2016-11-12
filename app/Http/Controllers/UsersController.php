@@ -197,6 +197,7 @@ class UsersController extends ApiController
 
                 $response[$value->id]["id"] = $value->id;
                 $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["thumbnail"] = $value->thumbnail;
                 $response[$value->id]["description"] = $value->description;
                 $response[$value->id]["group_id"] = $value->group_id;
 

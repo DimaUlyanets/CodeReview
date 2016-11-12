@@ -84,9 +84,8 @@ class LessonController extends ApiController
         }
 
         if($request->skills){
-            $request->skills = explode(',', $request->skills);
             foreach($request->skills as $value){
-                
+
                 $skill = Skill::whereName($value)->first();
                 if(!$skill){
                     $skill = Skill::create(["name" => $value]);
@@ -100,7 +99,6 @@ class LessonController extends ApiController
         }
 
         if($request->tags){
-            $request->tags = explode(',', $request->tags);
             Tag::assignTag($lesson, $request);
 
         }
