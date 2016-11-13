@@ -54,8 +54,8 @@ class UsersController extends ApiController
             #Get default organization and attach to created user
             $default = Organization::whereDefault(1)->first();
 
-            $user->organizations()->attach($default->id);
-            $user->groups()->attach($default->group->first()->id);
+            $user->organizations()->attach([$default->id => ['role' => 'member']]);
+            $user->groups()->attach([$default->group->first()->id => ['role' => 'member']]);
 
             return Response::json($user->toArray(), 200);
 
@@ -93,18 +93,18 @@ class UsersController extends ApiController
         $organization = $user->organizations()->whereId($id)->first();
         $response["organization"] = $organization;
         $groups = $user->groups()->whereOrganizationId($organization->id)->get();
+        $response["classes"] = [];
         foreach($groups as $key =>$group){
-            $response["classes"] = $user->classes()->whereGroupId($group->id)->get();
+           $response["classes"] = array_merge($response["classes"], $user->classes()->whereGroupId($group->id)->get()->toArray());
         }
+
+        usort($response["classes"], function($a, $b) {
+              return $a['id']- $b['id'];
+        });
+
         $groupsNotDeFault = $user->groups()->whereOrganizationId($organization->id)->whereDefault(0)->get();//TODO refactor
         $response["groups"] = $groupsNotDeFault->toArray();
         return Response::json($response, 200);
-
-    }
-
-    function notDefault($var)
-    {
-        return(!($var & 1));
     }
 
     /**
