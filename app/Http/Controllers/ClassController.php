@@ -42,8 +42,9 @@ class ClassController extends ApiController
 
         if(!$request->group_id){
 
+            $request->organization_id;
             $user = Auth::guard('api')->user();
-            $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+            $data["group_id"] = $user->organizations()->whereId($request->organization_id)->first()->group()->whereDefault(1)->first()->id;
 
         }else{
 

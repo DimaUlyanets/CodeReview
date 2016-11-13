@@ -16,6 +16,7 @@ class ClassCreateRequest extends Request
     {
 
         #check is user in group where he want to create class
+        if(!$this->group_id)return true;
         if(Auth::guard('api')->user()->groups()->whereId($this->group_id)->first())return true;
         return false;
 
@@ -29,8 +30,14 @@ class ClassCreateRequest extends Request
     public function rules()
     {
 
+        if(!$this->organization_id){
+            return [
+                'organization_id' => 'exists:organizations,id|numeric|required'
+            ];
+        }
+
         if(!$this->group_id){
-            $this->group_id = Auth::guard('api')->user()->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+            $this->group_id = Auth::guard('api')->user()->organizations()->whereId($this->organization_id)->first()->group()->whereDefault(1)->first()->id;
         }
 
         return [
@@ -40,6 +47,7 @@ class ClassCreateRequest extends Request
             'group_id' => 'exists:groups,id|numeric',
             'is_collaborative' => 'numeric|required|boolean',
             'tags' => 'max:255',
+            'organization_id' => 'exists:organizations,id|numeric|required'
         ];
     }
 }
