@@ -70,9 +70,10 @@ class UsersController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id = null)
     {
-        $user = User::find($id);
+        $id = $id ? $id : Auth::guard('api')->user()->id;
+        $user = User::with('organizations', 'profile')->find($id);
 
         if(!$user){
 
@@ -82,8 +83,30 @@ class UsersController extends ApiController
 
         return $this->respond($user);
 
+    }
 
+    public function getUserOrganization($id){
 
+        $user = Auth::guard('api')->user();
+        $response = [];
+
+        $organization = $user->organizations()->whereId($id)->first();
+        $response["organization"] = $organization;
+        $groups = $user->groups()->whereOrganizationId($organization->id)->get();
+        foreach($groups as $key =>$group){
+            $response["classes"] = $user->classes()->whereGroupId($group->id)->get();
+        }
+
+        $groupsNotDeFault = $user->groups()->whereOrganizationId($organization->id)->whereDefault(0)->get();//TODO refactor
+        $response["groups"] = $groupsNotDeFault;
+
+        return Response::json($response, 200);
+
+    }
+
+    function notDefault($var)
+    {
+        return(!($var & 1));
     }
 
     /**

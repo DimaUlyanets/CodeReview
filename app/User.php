@@ -52,7 +52,7 @@ class User extends Authenticatable
      */
     public function organizations()
     {
-        return $this->belongsToMany('App\Organization')->withTimestamps();;
+        return $this->belongsToMany('App\Organization')->withTimestamps();
     }
 
     /**
@@ -60,7 +60,7 @@ class User extends Authenticatable
      */
     public function groups()
     {
-        return $this->belongsToMany('App\Group')->withTimestamps();;
+        return $this->belongsToMany('App\Group')->withTimestamps();
     }
 
     /**
