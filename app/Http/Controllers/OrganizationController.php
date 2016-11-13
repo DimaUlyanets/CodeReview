@@ -103,29 +103,34 @@ class OrganizationController extends Controller
     public function show($id)
     {
         $organization = Organization::with('group.lessons', 'group.classes')->find($id);
-        $orgInfo = [];
-        $orgInfo['id']= $organization->id;
-        $orgInfo['name']= $organization->name;
-        $orgInfo['description']= $organization->description;
-        $orgInfo['thumbnail']= $organization->thumbnail;
-        $orgInfo['cover']= $organization->cover;
-        $organizationGroups = self::_excludeDefault($organization->group->toArray());
+        if ($organization) {
+            $orgInfo = [];
+            $orgInfo['id']= $organization->id;
+            $orgInfo['name']= $organization->name;
+            $orgInfo['description']= $organization->description;
+            $orgInfo['thumbnail']= $organization->icon;
+            $orgInfo['cover']= $organization->cover;
+            $organizationGroups = self::_excludeDefault($organization->group->toArray());
 
-        $lessons = [];
-        foreach ($organization->group as $group) {
-            if(!empty($group->lessons))$lessons = Group::createRelatedArray($group->lessons);
+            $lessons = [];
+            foreach ($organization->group as $group) {
+                if(!empty($group->lessons)) array_push($lessons, Group::createRelatedArray($group->lessons));
+            }
+
+            $classes = [];
+            foreach ($organization->group as $group) {
+                if(!empty($group->classes)) array_push($classes, Group::createRelatedArray($group->classes));
+            }
+
+            $response = $orgInfo;
+            $response['lessons'] = $lessons;
+            $response['classes'] = $classes;
+            $response['groups'] = $organizationGroups;
+            return Response::json($response, 200);
+        } else {
+             return response()->json(['error' => 'Not found'], 404);
         }
 
-        $classes = [];
-        foreach ($organization->group as $group) {
-            if(!empty($group->classes))$classes = Group::createRelatedArray($group->classes);
-        }
-
-        $response = $orgInfo;
-        $response['lessons'] = $lessons;
-        $response['classes'] = $classes;
-        $response['groups'] = $organizationGroups;
-        return Response::json($response, 200);
     }
 
     public function addMembers(Request $request, $id)

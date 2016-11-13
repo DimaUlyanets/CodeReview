@@ -83,15 +83,14 @@ class Group extends Model
     public static function createRelatedArray($entity){
 
         $result = [];
-
-        foreach($entity as $item) {
-            $result['id'] = $item->id;
-            $result['name'] = $item->name;
-            $result['description'] = $item->description;
-            $result['thumbnail'] = $item->thumbnail;
+        foreach($entity as $key => $item) {
+            $result[$key]['id'] = $item->id;
+            $result[$key]['name'] = $item->name;
+            $result[$key]['description'] = $item->description;
+            $result[$key]['thumbnail'] = $item->thumbnail;
             $idAuthor =  $item->author_id;
             $author = User::find($idAuthor);
-            $result['author'] = $author->name;
+            $result[$key]['author'] = $author->name;
         }
 
         return $result;
