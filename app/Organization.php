@@ -3,6 +3,7 @@
 namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Organization extends Model
 {
@@ -22,7 +23,7 @@ class Organization extends Model
 
         $privacy = Privacy::whereType("External")->where("subtype", "=", "Free")->first();
 
-        Group::create([
+        $group = Group::create([
                 'name' => 'Base group '.$organization->id,
                 'description' => 'Base group',
                 'icon' => 'icon.jpg',
@@ -33,7 +34,8 @@ class Organization extends Model
             ]
 
         );
-
+        $user = Auth::guard('api')->user();
+        $user->groups()->attach($group->id);
     }
 
     public static function checkToConflict($groupId, $organizationId){

@@ -88,7 +88,7 @@ class OrganizationController extends Controller
         $idOrganizationToSearch = $result->id;
         $nameOrganizationToSearch = $result['name'];
         $thumbnailOrganizationToSearch = (isset($result->icon)) ? $result->icon : null;
-       // event(new ElasticOrganizationAddToIndex($idOrganizationToSearch, $nameOrganizationToSearch, $thumbnailOrganizationToSearch));
+        //event(new ElasticOrganizationAddToIndex($idOrganizationToSearch, $nameOrganizationToSearch, $thumbnailOrganizationToSearch));
 
         return Response::json($result->toArray(), 200);
 
@@ -127,6 +127,7 @@ class OrganizationController extends Controller
         $response['groups'] = $organizationGroups;
         return Response::json($response, 200);
     }
+
     public function addMembers(Request $request, $id)
     {
         if (isset($request['userIds'])) {

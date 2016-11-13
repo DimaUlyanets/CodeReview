@@ -14,14 +14,15 @@ class OrganisationsTableSeeder extends Seeder
         DB::table('organizations')->insert([
             'name' => 'Graspe',
             'description' => 'description',
-            'icon' => 'icon.png',
+            'cover'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/organizations/1/cover/blue.JPG',
+            'icon' => 'https://s3-eu-west-1.amazonaws.com/bck-lessons/organizations/1/icon/logo.JPG',
             'default' => 1
         ]);
 
         DB::table('organizations')->insert([
-            'name' => 'Hack tools',
+            'name' => 'Fake organisation',
             'description' => 'description',
-            'icon' => 'icon.png',
+            'icon' => 'https://unsplash.it/200/200',
             'default' => 0
         ]);
 

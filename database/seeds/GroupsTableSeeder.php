@@ -33,28 +33,27 @@ class GroupsTableSeeder extends Seeder
             'author_id' => 1
         ]);
 
-        {
-            DB::table('groups')->insert([
-                'name' => 'Basic Group',
-                'description' => 'Basic',
-                'icon' => 'https://unsplash.it/200/200',
-                'cover' => 'https://unsplash.it/200/200',
-                'default' => 0,
-                'organization_id' => '2',
-                'privacy_id' => 4,
-                'author_id' => 1
-            ]);
+        DB::table('groups')->insert([
+            'name' => 'Basic Group 2',
+            'description' => 'Basic',
+            'icon' => 'https://unsplash.it/200/200',
+            'cover' => 'https://unsplash.it/200/200',
+            'default' => 0,
+            'organization_id' => '2',
+            'privacy_id' => 4,
+            'author_id' => 1
+        ]);
 
-            DB::table('groups')->insert([
-                'name' => 'Engineering Group',
-                'description' => 'Custom',
-                'icon' => 'https://unsplash.it/200/200',
-                'cover' => 'https://unsplash.it/200/200',
-                'default' => 1,
-                'organization_id' => '2',
-                'privacy_id' => 4,
-                'author_id' => 1
-            ]);
+        DB::table('groups')->insert([
+            'name' => 'Engineering Group 2',
+            'description' => 'Custom',
+            'icon' => 'https://unsplash.it/200/200',
+            'cover' => 'https://unsplash.it/200/200',
+            'default' => 1,
+            'organization_id' => '2',
+            'privacy_id' => 4,
+            'author_id' => 1
+        ]);
 
     }
 }
