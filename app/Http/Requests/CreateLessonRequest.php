@@ -23,7 +23,7 @@ class CreateLessonRequest extends Request
 
         if(!$this->group_id){
 
-            $group_id = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+            $group_id = $user->organizations()->whereId($this->organization_id)->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
 
         }
 
