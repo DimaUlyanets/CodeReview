@@ -36,6 +36,12 @@ class Organization extends Model
 
     }
 
+    public static function checkToConflict($groupId, $organizationId){
+
+        return Group::whereId($groupId)->whereOrganizationId($organizationId)->first();
+
+    }
+
     /**
      * The organization has many groups.
      */

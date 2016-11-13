@@ -10,6 +10,7 @@ use App\Files;
 use App\Group;
 use App\Http\Requests\CreateLessonRequest;
 use App\Lesson;
+use App\Organization;
 use App\Skill;
 use App\Tag;
 use App\User;
@@ -45,15 +46,27 @@ class LessonController extends ApiController
 
         $data = $request->except(['api_token']);
         $user = Auth::guard('api')->user();
-
+        $data["group_id"] = $request->group_id;
         $data["author_id"] = $user->id;
 
         if(!$request->group_id){
 
-            $data["group_id"] = $user->organizations()->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+            $organization =  $user->organizations()->whereId($request->organization_id)->first();
+            if($organization){
+                $data["group_id"] = $organization->group()->whereDefault(1)->first()->id;
+            }else{
+                return $this->setStatusCode(409)->respondWithError("User not related to provided Organization");
+            }
 
         }
 
+        $relation = Organization::checkToConflict($request->group_id, $request->organization_id);
+        if(!$relation){
+            return $this->setStatusCode(409)->respondWithError("Group not related to Organization");
+        }
+
+        $data["lesson_file"] = "aasd";
+        $data["lessdddon_file"] = "aasd";
         $lesson = Lesson::create($data);
 
         if($request->class_id){

@@ -8,6 +8,7 @@ use App\Group;
 use App\Events\ElasticClassAddToIndex;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
+use App\Organization;
 use App\Privacy;
 use App\Tag;
 use App\User;
@@ -49,7 +50,7 @@ class ClassController extends ApiController
 
             $data["group_id"] = $request->group_id;
 
-            $relation = Group::whereId($request->group_id)->whereOrganizationId($request->organization_id)->first();
+            $relation = Organization::checkToConflict($request->group_id, $request->organization_id);
             if(!$relation){
                 return $this->setStatusCode(409)->respondWithError("Group not related to Organization");
             }
