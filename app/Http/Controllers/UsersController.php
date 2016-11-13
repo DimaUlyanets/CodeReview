@@ -96,10 +96,8 @@ class UsersController extends ApiController
         foreach($groups as $key =>$group){
             $response["classes"] = $user->classes()->whereGroupId($group->id)->get();
         }
-
         $groupsNotDeFault = $user->groups()->whereOrganizationId($organization->id)->whereDefault(0)->get();//TODO refactor
-        $response["groups"] = $groupsNotDeFault;
-
+        $response["groups"] = $groupsNotDeFault->toArray();
         return Response::json($response, 200);
 
     }
