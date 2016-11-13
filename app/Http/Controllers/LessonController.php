@@ -65,8 +65,6 @@ class LessonController extends ApiController
             return $this->setStatusCode(409)->respondWithError("Group not related to Organization");
         }
 
-        $data["lesson_file"] = "aasd";
-        $data["lessdddon_file"] = "aasd";
         $lesson = Lesson::create($data);
 
         if($request->class_id){

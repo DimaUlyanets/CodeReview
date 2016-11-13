@@ -79,7 +79,7 @@ class CreateLessonRequest extends Request
             'name' => 'required|max:255',
             'description' => 'required|max:255',
             'thumbnail' => 'image|max:10240',
-            #'lesson_file' => 'required|file|mimes:mp4,pdf',
+            'lesson_file' => 'required|file|mimes:mp4,pdf',
             'difficulty' => 'required|between:0,100|numeric',
             'type' => 'numeric|required',
             'group_id' => 'numeric|exists:groups,id',
