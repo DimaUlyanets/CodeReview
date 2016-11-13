@@ -41,13 +41,18 @@ class ClassController extends ApiController
         $data = (array)$request->all();
 
         if(!$request->group_id){
-            
+
             $user = Auth::guard('api')->user();
             $data["group_id"] = $user->organizations()->whereId($request->organization_id)->first()->group()->whereDefault(1)->first()->id;
 
         }else{
 
             $data["group_id"] = $request->group_id;
+
+            $relation = Group::whereId($request->group_id)->whereOrganizationId($request->organization_id)->first();
+            if(!$relation){
+                return $this->setStatusCode(409)->respondWithError("Group not related to Organization");
+            }
 
         }
 
