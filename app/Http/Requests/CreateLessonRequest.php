@@ -23,9 +23,16 @@ class CreateLessonRequest extends Request
 
         if(!$this->group_id){
 
-            $group_id = $user->organizations()->whereId($this->organization_id)->whereDefault(1)->first()->group()->whereDefault(1)->first()->id;
+            $group_id = $user->organizations()->whereId($this->organization_id)->first()->group()->whereDefault(1)->first()->id;
 
         }
+
+        $groupsList = $user->organizations()->whereId($this->organization_id)->first()->group()->get();
+        $relatedGroups = [];
+        foreach($groupsList as $g){
+            $relatedGroups[] = $g->id;
+        }
+        $relatedGroups[] = $group_id;
 
         if($this->class_id){
 
@@ -34,7 +41,7 @@ class CreateLessonRequest extends Request
             if(!$class)return false;
 
             #is provided class under provided group
-            if(!$class->group()->whereId($group_id)->first())return false;
+            if(!$class->group()->whereIn("id", $relatedGroups)->get())return false;
 
             #is user under provided group
             if(!$user->groups()->whereId($class->group->id)->first())return false;
@@ -42,7 +49,7 @@ class CreateLessonRequest extends Request
 
         }
 
-        if(!$user->groups()->whereId($group_id)->first()){
+        if(!$user->groups()->whereIn("id", $relatedGroups)->first()){
 
             return false;
 
