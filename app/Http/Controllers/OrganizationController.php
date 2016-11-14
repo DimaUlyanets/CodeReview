@@ -102,7 +102,7 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $organization = Organization::with('group.lessons', 'group.classes')->find($id);
+        $organization = Organization::with('group.lessons', 'group.classes', 'group.tags', 'group.users')->find($id);
         if ($organization) {
             $orgInfo = [];
             $orgInfo['id']= $organization->id;
@@ -111,15 +111,18 @@ class OrganizationController extends Controller
             $orgInfo['thumbnail']= $organization->icon;
             $orgInfo['cover']= $organization->cover;
             $organizationGroups = self::_excludeDefault($organization->group->toArray());
-
             $lessons = [];
-            foreach ($organization->group as $group) {
-                if(!empty($group->lessons)) array_push($lessons, Group::createRelatedArray($group->lessons));
-            }
-
             $classes = [];
             foreach ($organization->group as $group) {
-                if(!empty($group->classes)) array_push($classes, Group::createRelatedArray($group->classes));
+                if(!empty($group->lessons)) $lessons = array_merge($lessons, $group->lessons->toArray());
+                if(!empty($group->classes)) {
+                    $tempClasses = [];
+                    foreach($group->classes as $key => $class) {
+                        $tempClasses[$key] = $class;
+                        $tempClasses[$key]['authorName'] = User::whereId($class->author_id)->first()->name;
+                    }
+                    $classes = array_merge($classes, $tempClasses);
+                }
             }
 
             $response = $orgInfo;
