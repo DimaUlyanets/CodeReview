@@ -62,17 +62,24 @@ class ClassController extends ApiController
 
         $class = Classes::create($data);
 
-        if($class){
+        if ($class){
 
+            $organization = Group::find($data["group_id"])->organization;
             if(!empty($request->thumbnail)){
-
-                $organization = Group::find($data["group_id"])->organization;
-
                 $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
                 $class->save();
 
             } else {
                 $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
+                $class->save();
+            }
+
+            if(!empty($request->cover)){
+                $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/classes/{$class->id}/cover");
+                $class->cover = $path;
+                $class->save();
+            } else {
+                $class->cover = 'https://unsplash.it/200/200'; //TODO: temporary
                 $class->save();
             }
 
@@ -129,6 +136,7 @@ class ClassController extends ApiController
                 "name" => $class->name,
                 "description" => $class->description,
                 "thumbnail" => $class->thumbnail,
+                "cover" => $class->cover,
                 "author_name" => $user->name,
                 "author_avatar" => $avatar,
                 "members" => $class->users()->count(),

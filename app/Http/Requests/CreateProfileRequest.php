@@ -32,7 +32,7 @@ class CreateProfileRequest extends Request
     {
 
         return [
-            'avatar' => 'image|size:10240',
+            'avatar' => 'image|max:10240',
             'cover' => 'image|max:10240',
             'bio' => 'max:255',
             'color' => 'max:255',

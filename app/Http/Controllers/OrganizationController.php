@@ -132,13 +132,19 @@ class OrganizationController extends Controller
                     $classes = array_merge($classes, $tempClasses);
                 }
                 if(!empty($group->users)) {
-                    $users = array_merge($users, $group->users->toArray());
+                    $tempUsers = [];
+                    foreach($group->users as $key => $user) {
+                        $tempUsers[$key] = $user;
+                        $tempUsers[$key]['thumbnail'] = $user->profile['avatar'];
+                        unset($tempUsers[$key]['profile']);
+                    }
+                    $users = array_merge($users, $tempUsers);
                 }
             }
             $response = $orgInfo;
             $response['lessons'] = $lessons;
             $response['classes'] = $classes;
-            $response['users'] = array_unique($users, SORT_REGULAR);
+            $response['users'] = $users; //TODO remove dupes
             $response['groups'] = $organizationGroups;
             return Response::json($response, 200);
         } else {
