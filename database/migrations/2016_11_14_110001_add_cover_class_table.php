@@ -25,6 +25,8 @@ class AddCoverClassTable extends Migration
      */
     public function down()
     {
-          $table->dropColumn('cover');
+         Schema::table('classes', function (Blueprint $table) {
+             $table->dropColumn('cover');
+         });
     }
 }
