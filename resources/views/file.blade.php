@@ -15,21 +15,17 @@
 
     function sendData() {
 
-        var url = 'http://mitka.local/api/lessons?api_token=2yYuwzRnUF5A3H6Kf84PmTcMNnkgRrJbXNnOALWXhmRCqKTZemNWCYTzeoZ3';
+        var url = 'http://mitka.local/api/users/1/profile?api_token=A0OD2Wlytppv2RtHHJvHCIbKWtJ2KHtHh5cq1tDop7QDTXrls31umCCPDWfZ';
         var data = {
-            "name": "ClassPddddsdddddri vateGroup",
-            "difficulty": 100,
-            "type": 1,
-            "tags[0]": "poc",
-            "is_collaborative": 1
-        };
+            "name": "ClassPddddsdddddri vateGroup"
+        }
         var formData  = new FormData();
 
         for(name in data) {
             formData.append(name, data[name]);
         }
 
-        formData.append('lesson_file', document.getElementById("file").files[0]);
+        formData.append('avatar', document.getElementById("file").files[0]);
         fetch(url, {
             method: 'POST',
             body: formData
