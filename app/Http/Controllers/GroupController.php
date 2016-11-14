@@ -94,7 +94,6 @@ class GroupController extends ApiController
         if($group){
 
             if($request->tags){
-                $request->tags = explode(',', $request->tags);
                 Tag::assignTag($group, $request);
             }
 

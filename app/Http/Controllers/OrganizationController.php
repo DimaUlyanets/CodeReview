@@ -234,7 +234,6 @@ class OrganizationController extends Controller
         isset($request['description'])?$organization->description = $request['description']:"";
         isset($request['color'])?$organization->color = $request['color']:"";
         if(isset($request['tags'])){
-            $request['tags'] = explode(',', $request['tags']);
             Tag::assignTag($organization, $request);
         }
         $organization->save();
