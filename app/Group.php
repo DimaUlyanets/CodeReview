@@ -29,6 +29,7 @@ class Group extends Model
             "name" => $group->name,
             "description" => $group->description,
             "thumbnail" => $group->icon,
+            "cover" => $group->cover,
             "lessons_num" => $lessons->count(),
             "users_num" => $users->count(),
 
@@ -54,8 +55,8 @@ class Group extends Model
 
         }
 
-        $response["child"]["lessons"] = $relatedLessons;
-        $response["child"]["classes"] = $relatedClasses;
+        $response["lessons"] = $relatedLessons;
+        $response["classes"] = $relatedClasses;
 
         return $response;
 

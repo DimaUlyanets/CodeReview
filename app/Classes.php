@@ -13,7 +13,7 @@ class Classes extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'description', 'thumbnail', 'group_id', 'is_collaborative', 'author_id'
+        'id', 'name', 'description', 'thumbnail', 'group_id', 'is_collaborative', 'author_id', 'cover'
     ];
 
 
