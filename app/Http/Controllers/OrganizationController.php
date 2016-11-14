@@ -113,8 +113,16 @@ class OrganizationController extends Controller
             $organizationGroups = self::_excludeDefault($organization->group->toArray());
             $lessons = [];
             $classes = [];
+            $users = [];
             foreach ($organization->group as $group) {
-                if(!empty($group->lessons)) $lessons = array_merge($lessons, $group->lessons->toArray());
+                if(!empty($group->lessons)) {
+                     $tempLessons = [];
+                     foreach($group->lessons as $key => $lesson) {
+                         $tempLessons[$key] = $lesson;
+                         $tempLessons[$key]['authorName'] = User::whereId($lesson->author_id)->first()->name;
+                     }
+                     $lessons = array_merge($lessons, $tempLessons);
+                }
                 if(!empty($group->classes)) {
                     $tempClasses = [];
                     foreach($group->classes as $key => $class) {
@@ -123,11 +131,14 @@ class OrganizationController extends Controller
                     }
                     $classes = array_merge($classes, $tempClasses);
                 }
+                if(!empty($group->users)) {
+                    $users = array_merge($users, $group->users->toArray());
+                }
             }
-
             $response = $orgInfo;
             $response['lessons'] = $lessons;
             $response['classes'] = $classes;
+            $response['users'] = array_unique($users, SORT_REGULAR);
             $response['groups'] = $organizationGroups;
             return Response::json($response, 200);
         } else {
