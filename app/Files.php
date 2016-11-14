@@ -21,7 +21,7 @@ class Files extends Model
         }
         if(!empty($request->avatar)){
 
-            $result["avatar"] = self::qualityCompress($request->avatart, "users/{$user->id}/profile_avatar");
+            $result["avatar"] = self::qualityCompress($request->avatar, "users/{$user->id}/profile_avatar");
 
         }
 
