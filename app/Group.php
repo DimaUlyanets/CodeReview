@@ -17,6 +17,10 @@ class Group extends Model
         'id', 'name', 'description', 'icon', 'default', 'organization_id', 'privacy_id', 'author_id'
     ];
 
+    protected $hidden = [
+        'pivot'
+    ];
+
     public static function getGroupInfo($group){
 
         $classes = $group->classes;
@@ -29,9 +33,11 @@ class Group extends Model
             "name" => $group->name,
             "description" => $group->description,
             "thumbnail" => $group->icon,
+            "privacy_id" => $group->privacy_id,
             "cover" => $group->cover,
             "lessons_num" => $lessons->count(),
             "users_num" => $users->count(),
+            "tags" => $group->tags
 
         ];
 
@@ -55,6 +61,16 @@ class Group extends Model
 
         }
 
+        $relatedUsers = [];
+        foreach($users as $key => $user){
+            $relatedUsers[$key]["id"] = $user->id;
+            $relatedUsers[$key]["avatar"] = $user->profile->avatar;
+            $relatedUsers[$key]["name"] = $user->name;
+            $relatedUsers[$key]["pivot"] = $user->pivot;
+
+        }
+
+        $response["users"] = $relatedUsers;
         $response["lessons"] = $relatedLessons;
         $response["classes"] = $relatedClasses;
 
@@ -108,7 +124,7 @@ class Group extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User')->withPivot('role');
     }
     /**
      * The organization has many groups.

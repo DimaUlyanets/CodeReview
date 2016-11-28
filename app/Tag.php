@@ -17,15 +17,14 @@ class Tag extends Model
     ];
 
     public static function assignTag($entity, $request){
+        $entity->tags()->detach();
 
         foreach($request->tags as $value){
-
             $tag = Tag::whereName($value)->first();
             if(!$tag){
                 $tag = Tag::create(["name" => $value]);
             }
             $entity->tags()->attach($tag->id);
-
         }
 
     }

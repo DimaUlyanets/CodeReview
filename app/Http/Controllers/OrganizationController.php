@@ -222,20 +222,28 @@ class OrganizationController extends Controller
         $organization = Organization::find($id);
         if(isset($request['name'])){
             if($request['name']!= $organization->name) {
-                $orgaName = Organization::where('name', $request['name'])->first();
-                if ($orgaName != null) {
+                $orgName = Organization::where('name', $request['name'])->first();
+                if ($orgName != null) {
                     return response()->json(['error' => 'name must be unique'], 403);
                 }
             }
             $organization->name = $request['name'];
         }
-        isset($request['logo'])?$organization->icon = $request['logo']:"";
-        isset($request['cover'])?$organization->cover = $request['cover']:"";
-        isset($request['description'])?$organization->description = $request['description']:"";
-        isset($request['color'])?$organization->color = $request['color']:"";
-        if(isset($request['tags'])){
+        if(!empty($request->icon)){
+            $path = Files::qualityCompress($request->icon, "organizations/{$organization->id}/icon");
+            $organization->icon = $path;
+        }
+        if(!empty($request->cover)){
+            $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/cover");
+            $organization->cover = $path;
+        }
+
+        if(isset($request['description'])) $organization->description = $request['description'];
+        if(isset($request['color'])) $organization->color = $request['color'];
+        if(isset($request['tags'])) {
             Tag::assignTag($organization, $request);
         }
+
         $organization->save();
         if(isset($request['addAdmins'])){
            $addAdmins = $request['addAdmins'];
@@ -251,7 +259,7 @@ class OrganizationController extends Controller
                 DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
             }
         }
-        event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
+        //event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
         return Response::json($organization->toArray(), 200);
     }
 

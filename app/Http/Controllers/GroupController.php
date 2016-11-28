@@ -169,46 +169,46 @@ class GroupController extends ApiController
             }
             $group->name = $request['name'];
         }
-        if(!empty($request['thumbnail'])){
-
-            $path = Files::qualityCompress($request['thumbnail'], "organizations/{$organizationId}/groups/{$group->id}/icon");
+        if(!empty($request['icon'])){
+            $path = Files::qualityCompress($request['icon'], "organizations/{$organizationId}/groups/{$group->id}/icon");
             $group->icon = $path;
-            $group->save();
         } else {
             $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
-            $group->save();
         }
         if(!empty($request['cover'])){
             $path = Files::qualityCompress($request['cover'], "organizations/{$organizationId}/groups/{$group->id}/cover");
             $group->cover = $path;
-            $group->save();
         } else {
             $group->cover = 'https://unsplash.it/200/200'; //TODO: temporary
-            $group->save();
         }
 
         isset($request['description']) ? $group->description = $request['description'] : "";
+        if (isset($request['privacy_id'])) {
+            $group->privacy_id = $request['privacy_id'];
+        }
         if(isset($request['tags'])){
             Tag::assignTag($group, $request);
         }
-        $group->save();
 
-        $user = Auth::guard('api')->user();
-        $userRole = DB::table('group_user')->select('role')->where('user_id', '=', $user->id)->where('group_id', '=', $group->id)->get();
-        if(count($userRole)>0) {
-            if ($userRole->toArray()[0]->role == "owner") {
-                if(isset($request['addAdmins'])){
-                    $addAdmins = $request['addAdmins'];
-                    foreach ($addAdmins as $idUser) {
-                        DB::table('group_user')->insert(
-                            ['user_id' => $idUser, 'group_id' => $group->id,'role' => 'admin']
-                        );
+        $group->save();
+        if(isset($request['addAdmins']) && isset($request['removeAdmins'])) {
+            $user = Auth::guard('api')->user();
+            $userRole = DB::table('group_user')->select('role')->where('user_id', '=', $user->id)->where('group_id', '=', $group->id)->get();
+            if(count($userRole)>0) {
+                if ($userRole->toArray()[0]->role == "owner") {
+                    if(isset($request['addAdmins'])){
+                        $addAdmins = $request['addAdmins'];
+                        foreach ($addAdmins as $idUser) {
+                            DB::table('group_user')->insert(
+                                ['user_id' => $idUser, 'group_id' => $group->id,'role' => 'admin']
+                            );
+                        }
                     }
-                }
-                if(isset($request['removeAdmins'])){
-                    $removeAdmins  = $request['removeAdmins'];
-                    foreach ($removeAdmins as $idUser) {
-                        DB::table('group_user')->where('user_id',$idUser)->where('role','admin')->where('group_id',$group->id)->delete();
+                    if(isset($request['removeAdmins'])){
+                        $removeAdmins  = $request['removeAdmins'];
+                        foreach ($removeAdmins as $idUser) {
+                            DB::table('group_user')->where('user_id',$idUser)->where('role','admin')->where('group_id',$group->id)->delete();
+                        }
                     }
                 }
             }

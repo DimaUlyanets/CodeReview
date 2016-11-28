@@ -52,7 +52,7 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
     Route::get('/{id}', 'OrganizationController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'OrganizationController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'OrganizationController@delete')->where('id', '[0-9]+');
-    Route::patch('/{id}', 'OrganizationController@update')->where('id', '[0-9]+')->middleware('OrganizationProtection');
+    Route::post('/{id}', 'OrganizationController@update')->where('id', '[0-9]+')->middleware('OrganizationProtection');
     Route::get('/{id}/users/{query}', 'OrganizationController@searchUsers')->where('id', '[0-9]+');
     Route::post('/{id}/users/members', 'OrganizationController@addMembers')->where('id', '[0-9]+')->middleware('OrganizationProtection');
     Route::delete('/{id}/users/members', 'OrganizationController@deleteMembers')->where('id', '[0-9]+')->middleware('OrganizationProtection');
@@ -65,7 +65,7 @@ Route::group(['prefix' => 'groups' , 'middleware' => 'auth:api'] , function() {
     Route::post('/join', 'GroupController@join');
     Route::get('/{id}/leave', 'GroupController@leave');
     Route::get('/{id}', 'GroupController@show')->where('id', '[0-9]+');
-    Route::put('/{id}', 'GroupController@update')->where('id', '[0-9]+')->middleware('GroupProtection');
+    Route::post('/{id}', 'GroupController@update')->where('id', '[0-9]+')->middleware('GroupProtection');
     Route::delete('/{id}', 'GroupController@delete')->where('id', '[0-9]+');
     Route::post('/{id}/users/members', 'GroupController@addMembers')->where('id', '[0-9]+')->middleware('GroupProtection');
     Route::delete('/{id}/users/members', 'GroupController@deleteMembers')->where('id', '[0-9]+')->middleware('GroupProtection');

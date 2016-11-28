@@ -94,7 +94,7 @@ class UsersController extends ApiController
         $response["organization"] = $organization;
         $groups = $user->groups()->whereOrganizationId($organization->id)->get();
         $response["classes"] = [];
-        foreach($groups as $key =>$group){
+        foreach($groups as $key => $group){
            $response["classes"] = array_merge($response["classes"], $user->classes()->whereGroupId($group->id)->get()->toArray());
         }
 
@@ -104,6 +104,7 @@ class UsersController extends ApiController
 
         $groupsNotDeFault = $user->groups()->whereOrganizationId($organization->id)->whereDefault(0)->get();//TODO refactor
         $response["groups"] = $groupsNotDeFault->toArray();
+        $response["organization"]["tags"] = $organization->tags->toArray();
         return Response::json($response, 200);
     }
 
@@ -130,10 +131,9 @@ class UsersController extends ApiController
         //
     }
 
-    public function groups($id = null){
+    public function groups(Request $request, $id = null){
 
         $id = $id ? $id : Auth::guard('api')->user()->id;
-
         $user = User::find($id);
 
         if($user){
@@ -146,8 +146,7 @@ class UsersController extends ApiController
 
             $response = array();
             foreach($user->groups as $key => $group){
-
-                if (!$group->default) {
+                if (!$group->default && (!$request->input('admin') || $group->author_id === $id)) {
                     $response[$group->id]["name"] = $group->name;
                     $response[$group->id]["thumbnail"] = $group->icon;
                     $response[$group->id]["id"] = $group->id;
