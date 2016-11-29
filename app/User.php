@@ -64,6 +64,14 @@ class User extends Authenticatable
     }
 
     /**
+     * The organizations that belong to the user.
+     */
+    public function controlledGroups()
+    {
+        return $this->groups()->where('role','=', 'admin')->orWhere('role', 'owner');
+    }
+
+    /**
      * The user belongs to many Classes
      */
     public function classes()

@@ -105,6 +105,7 @@ class UsersController extends ApiController
         $groupsNotDeFault = $user->groups()->whereOrganizationId($organization->id)->whereDefault(0)->get();//TODO refactor
         $response["groups"] = $groupsNotDeFault->toArray();
         $response["organization"]["tags"] = $organization->tags->toArray();
+        $response["organization"]["admins"] = $organization->admins->toArray();
         return Response::json($response, 200);
     }
 
@@ -143,10 +144,10 @@ class UsersController extends ApiController
                 return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             }
-
+            $groups = $request->input('admin') ? $user->controlledGroups : $user->groups;
             $response = array();
-            foreach($user->groups as $key => $group){
-                if (!$group->default && (!$request->input('admin') || $group->author_id === $id)) {
+            foreach($groups as $key => $group){
+                if (!$group->default) {
                     $response[$group->id]["name"] = $group->name;
                     $response[$group->id]["thumbnail"] = $group->icon;
                     $response[$group->id]["id"] = $group->id;

@@ -245,18 +245,18 @@ class OrganizationController extends Controller
         }
 
         $organization->save();
-        if(isset($request['addAdmins'])){
+        if(isset($request['addAdmins']) && is_array($request['addAdmins'])){
            $addAdmins = $request['addAdmins'];
-            foreach ($addAdmins as $idUser) {
+            foreach ($addAdmins as $userId) {
                 DB::table('organization_user')->insert(
-                    ['user_id' => $idUser, 'organization_id' => $organization->id,'role' => 'admin']
+                    ['user_id' => $userId, 'organization_id' => $organization->id,'role' => 'admin']
                 );
             }
        }
-        if(isset($request['removeAdmins'])){
+        if(isset($request['removeAdmins']) && is_array($request['removeAdmins'])){
             $removeAdmins  = $request['removeAdmins'];
-            foreach ($removeAdmins as $idUser) {
-                DB::table('organization_user')->where('user_id',$idUser)->where('role','admin')->where('organization_id',$organization->id)->delete();
+            foreach ($removeAdmins as $userId) {
+                DB::table('organization_user')->where('user_id', $userId)->where('role','admin')->where('organization_id',$organization->id)->delete();
             }
         }
         //event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
@@ -275,7 +275,7 @@ class OrganizationController extends Controller
                     $userInfo['id']= $user->id;
                     $userInfo['name']= $user->name;
                     $avatar = DB::table('profiles')->select('avatar')->where('user_id','=', $user->id)->get();
-                    if($avatar!=null) {
+                    if($avatar!=null && is_array($avatar) ) {
                         $userInfo['avatar'] = $avatar[0]->avatar;
                     }
                    array_push($responseUsers, $userInfo);

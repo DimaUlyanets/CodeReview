@@ -130,5 +130,4 @@ Route::group(['prefix' => 'topPicks' , 'middleware' => 'auth:api'] , function() 
 
     Route::get('/', 'TopPicksController@all');
 
-
 });

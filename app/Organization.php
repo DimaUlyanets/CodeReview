@@ -63,6 +63,10 @@ class Organization extends Model
         return $this->belongsToMany('App\User')->withPivot('role');
     }
 
+    public function admins()
+    {
+        return $this->users()->where('role', 'admin')->orWhere('role', 'owner')->with('profile');
+    }
     /**
      * The tag belongs to many classes.
      */
