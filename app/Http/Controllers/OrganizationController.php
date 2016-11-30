@@ -244,17 +244,15 @@ class OrganizationController extends Controller
         $organization->save();
 
         if (isset($request['addAdmins']) && is_array($request['addAdmins'])) {
-           $addAdmins = $request['addAdmins'];
-            foreach ($addAdmins as $userId) {
+            foreach ($request['addAdmins'] as $userId) {
                 DB::table('organization_user')->insert(
                     ['user_id' => $userId, 'organization_id' => $organization->id,'role' => 'admin']
                 );
             }
         }
         if (isset($request['removeAdmins']) && is_array($request['removeAdmins'])) {
-            $removeAdmins  = $request['removeAdmins'];
-            foreach ($removeAdmins as $userId) {
-                DB::table('organization_user')->where('user_id', $userId)->where('role','admin')->where('organization_id',$organization->id)->delete();
+            foreach ($request['removeAdmins'] as $userId) {
+                DB::table('organization_user')->where('user_id', $userId)->where('role','admin')->where('organization_id', $organization->id)->delete();
             }
         }
 
@@ -270,15 +268,14 @@ class OrganizationController extends Controller
         $responseUsers = [];
         foreach($findUser as $user){
             if(($user->organizations->count())>0) {
-                if (count($user->organizations->where('id',$id))>0){
+                if (count($user->organizations->where('id', $id))>0){
                     $userInfo = [];
                     $userInfo['id']= $user->id;
                     $userInfo['name']= $user->name;
-                    $avatar = DB::table('profiles')->select('avatar')->where('user_id','=', $user->id)->get();
-                    if($avatar!=null && is_array($avatar) ) {
-                        $userInfo['avatar'] = $avatar[0]->avatar;
-                    }
-                   array_push($responseUsers, $userInfo);
+                    if ($user->profile)
+                        $userInfo['avatar']= $user->profile->avatar;
+
+                    array_push($responseUsers, $userInfo);
                 }
             }
         }
