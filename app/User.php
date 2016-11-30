@@ -68,7 +68,10 @@ class User extends Authenticatable
      */
     public function controlledGroups()
     {
-        return $this->groups()->where('role','=', 'admin')->orWhere('role', 'owner');
+        return $this->groups()->where(function ($q) {
+            $q->where('role', 'admin')->orWhere('role', 'owner');
+        });
+
     }
 
     /**

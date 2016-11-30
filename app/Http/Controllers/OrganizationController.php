@@ -131,14 +131,13 @@ class OrganizationController extends Controller
                     }
                     $classes = array_merge($classes, $tempClasses);
                 }
-                if(!empty($group->users)) {
-                    $tempUsers = [];
-                    foreach($group->users as $key => $user) {
-                        $tempUsers[$key] = $user;
-                        $tempUsers[$key]['thumbnail'] = $user->profile['avatar'];
-                        unset($tempUsers[$key]['profile']);
-                    }
-                    $users = array_merge($users, $tempUsers);
+
+            }
+            if(!empty($organization->users)) {
+                foreach($organization->users as $key => $user) {
+                    $users[$key] = $user;
+                    $users[$key]['thumbnail'] = $user->profile['avatar'];
+                    unset($users[$key]['profile']);
                 }
             }
             $response = $orgInfo;

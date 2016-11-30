@@ -65,7 +65,9 @@ class Organization extends Model
 
     public function admins()
     {
-        return $this->users()->where('role', 'admin')->orWhere('role', 'owner')->with('profile');
+        return $this->users()->where(function ($q) {
+            $q->where('role', 'admin')->orWhere('role', 'owner');
+        })->with('profile');
     }
     /**
      * The tag belongs to many classes.
