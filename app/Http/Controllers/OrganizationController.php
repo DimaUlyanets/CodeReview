@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ElasticOrganizationAddToIndex;
-use App\Events\ElasticOrganizationDeleteIndex;
-use App\Events\ElasticOrganizationUpdateIndex;
+use App\Events\ElasticOrganisationAddToIndex;
+use App\Events\ElasticOrganisationDeleteIndex;
+use App\Events\ElasticOrganisationUpdateIndex;
 use App\Files;
 use App\Group;
 use App\Http\Requests\OrganizationCreateRequest;
@@ -85,10 +85,8 @@ class OrganizationController extends Controller
         $userId = Auth::guard('api')->user()->id;
         Organization::createDefaultGroup($result, $userId);
 
-        $idOrganizationToSearch = $result->id;
-        $nameOrganizationToSearch = $result['name'];
-        $thumbnailOrganizationToSearch = (isset($result->icon)) ? $result->icon : null;
-        //event(new ElasticOrganizationAddToIndex($idOrganizationToSearch, $nameOrganizationToSearch, $thumbnailOrganizationToSearch));
+        $orgThumbnail = (isset($result->icon)) ? $result->icon : null;
+        event(new ElasticOrganisationAddToIndex($result->id, $result['name'], $orgThumbnail));
 
         return Response::json($result->toArray(), 200);
 
@@ -244,21 +242,24 @@ class OrganizationController extends Controller
         }
 
         $organization->save();
-        if(isset($request['addAdmins']) && is_array($request['addAdmins'])){
+
+        if (isset($request['addAdmins']) && is_array($request['addAdmins'])) {
            $addAdmins = $request['addAdmins'];
             foreach ($addAdmins as $userId) {
                 DB::table('organization_user')->insert(
                     ['user_id' => $userId, 'organization_id' => $organization->id,'role' => 'admin']
                 );
             }
-       }
-        if(isset($request['removeAdmins']) && is_array($request['removeAdmins'])){
+        }
+        if (isset($request['removeAdmins']) && is_array($request['removeAdmins'])) {
             $removeAdmins  = $request['removeAdmins'];
             foreach ($removeAdmins as $userId) {
                 DB::table('organization_user')->where('user_id', $userId)->where('role','admin')->where('organization_id',$organization->id)->delete();
             }
         }
-        //event(new ElasticOrganizationUpdateIndex($id,$request->name,$request->thumbnail));
+
+        $orgThumbnail = (isset($organization->icon)) ? $organization->icon : null;
+        event(new ElasticOrganisationUpdateIndex($id, $organization->name, $orgThumbnail));
         return Response::json($organization->toArray(), 200);
     }
 

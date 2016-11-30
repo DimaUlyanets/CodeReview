@@ -15,14 +15,14 @@ class ElasticSearch
 
     public function fullSearch($itemToSearch){
         $params = [
-            "index" => "classes,groups,lessons",
-            "type" => "class,group,lesson",
+            "index" => "classes,groups,lessons,organisations",
+            "type" => "class,group,lesson,organisation",
             "body" => [
                 "query" => [
                     "bool" => [
                         "should" => [
                             "match_phrase_prefix" => [
-                                "Name" => $itemToSearch
+                                "name" => $itemToSearch
                             ]
                         ]
                     ]
@@ -35,14 +35,14 @@ class ElasticSearch
 
     public function quickSearch($itemToSearch){
         $params = [
-            "index" => "classes,groups,lessons",
-            "type" => "class,group,lesson",
+            "index" => "classes,groups,lessons,organisations",
+            "type" => "class,group,lesson,organisation",
             "body" => [
                 "query" => [
                     "bool" => [
                         "should" => [
                            "match_phrase_prefix" => [
-                               "Name" => $itemToSearch
+                               "name" => $itemToSearch
                            ]
                         ]
                     ]

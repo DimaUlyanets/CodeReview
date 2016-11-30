@@ -40,6 +40,15 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ElasticLessonDeleteIndex' => [
             'App\Listeners\EventLessonDeleteIndex',
         ],
+        'App\Events\ElasticOrganisationAddToIndex' => [
+            'App\Listeners\EventOrganisationAddToIndex',
+        ],
+        'App\Events\ElasticOrganisationUpdateIndex' => [
+            'App\Listeners\EventOrganisationUpdateIndex',
+        ],
+        'App\Events\ElasticOrganisationDeleteIndex' => [
+            'App\Listeners\EventOrganisationDeleteIndex',
+        ],
     ];
 
     /**

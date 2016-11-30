@@ -18,8 +18,8 @@ class GroupSearch implements IElasticSearch{
             "id" => $id,
             "body" => [
                 "id" => $id,
-                "Name" => $name,
-                "Thumbnail" => $thumbnail
+                "name" => $name,
+                "thumbnail" => $thumbnail
             ]
         ];
         $this->client->index($params);
@@ -31,9 +31,14 @@ class GroupSearch implements IElasticSearch{
             "type" => "group",
             "id" => $id,
             "body" => [
-                "id" => $id,
-                "Name" => $name,
-                "Thumbnail" => $thumbnail
+                "doc" => [
+                    "name" => $name,
+                    "thumbnail" => $thumbnail
+                ],
+                "upsert" => [
+                    "name" => $name,
+                    "thumbnail" => $thumbnail
+                ]
             ]
         ];
         $this->client->update($params);

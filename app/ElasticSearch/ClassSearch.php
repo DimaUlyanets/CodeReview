@@ -18,8 +18,8 @@ class ClassSearch implements IElasticSearch{
             "id" => $id,
             "body" => [
                 "id"=>$id,
-                "Name" => $name,
-                "Thumbnail" => $thumbnail
+                "name" => $name,
+                "thumbnail" => $thumbnail
               ]
         ];
         $this->client->index($params);
@@ -32,8 +32,8 @@ class ClassSearch implements IElasticSearch{
             "id" => $id,
             "body" => [
                 "id"=>$id,
-                "Name" => $name,
-                "Thumbnail" => $thumbnail
+                "name" => $name,
+                "thumbnail" => $thumbnail
             ]
         ];
         $this->client->update($params);

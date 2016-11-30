@@ -5,6 +5,7 @@ namespace App\ElasticSearch;
 use App\Classes;
 use App\Group;
 use App\Lesson;
+use App\Organization;
 use Elasticsearch;
 
 class ElasticGenerator{
@@ -15,7 +16,8 @@ class ElasticGenerator{
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function addClassesToSearch(){
+    public function addClassesToSearch()
+    {
         $classes = Classes::all();
         foreach ($classes as $class) {
             $classId = $class->id;
@@ -31,15 +33,17 @@ class ElasticGenerator{
                 "type" => "class",
                 "id" => $classId,
                 "body" => [
-                    "Name" => $className,
-                    "Thumbnail" => $classThumbnail,
-                    "Users" => $classUsers
+                    "name" => $className,
+                    "thumbnail" => $classThumbnail,
+                    "users" => $classUsers
                 ]
             ];
           $this->client->index($params);
         }
     }
-    public function addGroupsToSearch(){
+
+    public function addGroupsToSearch()
+    {
         $groups = Group::all();
         foreach ($groups as $group) {
             if (!$group->default) {
@@ -56,16 +60,18 @@ class ElasticGenerator{
                     "type" => "group",
                     "id" => $groupId,
                     "body" => [
-                        "Name" => $groupName,
-                        "Thumbnail" => $groupThumbnail,
-                        "Users" => $groupUsers
+                        "name" => $groupName,
+                        "thumbnail" => $groupThumbnail,
+                        "users" => $groupUsers
                     ]
                 ];
               $this->client->index($params);
             }
         }
     }
-    public function addLessonsToSearch(){
+
+    public function addLessonsToSearch()
+    {
         $lessons = Lesson::all();
         foreach ($lessons as $lesson) {
             $lessonId = $lesson->id;
@@ -76,9 +82,26 @@ class ElasticGenerator{
                 "type" => "lesson",
                 "id" => $lessonId,
                 "body" => [
-                    "Name" => $lessonName,
-                    "Thumbnail" => $lessonThumbnail,
+                    "name" => $lessonName,
+                    "thumbnail" => $lessonThumbnail,
                     "views" => $lesson->views
+                ]
+            ];
+          $this->client->index($params);
+        }
+    }
+
+    public function addOrganisationsToSearch()
+    {
+        $organisations = Organization::all();
+        foreach ($organisations as $org) {
+            $params = [
+                "index" => "organisations",
+                "type" => "organisation",
+                "id" => $org->id,
+                "body" => [
+                    "name" => $org->name,
+                    "thumbnail" => $org->icon
                 ]
             ];
           $this->client->index($params);
