@@ -196,7 +196,7 @@ class GroupController extends ApiController
             $userRole = DB::table('group_user')->select('role')->where('user_id', '=', $user->id)->where('group_id', '=', $group->id)->get();
             if(count($userRole)>0) {
                 if ($userRole->toArray()[0]->role == "owner") {
-                    if(isset($request['addAdmins'])){
+                    if(isset($request['addAdmins']) && is_array($request['addAdmins'])){
                         $addAdmins = $request['addAdmins'];
                         foreach ($addAdmins as $idUser) {
                             DB::table('group_user')->insert(
@@ -204,7 +204,7 @@ class GroupController extends ApiController
                             );
                         }
                     }
-                    if(isset($request['removeAdmins'])){
+                    if(isset($request['removeAdmins']) && is_array($request['removeAdmins'])){
                         $removeAdmins  = $request['removeAdmins'];
                         foreach ($removeAdmins as $idUser) {
                             DB::table('group_user')->where('user_id',$idUser)->where('role','admin')->where('group_id',$group->id)->delete();
