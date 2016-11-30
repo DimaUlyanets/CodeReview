@@ -17,7 +17,7 @@ class ElasticGroupUpdateIndex
     public $name;
     public $thumbnail;
 
-    public function __construct($id,$name,$thumbnail){
+    public function __construct($id, $name, $thumbnail){
         $this->id = $id;
         $this->name = $name;
         $this->thumbnail = $thumbnail;

@@ -214,10 +214,12 @@ class GroupController extends ApiController
             }
         }
 
+        $groupThumbnail = (isset($group->icon)) ? $group->icon : null;
+        event(new ElasticGroupUpdateIndex($group->id, $group->name, $groupThumbnail));
 
         return Response::json($group->toArray(), 200);
 
-        event(new ElasticGroupUpdateIndex($group->id, $group->name, $group->icon));
+
     }
 
     /**
