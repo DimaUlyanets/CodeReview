@@ -3,7 +3,7 @@
 namespace App\ElasticSearch;
 use Elasticsearch;
 
-class ClassSearch implements IElasticSearch{
+class ClassSearch{
 
     private $client;
 
