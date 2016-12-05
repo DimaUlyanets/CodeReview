@@ -15,6 +15,6 @@ class EventGroupUpdateIndex
 
     public function handle(ElasticGroupUpdateIndex $event){
         $search = new GroupSearch();
-        $search->updateIndex($event->id, $event->name, $event->thumbnail);
+        $search->updateIndex($event->id, $event->name, $event->thumbnail, $event->orgId, $event->type);
     }
 }

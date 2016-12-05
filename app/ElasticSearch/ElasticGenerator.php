@@ -62,6 +62,8 @@ class ElasticGenerator{
                     "body" => [
                         "name" => $groupName,
                         "thumbnail" => $groupThumbnail,
+                        "type" => $group->privacy_id,
+                        "orgId" => $group->organization_id,
                         "users" => $groupUsers
                     ]
                 ];

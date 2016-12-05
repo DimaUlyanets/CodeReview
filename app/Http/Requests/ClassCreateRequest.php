@@ -42,7 +42,7 @@ class ClassCreateRequest extends Request
 
         return [
             'name' => 'required|max:255|unique:classes,name,NULL,id,group_id,' . $this->group_id,
-            'description' => 'required|max:140',
+            'description' => 'required|max:512',
             'thumbnail' => 'image|max:10240',
             'group_id' => 'exists:groups,id|numeric',
             'is_collaborative' => 'numeric|required|boolean',

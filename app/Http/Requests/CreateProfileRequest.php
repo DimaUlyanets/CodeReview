@@ -34,7 +34,7 @@ class CreateProfileRequest extends Request
         return [
             'avatar' => 'image|max:10240',
             'cover' => 'image|max:10240',
-            'bio' => 'max:255',
+            'bio' => 'max:512',
             'color' => 'max:255',
         ];
     }

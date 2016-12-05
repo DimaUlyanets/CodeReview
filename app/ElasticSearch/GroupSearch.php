@@ -3,7 +3,7 @@
 namespace App\ElasticSearch;
 use Elasticsearch;
 
-class GroupSearch implements IElasticSearch{
+class GroupSearch {
 
     private $client;
 
@@ -11,7 +11,7 @@ class GroupSearch implements IElasticSearch{
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function addToIndex($id, $name, $thumbnail){
+    public function addToIndex($id, $name, $thumbnail, $orgId, $type){
         $params = [
             "index" => "groups",
             "type" => "group",
@@ -19,13 +19,15 @@ class GroupSearch implements IElasticSearch{
             "body" => [
                 "id" => $id,
                 "name" => $name,
-                "thumbnail" => $thumbnail
+                "thumbnail" => $thumbnail,
+                "orgId" => $orgId,
+                "type" => $type
             ]
         ];
         $this->client->index($params);
     }
 
-    public function updateIndex($id, $name, $thumbnail){
+    public function updateIndex($id, $name, $thumbnail, $orgId, $type){
         $params = [
             "index" => "groups",
             "type" => "group",
@@ -33,11 +35,15 @@ class GroupSearch implements IElasticSearch{
             "body" => [
                 "doc" => [
                     "name" => $name,
-                    "thumbnail" => $thumbnail
+                    "thumbnail" => $thumbnail,
+                    "orgId" => $orgId,
+                    "type" => $type
                 ],
                 "upsert" => [
                     "name" => $name,
-                    "thumbnail" => $thumbnail
+                    "thumbnail" => $thumbnail,
+                    "orgId" => $orgId,
+                    "type" => $type
                 ]
             ]
         ];

@@ -25,7 +25,7 @@ class OrganizationCreateRequest extends Request
     {
         return [
             'name' => 'required|max:255|unique:organizations',
-            'description' => 'max:140',
+            'description' => 'max:512',
             'icon' => 'image|max:10240',
             'cover' => 'image|max:10240'
         ];

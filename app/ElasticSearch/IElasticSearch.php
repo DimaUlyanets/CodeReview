@@ -4,8 +4,8 @@ namespace App\ElasticSearch;
 
 interface IElasticSearch
 {
-    public function addToIndex($id,$name,$thumbnail);
-    public function updateIndex($id,$name,$thumbnail);
+    public function addToIndex($id,$name,$thumbnail, $orgId, $type);
+    public function updateIndex($id,$name,$thumbnail, $orgId, $type);
     public function deleteIndex($id);
 
 }

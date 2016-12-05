@@ -101,11 +101,12 @@ class GroupController extends ApiController
             $user->groups()->attach($group->id);
 
 
-            //START BUILD  DATA TO SEARCH  (need to add thumbnail data, becouse not implemented!)
             $idGroupToSearch = $group->id;
+            $orgId = $group->organization_id;
+            $type = $group->privacy_id;
             $nameGroupToSearch = $data['name'];
             $thumbnailGroupToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
-            event(new ElasticGroupAddToIndex($idGroupToSearch, $nameGroupToSearch, $thumbnailGroupToSearch));
+            event(new ElasticGroupAddToIndex($idGroupToSearch, $nameGroupToSearch, $thumbnailGroupToSearch, $orgId, $type));
 
             return Response::json($group->toArray(), 200);
 
@@ -210,7 +211,7 @@ class GroupController extends ApiController
         }
 
         $groupThumbnail = (isset($group->icon)) ? $group->icon : null;
-        event(new ElasticGroupUpdateIndex($group->id, $group->name, $groupThumbnail));
+        event(new ElasticGroupUpdateIndex($group->id, $group->name, $groupThumbnail, $group->organization_id, $group->privacy_id));
 
         return Response::json($group->toArray(), 200);
 
