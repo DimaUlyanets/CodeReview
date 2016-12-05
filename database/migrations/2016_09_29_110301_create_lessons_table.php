@@ -17,7 +17,7 @@ class CreateLessonsTable extends Migration
 
             $table->increments('id');
             $table->string('name');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('lesson_file');
             $table->integer('type')->unsigned();

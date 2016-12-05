@@ -17,7 +17,7 @@ class CreateGroupsTable extends Migration
 
             $table->increments('id');
             $table->string('name')->unique();
-            $table->string('description');
+            $table->text('description');
             $table->string('icon')->nullable();
             $table->string('cover')->nullable();
             $table->integer('organization_id')->unsigned();
