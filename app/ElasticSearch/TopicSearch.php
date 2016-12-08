@@ -13,8 +13,8 @@ class TopicSearch{
 
     public function addToIndex($id, $name, $followers = 0){
         $params = [
-            "index" => "topics",
-            "type" => "topic",
+            "index" => "tags",
+            "type" => "tag",
             "id" => $id,
             "body" => [
                 "id"=>$id,
@@ -27,8 +27,8 @@ class TopicSearch{
 
     public function updateIndex($id, $followers){
         $params = [
-            "index" => "classes",
-            "type" => "class",
+            "index" => "tags",
+            "type" => "tag",
             "id" => $id,
             "body" => [
                 "id"=>$id,
@@ -40,8 +40,8 @@ class TopicSearch{
 
     public function deleteIndex($id){
         $params = [
-            "index" => "classes",
-            "type" => "class",
+            "index" => "tags",
+            "type" => "tag",
             "id" => $id
         ];
         $this->client->delete($params);

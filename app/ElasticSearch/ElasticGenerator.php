@@ -114,6 +114,7 @@ class ElasticGenerator{
     public function addTopicsToSearch()
     {
         $tags = Tag::all();
+
         foreach ($tags as $tag) {
             $params = [
                 "index" => "tags",

@@ -17,7 +17,7 @@ class ElasticClassAddToIndex
     public $name;
     public $followers;
 
-    public function __construct($id,$name,$followers){
+    public function __construct($id, $name, $followers){
         $this->id = $id;
         $this->name = $name;
         $this->$followers = $followers;

@@ -36,7 +36,7 @@ class ElasticSearch
     public function quickSearch($itemToSearch){
         $params = [
             "index" => "classes,groups,lessons,organisations,tags",
-            "type" => "class,group,lesson,organisation,tags",
+            "type" => "class,group,lesson,organisation,tag",
             "body" => [
                 "query" => [
                     "bool" => [
