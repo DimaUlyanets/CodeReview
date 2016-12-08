@@ -79,8 +79,17 @@ class User extends Authenticatable
      */
     public function classes()
     {
-        return $this->belongsToMany('App\Classes')->withTimestamps();;
+        return $this->belongsToMany('App\Classes')->withTimestamps();
     }
+
+     /**
+     * The group has many classes.
+     */
+
+     public function lessons()
+     {
+        return $this->hasMany('App\Lesson', 'author_id');
+     }
 
     /**
      * The user has one profile

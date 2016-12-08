@@ -108,30 +108,42 @@ class OrganizationController extends Controller
             $orgInfo['description']= $organization->description;
             $orgInfo['thumbnail']= $organization->icon;
             $orgInfo['cover']= $organization->cover;
-            $organizationGroups = self::_excludeDefault($organization->group->toArray());
             $lessons = [];
             $classes = [];
             $users = [];
+            $groups = [];
             foreach ($organization->group as $group) {
-                if(!empty($group->lessons)) {
+                if (!Group::userHasAccess($group)) continue;
+
+                if (!empty($group->lessons)) {
                      $tempLessons = [];
                      foreach($group->lessons as $key => $lesson) {
                          $tempLessons[$key] = $lesson;
+                         $author = User::whereId($lesson->author_id)->first();
+                         $tempLessons[$key]['authorName'] = $author->name;
+                         $tempLessons[$key]['authorThumbnail'] = $author->profile->avatar;
                          $tempLessons[$key]['authorName'] = User::whereId($lesson->author_id)->first()->name;
                      }
                      $lessons = array_merge($lessons, $tempLessons);
                 }
-                if(!empty($group->classes)) {
+                if (!empty($group->classes)) {
                     $tempClasses = [];
                     foreach($group->classes as $key => $class) {
                         $tempClasses[$key] = $class;
-                        $tempClasses[$key]['authorName'] = User::whereId($class->author_id)->first()->name;
+                        $author = User::whereId($class->author_id)->first();
+                        $tempClasses[$key]['authorName'] = $author->name;
+                        $tempClasses[$key]['authorThumbnail'] = $author->profile->avatar;
                     }
                     $classes = array_merge($classes, $tempClasses);
                 }
-
+                if (!$group->default) {
+                    $author = User::whereId($group->author_id)->first();
+                    $group['authorName'] = $author->name;
+                    $group['authorThumbnail'] = $author->profile->avatar;
+                    array_push($groups, $group);
+                }
             }
-            if(!empty($organization->users)) {
+            if (!empty($organization->users)) {
                 foreach($organization->users as $key => $user) {
                     $users[$key] = $user;
                     $users[$key]['thumbnail'] = $user->profile['avatar'];
@@ -142,7 +154,7 @@ class OrganizationController extends Controller
             $response['lessons'] = $lessons;
             $response['classes'] = $classes;
             $response['users'] = $users; //TODO remove dupes
-            $response['groups'] = $organizationGroups;
+            $response['groups'] = $groups;
             return Response::json($response, 200);
         } else {
              return response()->json(['error' => 'Not found'], 404);

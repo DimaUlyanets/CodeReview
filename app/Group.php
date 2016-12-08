@@ -85,9 +85,12 @@ class Group extends Model
         if(!$group) return false;
 
         $member = $user->groups()->whereId($group->id)->first();
+        $orgMember = $user->organizations()->whereId($group->organization_id)->first();
         $privacy = $group->privacy;
-
-        if($member || "{$privacy->type} {$privacy->subtype}" == "External Free"){
+        $groupType = "{$privacy->type} {$privacy->subtype}";
+        if($member
+        || $groupType == "External Free"
+        || ($groupType == "Internal Open" && $orgMember)){
 
             return true;
 

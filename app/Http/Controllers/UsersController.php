@@ -109,6 +109,20 @@ class UsersController extends ApiController
         return Response::json($response, 200);
     }
 
+    public function getMaterials($id = null){
+
+        $id = $id ? $id : Auth::guard('api')->user()->id;
+        $user = User::with('groups', 'classes', 'lessons')->find($id);
+        $response = [];
+
+
+        $response["classes"] = $user->classes()->get()->toArray();
+        $response["groups"] = $user->groups()->whereDefault(0)->get()->toArray();
+        $response["lessons"] = $user->lessons()->get()->toArray();
+
+        return Response::json($response, 200);
+    }
+
     /**
      * Update the specified resource in storage.
      *
