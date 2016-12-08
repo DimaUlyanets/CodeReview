@@ -6,6 +6,7 @@ use App\Files;
 use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
+use App\Events\ElasticUserAddToIndex;
 use App\Organization;
 use App\Privacy;
 use App\Profile;
@@ -56,6 +57,8 @@ class UsersController extends ApiController
 
             $user->organizations()->attach([$default->id => ['role' => 'member']]);
             $user->groups()->attach([$default->group->first()->id => ['role' => 'member']]);
+
+            event(new ElasticUserAddToIndex($user->id, $user->name));
 
             return Response::json($user->toArray(), 200);
 
@@ -114,7 +117,6 @@ class UsersController extends ApiController
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::with('groups', 'classes', 'lessons')->find($id);
         $response = [];
-
 
         $response["classes"] = $user->classes()->get()->toArray();
         $response["groups"] = $user->groups()->whereDefault(0)->get()->toArray();

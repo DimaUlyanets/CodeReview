@@ -6,6 +6,7 @@ use App\Classes;
 use App\Group;
 use App\Lesson;
 use App\Tag;
+use App\User;
 use App\Organization;
 use Elasticsearch;
 
@@ -123,6 +124,24 @@ class ElasticGenerator{
                 "body" => [
                     "name" => $tag->name,
                     "followers" => 0
+                ]
+            ];
+            $this->client->index($params);
+        }
+    }
+
+    public function addUsersToSearch()
+    {
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $params = [
+                "index" => "users",
+                "type" => "user",
+                "id" => $user->id,
+                "body" => [
+                    "name" => $user->name,
+                    "thumbnail" => $user->profile ? $user->profile->avatar : null
                 ]
             ];
             $this->client->index($params);

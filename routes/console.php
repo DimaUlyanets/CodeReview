@@ -27,6 +27,7 @@ Artisan::command('elastic:sync', function () {
     $generator->addLessonsToSearch();
     $generator->addOrganisationsToSearch();
     $generator->addTopicsToSearch();
+    $generator->addUsersToSearch();
 
 
     $this->comment("Data successfully indexed!");

@@ -9,18 +9,18 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class ElasticClassAddToIndex
+class ElasticUserAddToIndex
 {
     use InteractsWithSockets, SerializesModels;
 
     public $id;
     public $name;
-    public $followers;
+    public $thumbnail;
 
-    public function __construct($id, $name, $followers){
+    public function __construct($id, $name, $thumbnail){
         $this->id = $id;
         $this->name = $name;
-        $this->followers = $followers;
+        $this->thumbnail = $thumbnail;
     }
 
     public function broadcastOn(){
