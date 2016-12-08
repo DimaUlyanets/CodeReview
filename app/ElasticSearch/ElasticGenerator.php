@@ -110,6 +110,23 @@ class ElasticGenerator{
         }
     }
 
+    public function addTopicsToSearch()
+    {
+        $tags = Tag::all();
+        foreach ($tags as $tag) {
+            $params = [
+                "index" => "tags",
+                "type" => "tag",
+                "id" => $tag->id,
+                "body" => [
+                    "name" => $tag->name,
+                    "followers" => 0
+                ]
+            ];
+            $this->client->index($params);
+        }
+    }
+
     public function clearIndices() {
         $deleteParams = [
             'index' => '_all'

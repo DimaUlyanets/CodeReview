@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Events\ElasticTopicAddToIndex;
 
 class Tag extends Model
 {
@@ -23,6 +24,7 @@ class Tag extends Model
             $tag = Tag::whereName($value)->first();
             if(!$tag){
                 $tag = Tag::create(["name" => $value]);
+                event(new ElasticClassAddToIndex($tag->id, $tag->name));
             }
             $entity->tags()->attach($tag->id);
         }
