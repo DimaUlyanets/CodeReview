@@ -64,7 +64,7 @@ class Group extends Model
         $relatedUsers = [];
         foreach($users as $key => $user){
             $relatedUsers[$key]["id"] = $user->id;
-            $relatedUsers[$key]["avatar"] = $user->profile->avatar;
+            $relatedUsers[$key]["avatar"] = $user->profile && $user->profile->avatar;
             $relatedUsers[$key]["name"] = $user->name;
             $relatedUsers[$key]["pivot"] = $user->pivot;
 

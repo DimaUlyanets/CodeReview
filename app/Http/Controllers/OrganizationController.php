@@ -121,7 +121,7 @@ class OrganizationController extends Controller
                          $tempLessons[$key] = $lesson;
                          $author = User::whereId($lesson->author_id)->first();
                          $tempLessons[$key]['authorName'] = $author->name;
-                         $tempLessons[$key]['authorThumbnail'] = $author->profile->avatar;
+                         $tempLessons[$key]['authorThumbnail'] = $author->profile ? $author->profile->avatar : null;
                          $tempLessons[$key]['authorName'] = User::whereId($lesson->author_id)->first()->name;
                      }
                      $lessons = array_merge($lessons, $tempLessons);
@@ -132,14 +132,14 @@ class OrganizationController extends Controller
                         $tempClasses[$key] = $class;
                         $author = User::whereId($class->author_id)->first();
                         $tempClasses[$key]['authorName'] = $author->name;
-                        $tempClasses[$key]['authorThumbnail'] = $author->profile->avatar;
+                        $tempClasses[$key]['authorThumbnail'] = $author->profile ? $author->profile->avatar : null;
                     }
                     $classes = array_merge($classes, $tempClasses);
                 }
                 if (!$group->default) {
                     $author = User::whereId($group->author_id)->first();
                     $group['authorName'] = $author->name;
-                    $group['authorThumbnail'] = $author->profile->avatar;
+                    $group['authorThumbnail'] = $author->profile ? $author->profile->avatar : null;
                     array_push($groups, $group);
                 }
             }
