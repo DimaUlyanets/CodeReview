@@ -132,6 +132,7 @@ class OrganizationController extends Controller
                         $tempClasses[$key] = $class;
                         $author = User::whereId($class->author_id)->first();
                         $tempClasses[$key]['authorName'] = $author->name;
+                        $tempClasses[$key]['users'] = $class->users;
                         $tempClasses[$key]['authorThumbnail'] = $author->profile ? $author->profile->avatar : null;
                     }
                     $classes = array_merge($classes, $tempClasses);
