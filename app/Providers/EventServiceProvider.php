@@ -49,6 +49,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ElasticOrganisationDeleteIndex' => [
             'App\Listeners\EventOrganisationDeleteIndex',
         ],
+        'App\Events\ElasticUserAddToIndex' => [
+            'App\Listeners\EventUserAddToIndex',
+        ],
+        'App\Events\ElasticTopicAddToIndex' => [
+            'App\Listeners\EventTopicAddToIndex',
+        ],
     ];
 
     /**

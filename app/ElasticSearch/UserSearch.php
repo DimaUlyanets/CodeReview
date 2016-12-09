@@ -17,7 +17,7 @@ class UserSearch{
             "type" => "user",
             "id" => $id,
             "body" => [
-                "id"=>$id,
+                "id"=> $id,
                 "name" => $name,
                 "thumbnail" => $thumbnail
             ]

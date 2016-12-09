@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddCoverClassTable extends Migration
+class TagsTableAddCover extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddCoverClassTable extends Migration
      */
     public function up()
     {
-         Schema::table('classes', function (Blueprint $table) {
+         Schema::table('tags', function (Blueprint $table) {
             $table->string('cover')->nullable();
          });
     }
@@ -25,7 +25,7 @@ class AddCoverClassTable extends Migration
      */
     public function down()
     {
-         Schema::table('classes', function (Blueprint $table) {
+         Schema::table('tags', function (Blueprint $table) {
              $table->dropColumn('cover');
          });
     }

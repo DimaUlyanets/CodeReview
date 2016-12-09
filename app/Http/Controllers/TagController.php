@@ -38,7 +38,15 @@ class TagController extends ApiController
      */
     public function show($id)
     {
-        //
+       $tag = Tag::find($id);
+
+       if ($tag) {
+           $response = Tag::getTagInfo($tag);
+
+           return $this->setStatusCode(200)->respondSuccess($response);
+       }
+
+        return $this->setStatusCode(404)->respondWithError("Class Not Found");
     }
 
 

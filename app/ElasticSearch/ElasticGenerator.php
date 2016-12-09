@@ -40,7 +40,7 @@ class ElasticGenerator{
                     "users" => $classUsers
                 ]
             ];
-          $this->client->index($params);
+            $this->client->index($params);
         }
     }
 

@@ -58,8 +58,6 @@ class UsersController extends ApiController
             $user->organizations()->attach([$default->id => ['role' => 'member']]);
             $user->groups()->attach([$default->group->first()->id => ['role' => 'member']]);
 
-            event(new ElasticUserAddToIndex($user->id, $user->name));
-
             return Response::json($user->toArray(), 200);
 
         }
@@ -203,6 +201,8 @@ class UsersController extends ApiController
                 if(isset($files["avatar"]))$data["avatar"] = $files["avatar"];
 
                 $result = Profile::create($data);
+                $usrThumbnail = $result->thumbnail || null;
+                event(new ElasticUserAddToIndex($user->id, $user->name, $usrThumbnail));
                 return $this->setStatusCode(200)->respondSuccess($result);
 
             }
