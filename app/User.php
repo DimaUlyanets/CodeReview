@@ -99,6 +99,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Profile');
     }
 
+    /**
+     * The following many tags.
+     */
 
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag')->withTimestamps();
+    }
 
 }

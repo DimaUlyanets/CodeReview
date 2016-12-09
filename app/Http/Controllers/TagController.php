@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests;
 
@@ -46,7 +47,49 @@ class TagController extends ApiController
            return $this->setStatusCode(200)->respondSuccess($response);
        }
 
-        return $this->setStatusCode(404)->respondWithError("Class Not Found");
+        return $this->setStatusCode(404)->respondWithError("Topic Not Found");
+    }
+
+    /**
+     * Adds user follow relation.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function follow($id)
+    {
+       $tag = Tag::find($id);
+
+       if ($tag) {
+           $user = Auth::guard('api')->user();
+           Tag::followTag($user, $tag);
+           $tag['users'] = $tag->users;
+           $tag['following'] = true;
+           return $this->setStatusCode(200)->respondSuccess($tag);
+       }
+
+       return $this->setStatusCode(404)->respondWithError("Topic Not Found");
+    }
+
+    /**
+     * Removes user follow relation.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function unFollow($id)
+    {
+       $tag = Tag::find($id);
+
+       if ($tag) {
+           $user = Auth::guard('api')->user();
+           Tag::unFollowTag($user, $tag);
+           $tag['users'] = $tag->users;
+           $tag['following'] = false;
+           return $this->setStatusCode(200)->respondSuccess($tag);
+       }
+
+       return $this->setStatusCode(404)->respondWithError("Topic Not Found");
     }
 
 

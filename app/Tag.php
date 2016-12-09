@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Events\ElasticTopicAddToIndex;
 
@@ -28,7 +29,14 @@ class Tag extends Model
             }
             $entity->tags()->attach($tag->id);
         }
+    }
 
+    public static function followTag($user, $tag){
+        $user->tags()->attach($tag->id);
+    }
+
+    public static function unFollowTag($user, $tag){
+        $user->tags()->detach($tag->id);
     }
 
     public static function getTagInfo($tag){
@@ -40,7 +48,8 @@ class Tag extends Model
         $response = [
             "id" => $tag->id,
             "name" => $tag->name,
-            "cover" => $tag->cover
+            "cover" => $tag->cover,
+            "following" =>  !!$tag->users()->whereId(Auth::guard('api')->user()->id)->first()
         ];
 
         $relatedLessons = [];
@@ -73,7 +82,7 @@ class Tag extends Model
         $response["groups"] = $relatedGroups;
         $response["lessons"] = $relatedLessons;
         $response["classes"] = $relatedClasses;
-        $response["users"] = [];
+        $response["users"] = $tag->users;
 
         return $response;
     }
@@ -111,6 +120,15 @@ class Tag extends Model
     public function lessons()
     {
         return $this->belongsToMany('App\Lesson')->withTimestamps();
+    }
+
+    /**
+     * The has  many followers.
+     */
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User')->withTimestamps();
     }
 
 }

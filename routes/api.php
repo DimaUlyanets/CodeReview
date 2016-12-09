@@ -102,6 +102,8 @@ Route::group(['prefix' => 'tags' , 'middleware' => 'auth:api'] , function() {
     Route::post('/', 'TagController@create');
     Route::get('/{id}', 'TagController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'TagController@update')->where('id', '[0-9]+');
+    Route::post('/{id}/follow', 'TagController@follow')->where('id', '[0-9]+');
+    Route::delete('/{id}/follow', 'TagController@unFollow')->where('id', '[0-9]+');
     Route::delete('/{id}', 'TagController@delete')->where('id', '[0-9]+');
     Route::get('/suggest/{tag}', 'TagController@suggest')->where('id', '[0-9]+');
 
