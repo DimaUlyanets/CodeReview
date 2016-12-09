@@ -17,10 +17,11 @@ class ElasticTopicAddToIndex
     public $name;
     public $followers;
 
-    public function __construct($id, $name, $followers){
+    public function __construct($id, $name, $followers, $cover){
         $this->id = $id;
         $this->name = $name;
         $this->followers = $followers;
+        $this->cover = $cover;
     }
 
     public function broadcastOn(){

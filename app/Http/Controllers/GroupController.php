@@ -97,16 +97,10 @@ class GroupController extends ApiController
                 Tag::assignTag($group, $request);
             }
 
-            //Assign user to group
             $user->groups()->attach($group->id);
 
-
-            $idGroupToSearch = $group->id;
-            $orgId = $group->organization_id;
-            $type = $group->privacy_id;
-            $nameGroupToSearch = $data['name'];
-            $thumbnailGroupToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
-            event(new ElasticGroupAddToIndex($idGroupToSearch, $nameGroupToSearch, $thumbnailGroupToSearch, $orgId, $type));
+            $thumbnailGroup = (isset($data['icon'])) ? $data['icon'] : null;
+            event(new ElasticGroupAddToIndex($group->id, $data['name'], $thumbnailGroup, $group->organization_id, $group->privacy_id, $group->users || []));
 
             return Response::json($group->toArray(), 200);
 

@@ -51,7 +51,7 @@ class ElasticGenerator{
             if (!$group->default) {
                 $groupId = $group->id;
                 $groupName = $group->name;
-                $groupThumbnail = $group->thumbnail;
+                $groupThumbnail = $group->icon;
                 $groupUsers = [];
                 foreach ($group->users as $user) {
                     $groupUserName = $user->name;
@@ -122,8 +122,10 @@ class ElasticGenerator{
                 "type" => "tag",
                 "id" => $tag->id,
                 "body" => [
+                    "id" => $tag->id,
                     "name" => $tag->name,
-                    "followers" => 0
+                    "followers" => 0,
+                    "cover" => $tag->cover
                 ]
             ];
             $this->client->index($params);

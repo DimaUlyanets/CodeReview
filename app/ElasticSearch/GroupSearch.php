@@ -11,7 +11,7 @@ class GroupSearch {
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function addToIndex($id, $name, $thumbnail, $orgId, $type){
+    public function addToIndex($id, $name, $thumbnail, $orgId, $type, $users){
         $params = [
             "index" => "groups",
             "type" => "group",
@@ -21,7 +21,8 @@ class GroupSearch {
                 "name" => $name,
                 "thumbnail" => $thumbnail,
                 "orgId" => $orgId,
-                "type" => $type
+                "type" => $type,
+                "users" => $users
             ]
         ];
         $this->client->index($params);

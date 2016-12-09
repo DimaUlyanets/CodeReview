@@ -17,12 +17,13 @@ class ElasticGroupAddToIndex
     public $name;
     public $thumbnail;
 
-    public function __construct($id,$name,$thumbnail, $orgId, $type){
+    public function __construct($id,$name,$thumbnail, $orgId, $type, $users){
         $this->id = $id;
         $this->name = $name;
         $this->thumbnail = $thumbnail;
         $this->orgId = $orgId;
         $this->type = $type;
+        $this->users = $users;
     }
 
     public function broadcastOn(){

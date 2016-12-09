@@ -11,14 +11,15 @@ class TopicSearch{
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 
-    public function addToIndex($id, $name, $followers = 0){
+    public function addToIndex($id, $name, $followers = 0, $cover){
         $params = [
             "index" => "tags",
             "type" => "tag",
             "id" => $id,
             "body" => [
-                "id"=>$id,
+                "id" => $id,
                 "name" => $name,
+                "cover" => $cover,
                 "followers" => $followers
             ]
         ];

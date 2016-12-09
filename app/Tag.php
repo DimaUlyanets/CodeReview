@@ -25,7 +25,7 @@ class Tag extends Model
             $tag = Tag::whereName($value)->first();
             if(!$tag){
                 $tag = Tag::create(["name" => $value, "cover" => "https://unsplash.it/800/200"]);
-                event(new ElasticTopicAddToIndex($tag->id, $tag->name, 0));
+                event(new ElasticTopicAddToIndex($tag->id, $tag->name, 0, $tag->cover));
             }
             $entity->tags()->attach($tag->id);
         }

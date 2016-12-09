@@ -15,6 +15,6 @@ class EventTopicAddToIndex
 
     public function handle(ElasticTopicAddToIndex $event){
         $search = new TopicSearch();
-        $search->addToIndex($event->id, $event->name, $event->followers);
+        $search->addToIndex($event->id, $event->name, $event->followers, $event->cover);
     }
 }
