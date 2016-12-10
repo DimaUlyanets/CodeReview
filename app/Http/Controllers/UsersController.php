@@ -110,17 +110,45 @@ class UsersController extends ApiController
         return Response::json($response, 200);
     }
 
-    public function getMaterials($id = null){
-
+    public function getProfile($id = null){
+        $private = $id ? true : false;
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::with('groups', 'classes', 'lessons')->find($id);
         $response = [];
+        if ($user) {
+            $profile = $user->profile;
+            $response["id"] = $user->id;
+            $response["name"] = $user->name;
+            $response["thumbnail"] = $profile ? $profile->avatar : null;
+            $response["cover"] = $profile ? $profile->cover : null;
 
-        $response["classes"] = $user->classes()->get()->toArray();
-        $response["groups"] = $user->groups()->whereDefault(0)->get()->toArray();
-        $response["lessons"] = $user->lessons()->get()->toArray();
+            $response["groups"] = [];
+            $visibleGroupIds = [];
+            $allGroups = $user->groups()->whereDefault(0)->get();
+            foreach($allGroups as $key => $group) {
+                if (!Group::userHasAccess($group)) continue;
+                array_push($response["groups"], $group);
+                array_push($visibleGroupIds, $group->id);
+            }
 
-        return Response::json($response, 200);
+            $response["classes"] = [];
+            $allClasses = $user->classes()->get();
+            foreach($allClasses as $key => $class) {
+                if (!Group::userHasAccess($class->group)) continue;
+                array_push($response["classes"], $class);
+            }
+
+            $response["lessons"] = [];
+            $allLessons = $user->lessons()->get();
+            foreach($allLessons as $key => $lesson) {
+                if (!Group::userHasAccess($lesson->group)) continue;
+                array_push($response["lessons"], $lesson);
+            }
+
+            return Response::json($response, 200);
+        } else {
+             return $this->setStatusCode(404)->respondWithError("User not found");
+        }
     }
 
     /**
