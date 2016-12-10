@@ -39,6 +39,20 @@ class LessonsTableSeeder extends Seeder
 
         ]);
 
+        DB::table('lessons')->insert([
+            'name' => 'Algebra',
+            'description' => 'Algebra is one of the broad parts of mathematics, together with number theory, geometry and analysis. ',
+            'thumbnail' => 'https://unsplash.it/200/200',
+            'lesson_file' => 'avi.avi',
+            'difficulty' => '25',
+            'group_id' => '2',
+            'type' => '1',
+            'author_id' => '2',
+            'views' => 20,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+
+        ]);
+
 
 
     }
