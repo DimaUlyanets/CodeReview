@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Carbon\Carbon;
 class LessonsTableSeeder extends Seeder
 {
     /**
@@ -21,7 +21,8 @@ class LessonsTableSeeder extends Seeder
             'type' => '0',
             'group_id' => '1',
             'author_id' => '1',
-            'views' => 20
+            'views' => 20,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
         DB::table('lessons')->insert([
@@ -33,7 +34,9 @@ class LessonsTableSeeder extends Seeder
             'group_id' => '2',
             'type' => '1',
             'author_id' => '2',
-            'views' => 20
+            'views' => 20,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+
         ]);
 
 
