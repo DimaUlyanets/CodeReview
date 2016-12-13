@@ -81,21 +81,28 @@ class GroupController extends ApiController
         $data["author_id"] = $user->id;
         $group = Group::create($data);
 
-        if(!empty($request->icon)){
-
-            $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
-            $group->icon = $path;
-            $group->save();
-        } else {
-            $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
-            $group->save();
-        }
-
         if($group){
+
+            if(!empty($request->icon)){
+
+                $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
+                $group->icon = $path;
+                $group->save();
+            } else {
+                $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
+            }
+
+            if(!empty($request->cover)){
+                $path = Files::qualityCompress($request->cover, "groups/{$group->id}/cover");
+                $group->cover = $path;
+            } else {
+                $group->cover = 'https://unsplash.it/800/200'; //TODO: temporary
+            }
 
             if($request->tags){
                 Tag::assignTag($group, $request);
             }
+            $group->save();
 
             $user->groups()->attach($group->id);
 
