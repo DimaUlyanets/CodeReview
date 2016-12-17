@@ -43,21 +43,20 @@ class Group extends Model
 
         $relatedLessons = [];
         foreach($lessons as $key => $value){
-
-            $relatedLessons[$key]["id"] = $value->id;
-            $relatedLessons[$key]["thumbnail"] = $value->thumbnail;
-            $relatedLessons[$key]["name"] = $value->name;
-            $relatedLessons[$key]["author_name"] = User::whereId($value->author_id)->first()->name;
+            $author = User::whereId($value->author_id)->first();
+            $relatedLessons[$key] = $value;
+            $relatedLessons[$key]["authorName"] = $author->name;
+            $relatedLessons[$key]["authorThumbnail"] = $author->profile ? $author->profile->avatar : null;
             $relatedLessons[$key]["views"] = $value->views;
 
         }
 
         $relatedClasses = [];
         foreach($classes as $key => $value){
-            $relatedClasses[$key]["id"] = $value->id;
-            $relatedClasses[$key]["thumbnail"] = $value->thumbnail;
-            $relatedClasses[$key]["name"] = $value->name;
-            $relatedClasses[$key]["author_name"] = User::whereId($value->author_id)->first()->name;
+            $author = User::whereId($value->author_id)->first();
+            $relatedClasses[$key] = $value;
+            $relatedClasses[$key]["authorName"] = $author->name;
+            $relatedClasses[$key]["authorThumbnail"] = $author->profile ? $author->profile->avatar : null;
 
         }
 
