@@ -112,7 +112,7 @@ class ClassController extends ApiController
         $class = Classes::find($id);
 
         if($class){
-
+            $userId = Auth::guard('api')->user()->id;
             if(!User::LessonAndClassAccess($class))return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             $user = User::find($class->author_id);
@@ -129,6 +129,10 @@ class ClassController extends ApiController
             }
 
             $avatar = ($user->profile) ? $user->profile->avatar : "";
+            $isMember = $class->whereHas('users', function($q) use($userId, $class) {
+                $q->where('user_id', $userId)
+                ->where('classes_id', $class->id);
+            })->get();
 
             $response = [
 
@@ -140,7 +144,8 @@ class ClassController extends ApiController
                 "author_name" => $user->name,
                 "author_avatar" => $avatar,
                 "members" => $class->users()->count(),
-                "lessons" => $lessons
+                "lessons" => $lessons,
+                "memberOf" => !!sizeOf($isMember)
 
             ];
 

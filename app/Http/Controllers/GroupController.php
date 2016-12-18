@@ -131,9 +131,12 @@ class GroupController extends ApiController
                 return $this->setStatusCode(403)->respondWithError("Forbidden");
 
             }
-
+            $userId = Auth::guard('api')->user()->id;
             $response = Group::getGroupInfo($group);
-            $response['memberOf'] = Auth::guard('api')->user()->id === $group->author_id;
+            $response['memberOf'] = !!sizeOf($group->whereHas('users', function($q) use($userId, $group) {
+                $q->where('user_id', $userId)
+                ->where('group_id', $group->id);
+            })->get());
 
             return $this->setStatusCode(200)->respondSuccess($response);
 
