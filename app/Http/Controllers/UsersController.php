@@ -121,7 +121,7 @@ class UsersController extends ApiController
             $response["name"] = $user->name;
             $response["thumbnail"] = $profile ? $profile->avatar : null;
             $response["cover"] = $profile ? $profile->cover : null;
-
+            $response["following"] = !!$user->followers()->where('follower_id', Auth::guard('api')->user()->id)->first();
             $response["groups"] = [];
             $visibleGroupIds = [];
             $allGroups = $user->groups()->whereDefault(0)->get();
@@ -319,5 +319,37 @@ class UsersController extends ApiController
         return $this->setStatusCode(204)->respondSuccess(["No content"]);
 
     }
+
+    public function follow($id)
+    {
+       $user = User::find($id);
+
+       if ($user) {
+           $follower = Auth::guard('api')->user();
+           User::followUser($follower, $user);
+           $user['followers'] = $user->followers;
+           $user['following'] = true;
+           return $this->setStatusCode(200)->respondSuccess($user);
+       }
+
+       return $this->setStatusCode(404)->respondWithError("User Not Found");
+    }
+
+     public function unFollow($id)
+     {
+          $user = User::find($id);
+
+          if ($user) {
+              $follower = Auth::guard('api')->user();
+              User::unFollowUser($follower, $user);
+              $user['followers'] = $user->followers;
+              $user['following'] = false;
+              return $this->setStatusCode(200)->respondSuccess($user);
+          }
+
+          return $this->setStatusCode(404)->respondWithError("User Not Found");
+     }
+
+
 
 }

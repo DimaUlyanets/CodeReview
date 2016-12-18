@@ -99,6 +99,14 @@ class User extends Authenticatable
         return $this->hasOne('App\Profile');
     }
 
+    public static function followUser($follower, $user){
+        $user->followers()->attach($follower->id, ['follower_id' => $follower->id, 'user_id' => $user->id]);
+    }
+
+    public static function unFollowUser($follower, $user){
+        $user->followers()->where('follower_id', $follower->id)->detach();
+    }
+
     /**
      * The following many tags.
      */
@@ -106,6 +114,15 @@ class User extends Authenticatable
     public function tags()
     {
         return $this->belongsToMany('App\Tag')->withTimestamps();
+    }
+
+    /**
+     * The user has many followers.
+     */
+
+    public function followers()
+    {
+        return $this->belongsToMany('App\User', 'user_follower')->withTimestamps();
     }
 
 }

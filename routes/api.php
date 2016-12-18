@@ -44,6 +44,8 @@ Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
     Route::get('/{id}/classes', 'UsersController@classes')->where('id', '[0-9]+');
     Route::get('/classes', 'UsersController@classes');
     Route::get('/organizations/{id}', 'UsersController@getUserOrganization')->where('id', '[0-9]+');
+    Route::post('/{id}/follow', 'UsersController@follow')->where('id', '[0-9]+');
+    Route::delete('/{id}/follow', 'UsersController@unFollow')->where('id', '[0-9]+');
 });
 
 Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , function() {
