@@ -25,8 +25,6 @@ class AlterTableGroup extends Migration
      */
     public function down()
     {
-        Schema::table('groups', function (Blueprint $table) {
-           $table->string('name')->unique();
-        });
+
     }
 }
