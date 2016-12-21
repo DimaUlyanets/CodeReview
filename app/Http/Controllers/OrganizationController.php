@@ -156,6 +156,7 @@ class OrganizationController extends Controller
             $response['classes'] = $classes;
             $response['users'] = $users; //TODO remove dupes
             $response['groups'] = $groups;
+            $response['tags'] = $organization->tags;
             return Response::json($response, 200);
         } else {
              return response()->json(['error' => 'Not found'], 404);
