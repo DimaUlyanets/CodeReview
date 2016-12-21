@@ -100,6 +100,23 @@ class GroupController extends ApiController
             if($request->tags){
                 Tag::assignTag($group, $request);
             }
+
+            if(is_array($request['members']) && count($request['members']) > 0){
+                foreach ($request['members'] as $id) {
+                    DB::table('group_user')->insert(
+                        ['user_id'=>$id,'group_id'=>$group->id,'role'=>'member']
+                    );
+                }
+            }
+            if(is_array($request['admins']) && count($request['admins']) > 0){
+                $addAdmins = $request['admins'];
+                foreach ($addAdmins as $id) {
+                    DB::table('group_user')->insert(
+                        ['user_id'=>$id,'group_id'=>$group->id,'role'=>'admin']
+                    );
+                }
+            }
+
             $group->save();
 
             $user->groups()->attach($group->id);

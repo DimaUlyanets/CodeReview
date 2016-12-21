@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 
 class ClassController extends ApiController
 {
@@ -67,26 +68,39 @@ class ClassController extends ApiController
             $organization = Group::find($data["group_id"])->organization;
             if(!empty($request->thumbnail)){
                 $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
-                $class->save();
-
             } else {
                 $class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
-                $class->save();
             }
 
             if(!empty($request->cover)){
                 $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/classes/{$class->id}/cover");
                 $class->cover = $path;
-                $class->save();
             } else {
                 $class->cover = 'https://unsplash.it/200/200'; //TODO: temporary
-                $class->save();
             }
 
             if($request->tags){
                 Tag::assignTag($class, $request);
             }
 
+            if(is_array($request['members']) && count($request['members']) > 0){
+                foreach ($request['members'] as $id) {
+                    DB::table('classes_user')->insert(
+                        ['user_id'=>$id,'classes_id'=>$class->id]
+                    );
+                }
+            }
+
+            if(is_array($request['admins']) && count($request['admins']) > 0){
+                $addAdmins = $request['admins'];
+                foreach ($addAdmins as $id) {
+                    DB::table('classes_user')->insert(
+                        ['user_id'=>$id,'classes_id'=>$class->id]
+                    );
+                }
+            }
+
+            $class->save();
             //Assign user to class
             $user->classes()->attach($class->id);
 
