@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Events\ElasticTopicAddToIndex;
+use App\Group;
 
 class Tag extends Model
 {
@@ -73,6 +74,7 @@ class Tag extends Model
 
         $relatedGroups = [];
         foreach($groups as $key => $group) {
+            if (!Group::userHasAccess($group)) continue;
             $relatedGroups[$key] = $group;
             $relatedGroups[$key]['users'] = $group->users;
             $relatedGroups[$key]['tags'] = $group->tags;
