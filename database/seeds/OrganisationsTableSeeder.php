@@ -15,7 +15,7 @@ class OrganisationsTableSeeder extends Seeder
             'name' => 'Graspe',
             'description' => 'description',
             'cover'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png',
-            'icon' => 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg',
+            'icon' => 'https://s3-eu-west-1.amazonaws.com/bck-lessons/organizations/1/icon/logo.JPG',
             'default' => 1
         ]);
 
