@@ -192,14 +192,10 @@ class GroupController extends ApiController
         if(!empty($request['icon'])){
             $path = Files::qualityCompress($request['icon'], "organizations/{$organizationId}/groups/{$group->id}/icon");
             $group->icon = $path;
-        } else {
-            $group->icon = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg'; //TODO: temporary
         }
         if(!empty($request['cover'])){
             $path = Files::qualityCompress($request['cover'], "organizations/{$organizationId}/groups/{$group->id}/cover");
             $group->cover = $path;
-        } else {
-            $group->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
         }
 
         isset($request['description']) ? $group->description = $request['description'] : "";
