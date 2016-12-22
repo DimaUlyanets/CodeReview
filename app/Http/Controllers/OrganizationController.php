@@ -43,21 +43,19 @@ class OrganizationController extends Controller
         if(!empty($request->icon)){
             $path = Files::qualityCompress($request->icon, "organizations/{$result->id}/icon");
             $result->icon = $path;
-            $result->save();
-        } else {
-            $result->icon = 'https://unsplash.it/200/200'; //TODO: temporary
         }
+
         if(!empty($request->cover)){
             $path = Files::qualityCompress($request->cover, "organizations/{$result->id}/cover");
             $result->cover = $path;
-            $result->save();
-        } else {
-            $result->cover = 'https://unsplash.it/200/200'; //TODO: temporary
         }
+
         if(isset($request['color'])){
             $result->color = $request['color'];
         }
+
         $result->save();
+
         if($result){
             if($request->tags){
                 Tag::assignTag($result, $request);

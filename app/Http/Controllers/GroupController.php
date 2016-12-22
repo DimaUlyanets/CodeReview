@@ -86,15 +86,11 @@ class GroupController extends ApiController
             if(!empty($request->icon)){
                 $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
                 $group->icon = $path;
-            } else {
-                $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
             }
 
             if(!empty($request->cover)){
                 $path = Files::qualityCompress($request->cover, "groups/{$group->id}/cover");
                 $group->cover = $path;
-            } else {
-                $group->cover = 'https://unsplash.it/800/200'; //TODO: temporary
             }
 
             if($request->tags){
@@ -193,14 +189,11 @@ class GroupController extends ApiController
         if(!empty($request['icon'])){
             $path = Files::qualityCompress($request['icon'], "organizations/{$organizationId}/groups/{$group->id}/icon");
             $group->icon = $path;
-        } else {
-            $group->icon = 'https://unsplash.it/200/200'; //TODO: temporary
         }
+
         if(!empty($request['cover'])){
             $path = Files::qualityCompress($request['cover'], "organizations/{$organizationId}/groups/{$group->id}/cover");
             $group->cover = $path;
-        } else {
-            $group->cover = 'https://unsplash.it/200/200'; //TODO: temporary
         }
 
         isset($request['description']) ? $group->description = $request['description'] : "";

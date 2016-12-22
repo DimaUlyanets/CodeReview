@@ -80,9 +80,6 @@ class LessonController extends ApiController
             $path = "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon";
             $lesson->thumbnail = Files::qualityCompress($request->thumbnail, $path);
             $lesson->save();
-
-        } else {
-            #$class->thumbnail = 'https://unsplash.it/200/200'; //TODO: temporary
         }
 
 
