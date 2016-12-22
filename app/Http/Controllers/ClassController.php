@@ -68,11 +68,15 @@ class ClassController extends ApiController
             $organization = Group::find($data["group_id"])->organization;
             if(!empty($request->thumbnail)){
                 $class->thumbnail = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$data["group_id"]}/classes/{$class->id}/icon");
+            } else {
+                $class->thumbnail = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/lesson.jpg'; //TODO: temporary
             }
 
             if(!empty($request->cover)){
                 $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/classes/{$class->id}/cover");
                 $class->cover = $path;
+            } else {
+                $class->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
             }
 
             if($request->tags){
@@ -82,7 +86,7 @@ class ClassController extends ApiController
             if(is_array($request['members']) && count($request['members']) > 0){
                 foreach ($request['members'] as $id) {
                     DB::table('classes_user')->insert(
-                        ['user_id'=>$id,'classes_id'=>$class->id]
+                        ['user_id'=>$id,'classes_id'=>$class->id,'role'=>'member']
                     );
                 }
             }
@@ -91,7 +95,7 @@ class ClassController extends ApiController
                 $addAdmins = $request['admins'];
                 foreach ($addAdmins as $id) {
                     DB::table('classes_user')->insert(
-                        ['user_id'=>$id,'classes_id'=>$class->id]
+                        ['user_id'=>$id,'classes_id'=>$class->id,'role'=>'admin']
                     );
                 }
             }

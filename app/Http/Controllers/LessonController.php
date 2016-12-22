@@ -79,7 +79,8 @@ class LessonController extends ApiController
             $organization = Group::find($data["group_id"])->organization;
             $path = "organizations/{$organization->id}/groups/{$data["group_id"]}/lessons/icon";
             $lesson->thumbnail = Files::qualityCompress($request->thumbnail, $path);
-            $lesson->save();
+        } else {
+            $lesson->thumbnail = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/lesson.jpg'; //TODO: temporary
         }
 
 
@@ -108,8 +109,9 @@ class LessonController extends ApiController
 
         if($request->tags){
             Tag::assignTag($lesson, $request);
-
         }
+        $lesson->save();
+
        //START BUILD  DATA TO SEARCH
         $idLessonToSearch =  $lesson->id;
         $nameLessonToSearch =  $data['name'];

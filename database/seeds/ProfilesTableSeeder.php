@@ -14,7 +14,8 @@ class ProfilesTableSeeder extends Seeder
         DB::table('profiles')->insert([
 
             'user_id' => '1',
-            'cover' => 'cover.png',
+            'avatar'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/user.svg',
+            'cover' => 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png',
             'bio' => 'User Bio',
             'color' => 'white'
 
@@ -23,7 +24,8 @@ class ProfilesTableSeeder extends Seeder
         DB::table('profiles')->insert([
 
             'user_id' => '2',
-            'cover' => 'cover.png',
+            'avatar'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/user.svg',
+                        'cover' => 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png',
             'bio' => 'User Bio',
             'color' => 'white'
 

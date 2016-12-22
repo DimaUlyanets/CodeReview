@@ -86,11 +86,15 @@ class GroupController extends ApiController
             if(!empty($request->icon)){
                 $path = Files::qualityCompress($request->icon, "organizations/{$data["organization_id"]}/groups/{$group->id}/icon");
                 $group->icon = $path;
+            } else {
+                $group->icon = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg'; //TODO: temporary
             }
 
             if(!empty($request->cover)){
                 $path = Files::qualityCompress($request->cover, "groups/{$group->id}/cover");
                 $group->cover = $path;
+            } else {
+                $group->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
             }
 
             if($request->tags){
@@ -98,21 +102,20 @@ class GroupController extends ApiController
             }
 
             if(is_array($request['members']) && count($request['members']) > 0){
-                foreach ($request['members'] as $id) {
-                    DB::table('group_user')->insert(
-                        ['user_id'=>$id,'group_id'=>$group->id,'role'=>'member']
-                    );
+                        foreach ($request['members'] as $id) {
+                            DB::table('group_user')->insert(
+                                ['user_id'=>$id,'group_id'=>$group->id,'role'=>'member']
+                            );
+                        }
+                    }
+                if(is_array($request['admins']) && count($request['admins']) > 0){
+                    $addAdmins = $request['admins'];
+                    foreach ($addAdmins as $id) {
+                        DB::table('group_user')->insert(
+                            ['user_id'=>$id,'group_id'=>$group->id,'role'=>'admin']
+                        );
+                    }
                 }
-            }
-            if(is_array($request['admins']) && count($request['admins']) > 0){
-                $addAdmins = $request['admins'];
-                foreach ($addAdmins as $id) {
-                    DB::table('group_user')->insert(
-                        ['user_id'=>$id,'group_id'=>$group->id,'role'=>'admin']
-                    );
-                }
-            }
-
             $group->save();
 
             $user->groups()->attach($group->id);
@@ -189,11 +192,14 @@ class GroupController extends ApiController
         if(!empty($request['icon'])){
             $path = Files::qualityCompress($request['icon'], "organizations/{$organizationId}/groups/{$group->id}/icon");
             $group->icon = $path;
+        } else {
+            $group->icon = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg'; //TODO: temporary
         }
-
         if(!empty($request['cover'])){
             $path = Files::qualityCompress($request['cover'], "organizations/{$organizationId}/groups/{$group->id}/cover");
             $group->cover = $path;
+        } else {
+            $group->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
         }
 
         isset($request['description']) ? $group->description = $request['description'] : "";

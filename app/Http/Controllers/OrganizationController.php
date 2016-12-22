@@ -43,19 +43,20 @@ class OrganizationController extends Controller
         if(!empty($request->icon)){
             $path = Files::qualityCompress($request->icon, "organizations/{$result->id}/icon");
             $result->icon = $path;
+        } else {
+            $result->icon = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg'; //TODO: temporary
         }
-
         if(!empty($request->cover)){
             $path = Files::qualityCompress($request->cover, "organizations/{$result->id}/cover");
             $result->cover = $path;
+        } else {
+            $result->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
         }
-
         if(isset($request['color'])){
             $result->color = $request['color'];
         }
 
         $result->save();
-
         if($result){
             if($request->tags){
                 Tag::assignTag($result, $request);
@@ -154,7 +155,6 @@ class OrganizationController extends Controller
             $response['classes'] = $classes;
             $response['users'] = $users; //TODO remove dupes
             $response['groups'] = $groups;
-            $response['tags'] = $organization->tags;
             return Response::json($response, 200);
         } else {
              return response()->json(['error' => 'Not found'], 404);

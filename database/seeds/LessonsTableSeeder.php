@@ -15,6 +15,7 @@ class LessonsTableSeeder extends Seeder
         DB::table('lessons')->insert([
             'name' => 'Lesson 1',
             'description' => 'description',
+            'thumbnail'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/lesson.jpg',
             'lesson_file' => 'http://www.cbu.edu.zm/downloads/pdf-sample.pdf',
             'difficulty' => '44',
             'type' => '0',
@@ -27,6 +28,7 @@ class LessonsTableSeeder extends Seeder
         DB::table('lessons')->insert([
             'name' => 'Geometry',
             'description' => 'Geometry is a branch of mathematics concerned with questions of shape, size, relative position of figures, and the properties of space.',
+            'thumbnail'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/lesson.jpg',
             'lesson_file' => 'http://www.cbu.edu.zm/downloads/pdf-sample.pdf',
             'difficulty' => '55',
             'group_id' => '2',
@@ -40,6 +42,7 @@ class LessonsTableSeeder extends Seeder
         DB::table('lessons')->insert([
             'name' => 'Algebra',
             'description' => 'Algebra is one of the broad parts of mathematics, together with number theory, geometry and analysis. ',
+            'thumbnail'=> 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/lesson.jpg',
             'lesson_file' => 'http://www.cbu.edu.zm/downloads/pdf-sample.pdf',
             'difficulty' => '25',
             'group_id' => '2',

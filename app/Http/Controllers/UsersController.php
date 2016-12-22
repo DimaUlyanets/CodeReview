@@ -225,8 +225,8 @@ class UsersController extends ApiController
 
                 $files = Files::saveUserFiles($user, $request);
 
-                if(isset($files["cover"]))$data["cover"] = $files["cover"];
-                if(isset($files["avatar"]))$data["avatar"] = $files["avatar"];
+                $data["cover"] = $files["cover"] ? $files["cover"] : 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png';
+                $data["avatar"] = $files["avatar"] ? $files["avatar"] : 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/user.svg';
 
                 $result = Profile::create($data);
                 $usrThumbnail = $result->thumbnail || null;
