@@ -14,6 +14,7 @@ class OrganisationsTableSeeder extends Seeder
         DB::table('organizations')->insert([
             'name' => 'Graspe',
             'description' => 'description',
+            'icon' => 'https://s3-eu-west-1.amazonaws.com/bck-lessons/organizations/1/icon/logo.JPG',
             'default' => 1
         ]);
 
