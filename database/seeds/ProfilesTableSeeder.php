@@ -14,7 +14,6 @@ class ProfilesTableSeeder extends Seeder
         DB::table('profiles')->insert([
 
             'user_id' => '1',
-            'avatar' => 'https://unsplash.it/200/200',
             'cover' => 'cover.png',
             'bio' => 'User Bio',
             'color' => 'white'
@@ -24,7 +23,6 @@ class ProfilesTableSeeder extends Seeder
         DB::table('profiles')->insert([
 
             'user_id' => '2',
-            'avatar' => 'https://unsplash.it/200/200',
             'cover' => 'cover.png',
             'bio' => 'User Bio',
             'color' => 'white'
