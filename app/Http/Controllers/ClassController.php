@@ -106,7 +106,7 @@ class ClassController extends ApiController
 
             $idClassToSearch = $class->id;
             $nameClassToSearch = $data['name'];
-            $thumbnailClassToSearch = (isset($data['thumbnail'])) ? $data['thumbnail'] : null;
+            $thumbnailClassToSearch = (isset($class['thumbnail'])) ? $class['thumbnail'] : null;
             event(new ElasticClassAddToIndex($idClassToSearch, $nameClassToSearch, $thumbnailClassToSearch));
             return Response::json($class->toArray(), 200);
 

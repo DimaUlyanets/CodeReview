@@ -120,7 +120,7 @@ class GroupController extends ApiController
 
             $user->groups()->attach($group->id);
 
-            $thumbnailGroup = (isset($data['icon'])) ? $data['icon'] : null;
+            $thumbnailGroup = (isset($group['icon'])) ? $group['icon'] : null;
             $users = $group->users || [];
             event(new ElasticGroupAddToIndex($group->id, $data['name'], $thumbnailGroup, $group->organization_id, $group->privacy_id, $users));
 
