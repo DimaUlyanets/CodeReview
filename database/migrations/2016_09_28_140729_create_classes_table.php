@@ -23,6 +23,7 @@ class CreateClassesTable extends Migration
             $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
             $table->boolean('is_collaborative')->default(0);
             $table->timestamps();
+            $table->softDeletes();
 
         });
     }
