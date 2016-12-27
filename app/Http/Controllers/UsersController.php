@@ -350,6 +350,11 @@ class UsersController extends ApiController
           return $this->setStatusCode(404)->respondWithError("User Not Found");
      }
 
+    public function filter($name){
+        
+        $response = User::where('name', 'like', "%{$name}%")->get(['name', 'id']);
+        return $this->setStatusCode(200)->respondSuccess($response);
 
+    }
 
 }
