@@ -184,8 +184,22 @@ class LessonController extends ApiController
      */
     public function delete($id)
     {
-        //Need complete method and pass (id)!!!
-        event(new ElasticLessonDeleteIndex($id));
+
+
+        $lesson = Lesson::find($id);
+
+        if($lesson["author_id"] == Auth::guard('api')->user()->id){
+
+            $lesson->delete($id);
+            event(new ElasticLessonDeleteIndex($id));
+            return $this->setStatusCode(200)->respondSuccess("success");
+
+        }
+
+        return $this->setStatusCode(409)->respondWithError("Lesson is not created by this user");
+
+
+
     }
 
     public function suggest($tag){
