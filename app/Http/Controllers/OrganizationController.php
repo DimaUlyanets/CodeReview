@@ -108,6 +108,7 @@ class OrganizationController extends Controller
             $orgInfo['thumbnail']= $organization->icon;
             $orgInfo['color']= $organization->color;
             $orgInfo['cover']= $organization->cover;
+            $orgInfo['tags']= $organization->tags;
             $lessons = [];
             $classes = [];
             $users = [];
