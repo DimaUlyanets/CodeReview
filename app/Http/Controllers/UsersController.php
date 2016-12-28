@@ -278,8 +278,7 @@ class UsersController extends ApiController
             }
 
             return $this->setStatusCode(200)->respondSuccess(array_values($response));
-
-
+            
         }
 
         return $this->setStatusCode(404)->respondWithError("User does not exists");
