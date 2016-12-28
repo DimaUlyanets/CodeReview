@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes;
 use App\Files;
 use App\Group;
 use App\Http\Requests\CreateProfileRequest;
@@ -22,6 +23,7 @@ class UsersController extends ApiController
 {
 
     const LESSONS_LIMITS = 5;
+    const CLASSES_LIMITS = 5;
 
     /**
      * Display a listing of the resource.
@@ -245,7 +247,7 @@ class UsersController extends ApiController
 
     }
 
-    public function classes($id = null){
+    public function classes($id = null, $skip = 0){
 
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::find($id);
@@ -259,20 +261,26 @@ class UsersController extends ApiController
             }
 
             $response = [];
+            $classes = Classes::with('group', 'group.organization', 'lessons', 'users')->whereAuthorId($id)->skip($skip)->take(self::CLASSES_LIMITS)->get();
 
-            foreach($user->classes as $value){
+
+            foreach($classes as $key => $value){
 
                 $response[$value->id]["id"] = $value->id;
                 $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["organization"]["id"] = $value->group->organization->id;
+                $response[$value->id]["organization"]["icon"] = $value->group->organization->icon;
+                $response[$value->id]["lessons_num"] = count($value->lessons);
+                $response[$value->id]["users_num"] = count($value->users);
                 $response[$value->id]["thumbnail"] = $value->thumbnail;
                 $response[$value->id]["description"] = $value->description;
                 $response[$value->id]["group_id"] = $value->group_id;
+                $response[$value->id]["group_icon"] = $value->group->icon;
 
             }
 
             return $this->setStatusCode(200)->respondSuccess(array_values($response));
-
-
+            
         }
 
         return $this->setStatusCode(404)->respondWithError("User does not exists");
