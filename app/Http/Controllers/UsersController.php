@@ -266,14 +266,16 @@ class UsersController extends ApiController
 
             foreach($classes as $key => $value){
 
-                $response[$key]["id"] = $value->id;
-                $response[$key]["name"] = $value->name;
-                $response[$key]["group"]["id"] = $value->group->id;
-                $response[$key]["group"]["icon"] = $value->group->icon;
-                $response[$key]["organization"]["id"] = $value->group->organization->id;
-                $response[$key]["organization"]["icon"] = $value->group->organization->icon;
-                $response[$key]["lessons_num"] = count($value->lessons);
-                $response[$key]["users_num"] = count($value->users);
+                $response[$value->id]["id"] = $value->id;
+                $response[$value->id]["name"] = $value->name;
+                $response[$value->id]["organization"]["id"] = $value->group->organization->id;
+                $response[$value->id]["organization"]["icon"] = $value->group->organization->icon;
+                $response[$value->id]["lessons_num"] = count($value->lessons);
+                $response[$value->id]["users_num"] = count($value->users);
+                $response[$value->id]["thumbnail"] = $value->thumbnail;
+                $response[$value->id]["description"] = $value->description;
+                $response[$value->id]["group_id"] = $value->group_id;
+                $response[$value->id]["group_icon"] = $value->group->icon;
 
             }
 
@@ -304,16 +306,13 @@ class UsersController extends ApiController
 
             foreach($lessons as $key => $value){
 
-                $response[$value->id]["id"] = $value->id;
-                $response[$value->id]["name"] = $value->name;
-                $response[$value->id]["organization"]["id"] = $value->group->organization->id;
-                $response[$value->id]["organization"]["icon"] = $value->group->organization->icon;
-                $response[$value->id]["lessons_num"] = count($value->lessons);
-                $response[$value->id]["users_num"] = count($value->users);
-                $response[$value->id]["thumbnail"] = $value->thumbnail;
-                $response[$value->id]["description"] = $value->description;
-                $response[$value->id]["group_id"] = $value->group_id;
-                $response[$value->id]["group_icon"] = $value->group->icon;
+                $response[$key]["id"] = $value->id;
+                $response[$key]["name"] = $value->name;
+                $response[$key]["views"] = $value->views;
+                $response[$key]["group"]["id"] = $value->group->id;
+                $response[$key]["group"]["icon"] = $value->group->icon;
+                $response[$key]["organization"]["id"] = $value->group->organization->id;
+                $response[$key]["organization"]["icon"] = $value->group->organization->icon;
 
             }
 
