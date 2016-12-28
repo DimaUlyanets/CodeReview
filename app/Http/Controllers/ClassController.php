@@ -189,7 +189,8 @@ class ClassController extends ApiController
 
 
         if($class["author_id"] == Auth::guard('api')->user()->id){
-            
+
+            $class->lessons()->detach();
             $class->delete($id);
             return $this->setStatusCode(200)->respondSuccess("success");
 
