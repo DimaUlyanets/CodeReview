@@ -185,7 +185,19 @@ class ClassController extends ApiController
      */
     public function delete($id)
     {
-        //
+        $class = Classes::find($id);
+
+
+        if($class["author_id"] == Auth::guard('api')->user()->id){
+
+            $class->lessons()->detach();
+            $class->delete($id);
+            return $this->setStatusCode(200)->respondSuccess("success");
+
+        }
+
+        return $this->setStatusCode(409)->respondWithError("Lesson is not created by this user");
+
     }
 
     /**
