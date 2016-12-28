@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Lesson extends Model
 {
 
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -16,6 +18,8 @@ class Lesson extends Model
     protected $fillable = [
         'id', 'name', 'description', 'thumbnail', 'lesson_file', 'difficulty', 'group_id', 'author_id', 'type'
     ];
+
+    protected $softDelete = true;
 
     /**
      * The lessons has one group .

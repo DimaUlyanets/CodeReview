@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes;
 use App\Files;
 use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Events\ElasticUserAddToIndex;
+use App\Lesson;
 use App\Organization;
 use App\Privacy;
 use App\Profile;
@@ -20,6 +22,8 @@ use Illuminate\Support\Facades\Response;
 class UsersController extends ApiController
 {
 
+    const LESSONS_LIMITS = 5;
+    const CLASSES_LIMITS = 5;
 
     /**
      * Display a listing of the resource.
@@ -243,7 +247,46 @@ class UsersController extends ApiController
 
     }
 
-    public function classes($id = null){
+    public function classes($id = null, $skip = 0){
+
+        $id = $id ? $id : Auth::guard('api')->user()->id;
+        $user = User::find($id);
+
+        if($user){
+
+            if($id != Auth::guard('api')->user()->id){
+
+                return $this->setStatusCode(403)->respondWithError("Forbidden");
+
+            }
+
+            $response = [];
+            $classes = Classes::with('group', 'group.organization', 'lessons', 'users')->whereAuthorId($id)->skip($skip)->take(self::CLASSES_LIMITS)->get();
+
+
+            foreach($classes as $key => $value){
+
+                $response[$key]["id"] = $value->id;
+                $response[$key]["name"] = $value->name;
+                $response[$key]["group"]["id"] = $value->group->id;
+                $response[$key]["group"]["icon"] = $value->group->icon;
+                $response[$key]["organization"]["id"] = $value->group->organization->id;
+                $response[$key]["organization"]["icon"] = $value->group->organization->icon;
+                $response[$key]["lessons_num"] = count($value->lessons);
+                $response[$key]["users_num"] = count($value->users);
+
+            }
+
+            return $this->setStatusCode(200)->respondSuccess(array_values($response));
+
+
+        }
+
+        return $this->setStatusCode(404)->respondWithError("User does not exists");
+
+    }
+
+    public function lessons($id = null, $skip = 0){
 
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::find($id);
@@ -258,18 +301,21 @@ class UsersController extends ApiController
 
             $response = [];
 
-            foreach($user->classes as $value){
+            $lessons = Lesson::with('group', 'group.organization')->whereAuthorId($id)->skip($skip)->take(self::LESSONS_LIMITS)->get();
 
-                $response[$value->id]["id"] = $value->id;
-                $response[$value->id]["name"] = $value->name;
-                $response[$value->id]["thumbnail"] = $value->thumbnail;
-                $response[$value->id]["description"] = $value->description;
-                $response[$value->id]["group_id"] = $value->group_id;
+            foreach($lessons as $key => $value){
+
+                $response[$key]["id"] = $value->id;
+                $response[$key]["name"] = $value->name;
+                $response[$key]["views"] = $value->views;
+                $response[$key]["group"]["id"] = $value->group->id;
+                $response[$key]["group"]["icon"] = $value->group->icon;
+                $response[$key]["organization"]["id"] = $value->group->organization->id;
+                $response[$key]["organization"]["icon"] = $value->group->organization->icon;
 
             }
 
             return $this->setStatusCode(200)->respondSuccess(array_values($response));
-
 
         }
 
@@ -350,6 +396,11 @@ class UsersController extends ApiController
           return $this->setStatusCode(404)->respondWithError("User Not Found");
      }
 
+    public function filter($name){
 
+        $response = User::where('name', 'like', "%{$name}%")->get(['name', 'id']);
+        return $this->setStatusCode(200)->respondSuccess($response);
+
+    }
 
 }

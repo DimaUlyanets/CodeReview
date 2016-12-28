@@ -32,17 +32,17 @@ Route::group(['prefix' => 'auth' , 'middleware' => 'auth:api'] , function() {
 
 Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
 
+    Route::get('/filter/{name}', 'UsersController@filter');
     Route::get('/list', 'UsersController@all');
     Route::get('/{id}', 'UsersController@show')->where('id', '[0-9]+');
     Route::get('/profile/{id?}', 'UsersController@getProfile')->where('id', '[0-9]+');
     Route::get('/', 'UsersController@show');
     Route::put('/{id}', 'UsersController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'UsersController@delete')->where('id', '[0-9]+');
-    Route::get('/{id}/groups', 'UsersController@groups')->where('id', '[0-9]+');
-    Route::get('/groups', 'UsersController@groups');
     Route::post('/{id}/profile', 'UsersController@profile')->where('id', '[0-9]+');
-    Route::get('/{id}/classes', 'UsersController@classes')->where('id', '[0-9]+');
-    Route::get('/classes', 'UsersController@classes');
+    Route::get('/{id?}/classes/{skip?}', 'UsersController@classes')->where('id', '[0-9]+');
+    Route::get('/{id?}/groups', 'UsersController@groups')->where('id', '[0-9]+');
+    Route::get('/{id?}/lessons/{skip?}', 'UsersController@lessons')->where('id', '[0-9]+')->where('skip', '[0-9]+');
     Route::get('/organizations/{id}', 'UsersController@getUserOrganization')->where('id', '[0-9]+');
     Route::post('/{id}/follow', 'UsersController@follow')->where('id', '[0-9]+');
     Route::delete('/{id}/follow', 'UsersController@unFollow')->where('id', '[0-9]+');
