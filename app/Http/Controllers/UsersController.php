@@ -310,22 +310,22 @@ class UsersController extends ApiController
 
 
             $lessons = $lessons->get();
-
+            $tempLessons = [];
             foreach($lessons as $key => $value){
 
-                $response[$key]["id"] = $value->id;
-                $response[$key]["name"] = $value->name;
-                $response[$key]["views"] = $value->views;
-                $response[$key]["group"]["id"] = $value->group->id;
-                $response[$key]["group"]["icon"] = $value->group->icon;
-                $response[$key]["organization"]["id"] = $value->group->organization->id;
-                $response[$key]["organization"]["icon"] = $value->group->organization->icon;
+                $tempLessons[$key]["id"] = $value->id;
+                $tempLessons[$key]["name"] = $value->name;
+                $tempLessons[$key]["views"] = $value->views;
+                $tempLessons[$key]["group"]["id"] = $value->group->id;
+                $tempLessons[$key]["group"]["icon"] = $value->group->icon;
+                $tempLessons[$key]["organization"]["id"] = $value->group->organization->id;
+                $tempLessons[$key]["organization"]["icon"] = $value->group->organization->icon;
 
             }
+            $response["lessons"] = $tempLessons;
+            $response["total"] = $total;
 
-            $response["total"]["total"] = $total;
-
-            return $this->setStatusCode(200)->respondSuccess(array_values($response));
+            return $this->setStatusCode(200)->respondSuccess($response);
 
         }
 
