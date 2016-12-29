@@ -247,9 +247,9 @@ class UsersController extends ApiController
 
     }
 
-    public function classes($id = null, $skip = 0, $filter = null){
+    public function classes($skip = 0, $filter = null){
 
-        $id = $id ? $id : Auth::guard('api')->user()->id;
+        $id = Auth::guard('api')->user()->id;
         $user = User::find($id);
 
         if($user){
@@ -296,9 +296,9 @@ class UsersController extends ApiController
 
     }
 
-    public function lessons($id = null, $skip = 0, $filter = null){
+    public function lessons($skip = 0, $filter = null){
 
-        $id = $id ? $id : Auth::guard('api')->user()->id;
+        $id = Auth::guard('api')->user()->id;
         $user = User::find($id);
 
         if($user){
