@@ -287,7 +287,7 @@ class UsersController extends ApiController
 
     }
 
-    public function lessons($id = null, $skip = 0){
+    public function lessons($id = null, $skip = 0, $filter = null){
 
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::find($id);
@@ -302,7 +302,14 @@ class UsersController extends ApiController
 
             $response = [];
 
-            $lessons = Lesson::with('group', 'group.organization')->whereAuthorId($id)->skip($skip)->take(self::LESSONS_LIMITS)->get();
+            $lessons = Lesson::with('group', 'group.organization')->whereAuthorId($id);
+            if($filter) $lessons->where('name', 'like', "%{$filter}%");
+
+            $total = $lessons->count();
+            $lessons = $lessons->skip($skip)->take(self::LESSONS_LIMITS);
+
+
+            $lessons = $lessons->get();
 
             foreach($lessons as $key => $value){
 
@@ -315,6 +322,8 @@ class UsersController extends ApiController
                 $response[$key]["organization"]["icon"] = $value->group->organization->icon;
 
             }
+
+            $response["total"]["total"] = $total;
 
             return $this->setStatusCode(200)->respondSuccess(array_values($response));
 
