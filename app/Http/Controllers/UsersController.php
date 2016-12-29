@@ -247,7 +247,7 @@ class UsersController extends ApiController
 
     }
 
-    public function classes($id = null, $skip = 0){
+    public function classes($id = null, $skip = 0, $filter = null){
 
         $id = $id ? $id : Auth::guard('api')->user()->id;
         $user = User::find($id);
@@ -261,25 +261,34 @@ class UsersController extends ApiController
             }
 
             $response = [];
-            $classes = Classes::with('group', 'group.organization', 'lessons', 'users')->whereAuthorId($id)->skip($skip)->take(self::CLASSES_LIMITS)->get();
+            $tmpClass = [];
 
+            $classes = Classes::with('group', 'group.organization', 'lessons', 'users')->whereAuthorId($id);
+            if($filter) $classes->where('name', 'like', "%{$filter}%");
+
+            $total = $classes->count();
+            $classes = $classes->skip($skip)->take(self::LESSONS_LIMITS);
+            $classes = $classes->get();
 
             foreach($classes as $key => $value){
 
-                $response[$value->id]["id"] = $value->id;
-                $response[$value->id]["name"] = $value->name;
-                $response[$value->id]["organization"]["id"] = $value->group->organization->id;
-                $response[$value->id]["organization"]["icon"] = $value->group->organization->icon;
-                $response[$value->id]["lessons_num"] = count($value->lessons);
-                $response[$value->id]["users_num"] = count($value->users);
-                $response[$value->id]["thumbnail"] = $value->thumbnail;
-                $response[$value->id]["description"] = $value->description;
-                $response[$value->id]["group_id"] = $value->group_id;
-                $response[$value->id]["group_icon"] = $value->group->icon;
+                $tmpClass[$value->id]["id"] = $value->id;
+                $tmpClass[$value->id]["name"] = $value->name;
+                $tmpClass[$value->id]["organization"]["id"] = $value->group->organization->id;
+                $tmpClass[$value->id]["organization"]["icon"] = $value->group->organization->icon;
+                $tmpClass[$value->id]["lessons_num"] = count($value->lessons);
+                $tmpClass[$value->id]["users_num"] = count($value->users);
+                $tmpClass[$value->id]["thumbnail"] = $value->thumbnail;
+                $tmpClass[$value->id]["description"] = $value->description;
+                $tmpClass[$value->id]["group_id"] = $value->group_id;
+                $tmpClass[$value->id]["group_icon"] = $value->group->icon;
 
             }
 
-            return $this->setStatusCode(200)->respondSuccess(array_values($response));
+            $response["classes"] = array_values($tmpClass);
+            $response["total"] = $total;
+
+            return $this->setStatusCode(200)->respondSuccess($response);
             
         }
 
@@ -301,16 +310,15 @@ class UsersController extends ApiController
             }
 
             $response = [];
+            $tempLessons = [];
 
             $lessons = Lesson::with('group', 'group.organization')->whereAuthorId($id);
             if($filter) $lessons->where('name', 'like', "%{$filter}%");
 
             $total = $lessons->count();
             $lessons = $lessons->skip($skip)->take(self::LESSONS_LIMITS);
-
-
             $lessons = $lessons->get();
-            $tempLessons = [];
+
             foreach($lessons as $key => $value){
 
                 $tempLessons[$key]["id"] = $value->id;

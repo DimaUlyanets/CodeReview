@@ -42,6 +42,8 @@ Route::group(['prefix' => 'users' , 'middleware' => 'auth:api'] , function() {
     Route::post('/{id}/profile', 'UsersController@profile')->where('id', '[0-9]+');
     Route::get('/{id?}/classes/{skip?}', 'UsersController@classes')->where('id', '[0-9]+')->where('skip', '[0-9]+');
     Route::get('/classes/{skip?}', 'UsersController@classes')->where('skip', '[0-9]+');
+    Route::get('{id}/classes/{skip}/{name}', 'UsersController@classes')->where('id', '[0-9]+');
+    Route::get('/classes/{skip}/{name}', 'UsersController@classes')->where('skip', '[0-9]+');
     Route::get('/{id?}/groups', 'UsersController@groups')->where('id', '[0-9]+');
     Route::get('/groups', 'UsersController@groups');
     Route::get('/{id?}/lessons/{skip?}', 'UsersController@lessons')->where('id', '[0-9]+')->where('skip', '[0-9]+');
