@@ -306,4 +306,66 @@ class OrganizationController extends Controller
     {
         //
     }
+
+    public function membership($id, $skip = null, $name = null){
+
+
+        $user = Auth::guard('api')->user();
+        $controlledGroups = [];
+
+        #get all groups if user is org admin
+        $groups = $user->organizations()->where(function ($q) {
+            $q->where('role', 'admin');
+        })->whereOrganizationId($id)->get();
+
+
+        if(count($groups) == 0){
+
+            #get groups where user is admin or owner
+            $groups = $user->groups()->where(function ($q) {
+                $q->where('role', 'admin')->orWhere('role', 'owner');
+            })->whereOrganizationId($id)->get();
+
+        }
+
+        foreach($groups as $value)$controlledGroups[] = $value->id;
+
+        $groups = Group::with('users')->whereIn('id', $controlledGroups)->get();
+        $groupsList = [];
+        $usersList = [];
+        $relationLists = [];
+
+        foreach($groups as $value){
+
+            $groupsList[$value->id]["id"] = $value->id;
+            $groupsList[$value->id]["name"] = $value->name;
+            $groupsList[$value->id]["icon"] = $value->icon;
+
+            foreach($value->users as $u){
+
+                $relationLists[$value->id][] = $u->id;
+
+            }
+
+        }
+
+        #get all users from organization
+        $organizationUsers = Organization::with('users')->whereId($id)->get();
+        foreach($organizationUsers as $value){
+            foreach($value->users as $u){
+                $usersList[$u->id]["id"] = $u->id;
+                $usersList[$u->id]["name"] = $u->name;
+                if($u->profile)$usersList[$u->id]["avatar"] = $u->profile->avatar;
+            }
+        }
+        
+        $response["groups"] = array_values($groupsList);
+        $response["users"] = array_values($usersList);
+        $response["relations"] = $relationLists;
+
+        return Response::json($response, 200);
+
+
+    }
+
 }

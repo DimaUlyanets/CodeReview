@@ -64,12 +64,23 @@ class User extends Authenticatable
     }
 
     /**
-     * The organizations that belong to the user.
+     * The groups that belong controlled by user.
      */
     public function controlledGroups()
     {
         return $this->groups()->where(function ($q) {
             $q->where('role', 'admin')->orWhere('role', 'owner');
+        });
+
+    }
+
+    /**
+     * The groups that belong controlled by user.
+     */
+    public function controlledOrganizations()
+    {
+        return $this->organizations()->where(function ($q) {
+            $q->where('role', 'admin');
         });
 
     }
