@@ -34,7 +34,6 @@ class Files extends Model
 
         $local = $resource->store($path, 'public');
         $localPath = storage_path('app/public').DIRECTORY_SEPARATOR .$local;
-
         $img = Image::make($localPath);
         $img->save($localPath, env('COMPRESS_RATIO'));
 

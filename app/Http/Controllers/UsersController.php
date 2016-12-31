@@ -7,6 +7,7 @@ use App\Files;
 use App\Group;
 use App\Http\Requests\CreateProfileRequest;
 use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Events\ElasticUserAddToIndex;
 use App\Lesson;
 use App\Organization;
@@ -153,18 +154,6 @@ class UsersController extends ApiController
         } else {
              return $this->setStatusCode(404)->respondWithError("User not found");
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
@@ -419,6 +408,45 @@ class UsersController extends ApiController
         $response = User::where('name', 'like', "%{$name}%")->get(['name', 'id']);
         return $this->setStatusCode(200)->respondSuccess($response);
 
+    }
+
+    /**
+     * Update user info(user data and profile).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateInfo(UserUpdateRequest $request, $id)
+    {
+        $user = User::with('organizations', 'profile')->find($id);
+        if(isset($request['name'])){
+            if($request['name']!= $user->name) {
+                $userName = User::where('name', $request['name'])->where('id', '<>', $id)->first();
+                if ($userName != null) {
+                    return response()->json(['error' => 'This name already used in the system'], 403);
+                }
+            }
+            $user->name = $request['name'];
+        }
+
+        if(isset($request['bio'])) {
+            $user->profile->bio = $request['bio'];
+        }
+
+        $files = Files::saveUserFiles($user, $request);
+
+        if(isset($files["cover"])) {
+            $user->profile->cover = $files["cover"];
+        }
+        if(isset($files["avatar"])) {
+            $user->profile->avatar = $files["avatar"];
+        }
+
+        $user->profile->save();
+        $user->save();
+
+        return Response::json($user->toArray(), 200);
     }
 
 }
