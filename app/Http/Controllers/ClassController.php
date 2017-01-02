@@ -201,7 +201,6 @@ class ClassController extends ApiController
         }
 
         if(isset($request['description'])) $class->description = $request['description'];
-        var_dump($request['is_collaborative']);die;
         if(isset($request['is_collaborative'])) $class->is_collaborative = $request['is_collaborative'] === 'true' ? 1 : 0 ;
         if(isset($request['tags'])) {
             Tag::assignTag($class, $request);
