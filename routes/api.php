@@ -54,6 +54,7 @@ Route::group(['prefix' => 'organizations' , 'middleware' => 'auth:api'] , functi
 
     Route::get('/list', 'OrganizationController@all');
     Route::post('/', 'OrganizationController@create');
+    Route::get('/{id}/membership/{skip}/{name?}', 'OrganizationController@membership')->where('id', '[0-9]+')->where('skip', '[0-9]+');
     Route::get('/{id}', 'OrganizationController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'OrganizationController@update')->where('id', '[0-9]+');
     Route::delete('/{id}', 'OrganizationController@delete')->where('id', '[0-9]+');
