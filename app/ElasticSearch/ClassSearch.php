@@ -31,9 +31,14 @@ class ClassSearch{
             "type" => "class",
             "id" => $id,
             "body" => [
-                "id"=>$id,
-                "name" => $name,
-                "thumbnail" => $thumbnail
+               "doc" => [
+                  "name" => $name,
+                  "thumbnail" => $thumbnail
+               ],
+               "upsert" => [
+                  "name" => $name,
+                  "thumbnail" => $thumbnail
+               ]
             ]
         ];
         $this->client->update($params);

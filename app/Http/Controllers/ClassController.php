@@ -6,6 +6,7 @@ use App\Classes;
 use App\Files;
 use App\Group;
 use App\Events\ElasticClassAddToIndex;
+use App\Events\ElasticClassUpdateIndex;
 use App\Http\Requests\ClassCreateRequest;
 use App\Http\Requests\JoinClassRequest;
 use App\Organization;
@@ -147,6 +148,14 @@ class ClassController extends ApiController
                 $q->where('user_id', $userId)
                 ->where('classes_id', $class->id);
             })->get();
+            $users = [];
+            if (!empty($class->users)) {
+                foreach($class->users as $key => $user) {
+                    $users[$key] = $user;
+                    $users[$key]['thumbnail'] = $user->profile['avatar'];
+                    unset($users[$key]['profile']);
+                }
+            }
 
             $response = [
 
@@ -159,6 +168,9 @@ class ClassController extends ApiController
                 "author_avatar" => $avatar,
                 "members" => $class->users()->count(),
                 "lessons" => $lessons,
+                "tags" => $class->tags,
+                "users" => $users,
+                "is_collaborative" => $class->is_collaborative,
                 "memberOf" => !!sizeOf($isMember)
 
             ];
@@ -174,7 +186,41 @@ class ClassController extends ApiController
 
     public function update(Request $request, $id)
     {
-        //
+        $class = Classes::find($id);
+        $organization = Group::find($class["group_id"])->organization;
+        if(isset($request['name'])){
+            $class->name = $request['name'];
+        }
+        if(!empty($request->thumbnail)){
+            $path = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/classes/{$class->id}/icon");
+            $class->thumbnail = $path;
+        }
+        if(!empty($request->cover)){
+            $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/classes/{$class->id}/cover");
+            $class->cover = $path;
+        }
+
+        if(isset($request['description'])) $class->description = $request['description'];
+        var_dump($request['is_collaborative']);die;
+        if(isset($request['is_collaborative'])) $class->is_collaborative = $request['is_collaborative'] === 'true' ? 1 : 0 ;
+        if(isset($request['tags'])) {
+            Tag::assignTag($class, $request);
+        }
+
+        $class->save();
+
+        if (isset($request['admins']) && is_array($request['admins'])) {
+            DB::table('classes_user')->where('role', 'admin')->where('classes_id', $class->id)->delete();
+            foreach ($request['admins'] as $userId) {
+                DB::table('classes_user')->insert(
+                    ['user_id' => $userId, 'classes_id' => $class->id, 'role' => 'admin']
+                );
+            }
+        }
+
+        $classThumbnail = (isset($class->thumbnail)) ? $class->thumbnail : null;
+        event(new ElasticClassUpdateIndex($id, $class->name, $classThumbnail));
+        return Response::json($class->toArray(), 200);
     }
 
     /**
