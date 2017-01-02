@@ -48,14 +48,14 @@ class Files extends Model
 
         $extension = $resource->extension();
 
-        if($extension == "pdf"){
+        if ($extension == "pdf"){
 
             $lesson->lesson_file = env("APP_S3") . $resource->store($path, 's3');
             $lesson->save();
 
             return $lesson->lesson_file ;
 
-        }else if($extension == "mp4"){
+        } else if($extension == "mp4"){
 
             $lesson->lesson_file = "processing";
             $lesson->save();
@@ -64,7 +64,6 @@ class Files extends Model
             dispatch(new UploadVideo($local, $lesson));
 
             return "processing";
-
 
         }
 

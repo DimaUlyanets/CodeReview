@@ -21,15 +21,15 @@ class Tag extends Model
 
     public static function assignTag($entity, $request){
         $entity->tags()->detach();
-
-        foreach($request->tags as $value){
-            $tag = Tag::whereName($value)->first();
-            if(!$tag){
-                $tag = Tag::create(["name" => $value, "cover" => "https://unsplash.it/800/200"]);
-                event(new ElasticTopicAddToIndex($tag->id, $tag->name, 0, $tag->cover));
+        if (is_array($request->tags))
+            foreach($request->tags as $value){
+                $tag = Tag::whereName($value)->first();
+                if(!$tag){
+                    $tag = Tag::create(["name" => $value, "cover" => "https://unsplash.it/800/200"]);
+                    event(new ElasticTopicAddToIndex($tag->id, $tag->name, 0, $tag->cover));
+                }
+                $entity->tags()->attach($tag->id);
             }
-            $entity->tags()->attach($tag->id);
-        }
     }
 
     public static function followTag($user, $tag){

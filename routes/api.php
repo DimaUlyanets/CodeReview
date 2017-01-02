@@ -96,6 +96,7 @@ Route::group(['prefix' => 'lessons' , 'middleware' => 'auth:api'] , function() {
     Route::post('/', 'LessonController@create');
     Route::get('/{id}', 'LessonController@show')->where('id', '[0-9]+');
     Route::put('/{id}', 'LessonController@update')->where('id', '[0-9]+');
+    Route::post('/{id}', 'LessonController@update')->where('id', '[0-9]+')->middleware('LessonProtection');
     Route::delete('/{id}', 'LessonController@delete')->where('id', '[0-9]+');
     Route::get('/suggest/{tag}', 'LessonController@suggest')->where('id', '[0-9]+');
 

@@ -13,8 +13,8 @@ class EventLessonUpdateIndex
 
     }
 
-    public function handle(ElasticClassUpdateIndex $event){
+    public function handle(ElasticLessonUpdateIndex $event){
         $search = new LessonSearch();
-        $search->updateIndex($event->id,$event->name,$event->thumbnail);
+        $search->updateIndex($event->id, $event->name, $event->thumbnail);
     }
 }

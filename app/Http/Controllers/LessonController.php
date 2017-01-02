@@ -9,6 +9,7 @@ use App\Events\ElasticLessonUpdateIndex;
 use App\Files;
 use App\Group;
 use App\Http\Requests\CreateLessonRequest;
+use App\Http\Requests\UpdateLessonRequest;
 use App\Lesson;
 use App\Organization;
 use App\Skill;
@@ -18,8 +19,7 @@ use Illuminate\Http\Request;
 use App\ElasticSearch\LessonSearch;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Response;
 
 class LessonController extends ApiController
 {
@@ -103,8 +103,6 @@ class LessonController extends ApiController
 
             }
 
-            $lesson->skills = $request->skills;
-
         }
 
         if($request->tags){
@@ -147,6 +145,8 @@ class LessonController extends ApiController
                 "difficulty" => $lesson->difficulty,
                 "type" => $lesson->type,
                 "views" => ++$lesson->views,
+                "tags" => $lesson->tags,
+                "skills" => $lesson->skills,
                 "group_name" => $group->name,
                 "group_icon" => $group->icon
 
@@ -170,10 +170,53 @@ class LessonController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateLessonRequest $request, $id)
     {
-        //Need complete method and pass (new name and new thumbnail)!!!
-        //event(new ElasticLessonUpdateIndex($id,$name,$thumbnail));
+        $lesson = Lesson::find($id);
+        $organization = Group::find($lesson->group_id)->organization;
+        if(isset($request['name'])){
+            $lesson->name = $request['name'];
+        }
+
+        if(!empty($request->thumbnail)){
+            $path = Files::qualityCompress($request->thumbnail, "organizations/{$organization->id}/groups/{$lesson->group_id}/lessons/{$lesson->id}/icon");
+            $lesson->thumbnail = $path;
+        }
+
+        if(!empty($request->lesson_file)){
+           $path = "organizations/{$organization->id}/groups/{$lesson->group_id}/lessons/{$lesson->id}/lesson_file";
+           $lesson->lesson_file = Files::uploadLessonFile($request['lesson_file'], $path, $lesson);
+        }
+
+        if(!empty($request->cover)){
+            $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/groups/{$lesson->group_id}/lessons/{$lesson->id}/cover");
+            $lesson->cover = $path;
+        }
+
+        if(isset($request['description'])) $lesson->description = $request['description'];
+        if(isset($request['difficulty'])) $lesson->difficulty = $request['difficulty'];
+        if(isset($request['tags'])) {
+            Tag::assignTag($lesson, $request);
+        }
+        if($request->skills){
+            $lesson->skills()->detach();
+            foreach($request->skills as $value){
+
+                $skill = Skill::whereName($value)->first();
+                if(!$skill){
+                    $skill = Skill::create(["name" => $value]);
+                }
+                $lesson->skills()->attach($skill->id);
+
+            }
+
+        }
+
+        $lesson->save();
+
+        $lessonThumbnail = (isset($lesson->thumbnail)) ? $lesson->thumbnail : null;
+        event(new ElasticLessonUpdateIndex($id, $lesson->name, $lessonThumbnail));
+        return Response::json($lesson->toArray(), 200);
     }
 
     /**
