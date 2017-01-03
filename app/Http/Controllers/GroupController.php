@@ -225,6 +225,24 @@ class GroupController extends ApiController
             }
         }
 
+        if(isset($request['addMembers']) || isset($request['removeMembers'])) {
+            if(isset($request['addMembers']) && is_array($request['addMembers'])){
+                $addMembers = $request['addMembers'];
+                foreach ($addMembers as $idUser) {
+                    DB::table('group_user')->insert(
+                        ['user_id' => $idUser, 'group_id' => $group->id,'role' => 'member']
+                    );
+                }
+            }
+
+            if(isset($request['removeMembers']) && is_array($request['removeMembers'])){
+                $removeMembers  = $request['removeMembers'];
+                foreach ($removeMembers as $idUser) {
+                    DB::table('group_user')->where('user_id', $idUser)->where('group_id', $group->id)->delete();
+                }
+            }
+        }
+
         $groupThumbnail = (isset($group->icon)) ? $group->icon : null;
         event(new ElasticGroupUpdateIndex($group->id, $group->name, $groupThumbnail, $group->organization_id, $group->privacy_id));
 

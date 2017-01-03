@@ -270,6 +270,19 @@ class OrganizationController extends Controller
             }
         }
 
+        if (isset($request['addMembers']) && is_array($request['addMembers'])) {
+            foreach ($request['addMembers'] as $userId) {
+                DB::table('organization_user')->insert(
+                    ['user_id' => $userId, 'organization_id' => $organization->id,'role' => 'member']
+                );
+            }
+        }
+        if (isset($request['removeMembers']) && is_array($request['removeMembers'])) {
+            foreach ($request['removeMembers'] as $userId) {
+                DB::table('organization_user')->where('user_id', $userId)->where('organization_id', $organization->id)->delete();
+            }
+        }
+
         $orgThumbnail = (isset($organization->icon)) ? $organization->icon : null;
         event(new ElasticOrganisationUpdateIndex($id, $organization->name, $orgThumbnail));
         return Response::json($organization->toArray(), 200);
@@ -328,7 +341,10 @@ class OrganizationController extends Controller
 
         }
 
-        foreach($groups as $value)$controlledGroups[] = $value->id;
+        foreach($groups as $value) {
+            if($value->default) continue;
+            $controlledGroups[] = $value->id;
+        }
 
         $groups = Group::with('users')->whereIn('id', $controlledGroups)->get();
         $groupsList = [];
@@ -341,12 +357,6 @@ class OrganizationController extends Controller
             $groupsList[$value->id]["name"] = $value->name;
             $groupsList[$value->id]["icon"] = $value->icon;
 
-            foreach($value->users as $u){
-
-                $relationLists[$value->id][] = $u->id;
-
-            }
-
         }
 
         #get all users from organization
@@ -356,6 +366,12 @@ class OrganizationController extends Controller
                 $usersList[$u->id]["id"] = $u->id;
                 $usersList[$u->id]["name"] = $u->name;
                 if($u->profile)$usersList[$u->id]["avatar"] = $u->profile->avatar;
+
+                foreach($u->groups as $g){
+                    if ($g->organization_id === intval($id))
+                        $relationLists[$u->id][] = $g->id;
+
+                }
             }
         }
         
