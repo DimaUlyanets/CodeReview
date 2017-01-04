@@ -320,7 +320,7 @@ class OrganizationController extends Controller
         //
     }
 
-    public function membership($id, $skip = null, $name = null){
+    public function membership($id, $skip = 0, $filter = null){
 
 
         $user = Auth::guard('api')->user();
@@ -360,8 +360,10 @@ class OrganizationController extends Controller
         }
 
         #get all users from organization
-        $organizationUsers = Organization::with('users')->whereId($id)->get();
-        foreach($organizationUsers as $value){
+        $with = 'users';
+        if($filter) $with = ['users' => function ($query) use($filter) { $query->where('name', 'like', '%' . $filter. '%'); }];
+        $organization = Organization::with($with)->whereId($id)->get();
+        foreach($organization as $value){
             foreach($value->users as $u){
                 $usersList[$u->id]["id"] = $u->id;
                 $usersList[$u->id]["name"] = $u->name;
