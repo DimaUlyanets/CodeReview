@@ -13,8 +13,47 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        'App\Events\ElasticClassAddToIndex' => [
+            'App\Listeners\EventClassAddToIndex',
+        ],
+        'App\Events\ElasticClassUpdateIndex' => [
+            'App\Listeners\EventClassUpdateIndex',
+        ],
+        'App\Events\ElasticClassDeleteIndex' => [
+            'App\Listeners\EventClassDeleteIndex',
+        ],
+        'App\Events\ElasticGroupAddToIndex' => [
+            'App\Listeners\EventGroupAddToIndex',
+        ],
+        'App\Events\ElasticGroupUpdateIndex' => [
+            'App\Listeners\EventGroupUpdateIndex',
+        ],
+        'App\Events\ElasticGroupDeleteIndex' => [
+            'App\Listeners\EventGroupDeleteIndex',
+        ],
+        'App\Events\ElasticLessonAddToIndex' => [
+            'App\Listeners\EventLessonAddToIndex',
+        ],
+        'App\Events\ElasticLessonUpdateIndex' => [
+            'App\Listeners\EventLessonUpdateIndex',
+        ],
+        'App\Events\ElasticLessonDeleteIndex' => [
+            'App\Listeners\EventLessonDeleteIndex',
+        ],
+        'App\Events\ElasticOrganisationAddToIndex' => [
+            'App\Listeners\EventOrganisationAddToIndex',
+        ],
+        'App\Events\ElasticOrganisationUpdateIndex' => [
+            'App\Listeners\EventOrganisationUpdateIndex',
+        ],
+        'App\Events\ElasticOrganisationDeleteIndex' => [
+            'App\Listeners\EventOrganisationDeleteIndex',
+        ],
+        'App\Events\ElasticUserAddToIndex' => [
+            'App\Listeners\EventUserAddToIndex',
+        ],
+        'App\Events\ElasticTopicAddToIndex' => [
+            'App\Listeners\EventTopicAddToIndex',
         ],
     ];
 

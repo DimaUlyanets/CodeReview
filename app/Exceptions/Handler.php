@@ -4,7 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -44,7 +46,33 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
         return parent::render($request, $exception);
+
+        $error = $this->convertExceptionToResponse($exception);
+        if(preg_match("#failed to pass validation#", $error))return parent::render($request, $exception);
+
+        if(env("APP_DEBUG") == true){
+
+            $error = $this->convertExceptionToResponse($exception);
+
+            if(preg_match('#Unauthenticated#', $error->getContent())){
+                return Response::json( ['error' => "Unauthenticated"], 401 );
+            }
+
+            if($error->getStatusCode() == 404 || !preg_match('#FormRequest#', $error->getContent())){
+
+                return Response::json( [
+                    'error' => [
+                        'exception' => class_basename( $exception ) . ' in ' . basename( $exception->getFile() ) . ' line ' . $exception->getLine() . ': ' . $exception->getMessage(),
+                    ]
+                ], 404 );
+
+            }
+        }
+
+
+
     }
 
     /**

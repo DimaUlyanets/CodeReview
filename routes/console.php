@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
+use App\ElasticSearch\ElasticGenerator;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,31 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+
+Artisan::command('elastic:sync', function () {
+
+    $generator = new ElasticGenerator();
+    $generator->addClassesToSearch();
+    $generator->addGroupsToSearch();
+    $generator->addLessonsToSearch();
+    $generator->addOrganisationsToSearch();
+    $generator->addTopicsToSearch();
+    $generator->addUsersToSearch();
+
+
+    $this->comment("Data successfully indexed!");
+})->describe('Add all data from Lessons Groups Classes to elastic');
+
+
+
+Artisan::command('elastic:clear', function () {
+
+    $generator = new ElasticGenerator();
+    $generator->clearIndices();
+
+    $this->comment("Data successfully cleared!");
+})->describe('Remove all data from elastic');
+
+
+

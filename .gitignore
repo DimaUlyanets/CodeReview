@@ -1,7 +1,10 @@
 /node_modules
 /public/storage
 /vendor
-/.idea
+.idea
 Homestead.json
 Homestead.yaml
+.env.example
+composer.lock
 .env
+npm-debug.log

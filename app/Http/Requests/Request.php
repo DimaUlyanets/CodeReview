@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 abstract class Request extends FormRequest {
 
@@ -15,7 +16,18 @@ abstract class Request extends FormRequest {
 
     public function response(array $errors)
     {
-        return new JsonResponse($errors, 422);
+        return new JsonResponse(array("errors" => $errors), 422);
+    }
+
+    public function forbiddenResponse()
+    {
+
+        return new Response([
+            'error' => [
+                'message' => "Forbidden",
+                'status_code' => 403
+            ]
+        ], 403);
     }
 
 }
