@@ -39,55 +39,54 @@ class OrganizationController extends Controller
     public function create(OrganizationCreateRequest $request)
     {
         $data = $request->all();
-        $result = Organization::create($data);
+        $organization = Organization::create($data);
         if(!empty($request->icon)){
-            $path = Files::qualityCompress($request->icon, "organizations/{$result->id}/icon");
-            $result->icon = $path;
+            $path = Files::qualityCompress($request->icon, "organizations/{$organization->id}/icon");
+            $organization->icon = $path;
         } else {
-            $result->icon = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg'; //TODO: temporary
+            $organization->icon = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/group.jpg'; //TODO: temporary
         }
         if(!empty($request->cover)){
-            $path = Files::qualityCompress($request->cover, "organizations/{$result->id}/cover");
-            $result->cover = $path;
+            $path = Files::qualityCompress($request->cover, "organizations/{$organization->id}/cover");
+            $organization->cover = $path;
         } else {
-            $result->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
+            $organization->cover = 'https://s3-eu-west-1.amazonaws.com/bck-lessons/default/cover.png'; //TODO: temporary
         }
         if(isset($request['color'])){
-            $result->color = $request['color'];
+            $organization->color = $request['color'];
         }
 
-        $result->save();
-        if($result){
+        $organization->save();
+        if($organization){
             if($request->tags){
-                Tag::assignTag($result, $request);
+                Tag::assignTag($organization, $request);
             }
         }
         $user = Auth::guard('api')->user();
         DB::table('organization_user')->insert(
-            ['user_id' => $user->id, 'organization_id' => $result->id ,'role'=>'owner']
+            ['user_id' => $user->id, 'organization_id' => $organization->id ,'role'=>'owner']
         );
+
+        $defaultGroup = Organization::createDefaultGroup($organization, $user->id);
+
         if(is_array($request['members']) && count($request['members']) > 0){
-            foreach ($request['members'] as $id) {
-                DB::table('organization_user')->insert(
-                    ['user_id'=>$id,'organization_id'=>$result->id,'role'=>'member']
-                );
+            foreach ($request['members'] as $userId) {
+               $organization->users()->attach([$userId => ['role'=>'member']]);
+               User::find($userId)->groups()->attach($defaultGroup->id);
             }
         }
         if(is_array($request['admins']) && count($request['admins']) > 0){
             $addAdmins = $request['admins'];
-            foreach ($addAdmins as $id) {
-                DB::table('organization_user')->insert(
-                    ['user_id'=>$id,'organization_id'=>$result->id,'role'=>'admin']
-                );
+            foreach ($addAdmins as $userId) {
+                $organization->users()->attach([$userId => ['role'=>'admin']]);
+                User::find($userId)->groups()->attach($defaultGroup->id);
             }
         }
-        $userId = Auth::guard('api')->user()->id;
-        Organization::createDefaultGroup($result, $userId);
 
-        $orgThumbnail = (isset($result->icon)) ? $result->icon : null;
-        event(new ElasticOrganisationAddToIndex($result->id, $result['name'], $orgThumbnail));
+        $orgThumbnail = (isset($organization->icon)) ? $organization->icon : null;
+        event(new ElasticOrganisationAddToIndex($organization->id, $organization['name'], $orgThumbnail));
 
-        return Response::json($result->toArray(), 200);
+        return Response::json($organization->toArray(), 200);
 
     }
 
@@ -164,54 +163,6 @@ class OrganizationController extends Controller
 
     }
 
-    public function addMembers(Request $request, $id)
-    {
-        if (isset($request['userIds'])) {
-            $addMembers = $request['userIds'];
-            foreach ($addMembers as $idMember) {
-
-                $userRole = DB::table('organization_user')
-                    ->select("role")
-                    ->where('organization_id', '=', $id)
-                    ->where('user_id', '=', $idMember)->get();
-
-                if(($userRole->count()==0)){
-
-                    DB::table('organization_user')->insert(
-                        ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
-                    );
-
-                }else {
-                    $role = $userRole->toArray()[0]->role;
-                    if ($role != 'admin' && $role != 'owner') {
-                        DB::table('organization_user')->insert(
-                            ['user_id' => $idMember, 'organization_id' => $id, 'role' => 'member']
-                        );
-                    }
-                }
-            }
-        }
-    }
-    public function deleteMembers(Request $request, $id)
-    {
-        if (isset($request['userIds'])) {
-            $delMembers = $request['userIds'];
-            foreach ($delMembers as $idMember) {
-                $userRole = DB::table('organization_user')
-                    ->select("role")
-                    ->where('organization_id', '=', $id)
-                    ->where('user_id', '=', $idMember)->get();
-                if(($userRole->count()==0)){
-                    continue;
-                }
-                $role = $userRole->toArray()[0]->role;
-                if ($role != 'admin' && $role != 'owner') {
-                    DB::table('organization_user')->where('user_id' , $idMember)->where('organization_id',$id)->delete();
-                }
-            }
-        }
-    }
-
     private function _excludeDefault($groups) {
         return array_values(array_filter($groups,
                 function($group){
@@ -256,30 +207,34 @@ class OrganizationController extends Controller
         }
 
         $organization->save();
-
+        $defaultGroupId = Group::where('organization_id', $organization->id)->where('default', 1)->first()->id;
         if (isset($request['addAdmins']) && is_array($request['addAdmins'])) {
             foreach ($request['addAdmins'] as $userId) {
-                DB::table('organization_user')->insert(
-                    ['user_id' => $userId, 'organization_id' => $organization->id,'role' => 'admin']
-                );
+                $organization->users()->attach([$userId => ['role'=>'admin']]);
+                $user = User::find($userId);
+                $user->groups()->attach([$defaultGroupId => ['role'=>'admin']]);
             }
         }
         if (isset($request['removeAdmins']) && is_array($request['removeAdmins'])) {
             foreach ($request['removeAdmins'] as $userId) {
-                DB::table('organization_user')->where('user_id', $userId)->where('role','admin')->where('organization_id', $organization->id)->delete();
+                $organization->users()->detach($userId);
+                $user = User::find($userId);
+                $user->groups()->detach($defaultGroupId);
             }
         }
 
         if (isset($request['addMembers']) && is_array($request['addMembers'])) {
             foreach ($request['addMembers'] as $userId) {
-                DB::table('organization_user')->insert(
-                    ['user_id' => $userId, 'organization_id' => $organization->id,'role' => 'member']
-                );
+               $organization->users()->attach([$userId => ['role'=>'member']]);
+               $user = User::find($userId);
+               $user->groups()->attach([$defaultGroupId => ['role'=>'member']]);
             }
         }
         if (isset($request['removeMembers']) && is_array($request['removeMembers'])) {
             foreach ($request['removeMembers'] as $userId) {
-                DB::table('organization_user')->where('user_id', $userId)->where('organization_id', $organization->id)->delete();
+                  $organization->users()->detach($userId);
+                  $user = User::find($userId);
+                  $user->groups()->detach($defaultGroupId);
             }
         }
 

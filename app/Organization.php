@@ -36,6 +36,7 @@ class Organization extends Model
         );
         $user = Auth::guard('api')->user();
         $user->groups()->attach($group->id);
+        return $group;
     }
 
     public static function checkToConflict($groupId, $organizationId){
