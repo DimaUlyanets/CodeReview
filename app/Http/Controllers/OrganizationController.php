@@ -87,7 +87,6 @@ class OrganizationController extends Controller
         event(new ElasticOrganisationAddToIndex($organization->id, $organization['name'], $orgThumbnail));
 
         return Response::json($organization->toArray(), 200);
-
     }
 
     /**
