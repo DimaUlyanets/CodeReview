@@ -25,7 +25,7 @@ class UserUpdateRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'sometimes|required|max:255|alpha_dash',
+            'name' => 'sometimes|required|max:255',
             'icon' => 'image|max:10240',
             'cover' => 'image|max:10240'
         ];
