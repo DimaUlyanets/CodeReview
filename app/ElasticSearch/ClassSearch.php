@@ -8,6 +8,7 @@ class ClassSearch{
     private $client;
 
     function __construct(){
+        // This can probably be registered as an instance in service provider rather than being declared in every class
         $this->client = Elasticsearch\ClientBuilder::create()->setHosts([env("ELASTIC_SEARCH_HOST")])->build();
     }
 

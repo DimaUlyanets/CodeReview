@@ -37,6 +37,7 @@ return [
 
     'connections' => [
 
+        // Hardcode in config. Move it to .env
         'awss3' => [
             'driver'          => 'awss3',
             'key' => 'DimaUlyanets',

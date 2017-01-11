@@ -1,0 +1,5 @@
+General thoughts:
+- A lack of comments - a very bad idea for a project that will expand and evolve
+- Exception handler needs to be properly set up for API
+- There's a need to clean up the project - remove unnecessary and unused filed, lines from config files and classes
+- Overall it's not bad, but requires some refactoring and code optimization
